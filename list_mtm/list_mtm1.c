@@ -60,7 +60,8 @@ int listGetSize(List list) {
 
 ListElement listGetFirst(List list) {
 	if ( list == NULL ) return NULL;
-	return list->first;
+	if ( list->first == NULL) return NULL;
+	return list->first->data;
 }
 
 ListElement listGetNext(List list) {
@@ -85,11 +86,11 @@ ListResult listInsertFirst(List list, ListElement listElement) {
 		free(listElementNode);
 		return LIST_OUT_OF_MEMORY;
 	}
-
 	ListElementNode newNode = listElementNodeCreat(newListElement);
 
 	newNode->next = list->first;
 	list->first = newNode;
+	list->size++;
 	return LIST_SUCCESS;
 }
 

@@ -34,8 +34,14 @@ static bool testListCreateSuccess() {
 	List list = listCreate(copyString,freeString);
 	ASSERT_TEST(list != NULL);
 	ASSERT_TEST(listGetSize(list) == 0);
+	char* a[5] = {"aaa","bbb","NI","hello mister fish","I"};
+	for (int i = 0; i < 5; ++i){
+		listInsertFirst(list,a[i]);
+	}
+	ASSERT_TEST(listGetSize(list) == 5);
+	//printf("\n%s\n", (char*)listGetFirst(list));
 
-	//ASSERT_TEST(list->first == NULL);
+	ASSERT_TEST(strcmp(listGetFirst(list),a[4])==0);
 
 	listDestroy(list);
 	return true;
