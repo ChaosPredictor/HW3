@@ -41,6 +41,10 @@ static bool testListCreateSuccess() {
 	return true;
 }
 
+static bool testListGetSizeFailure() {
+	ASSERT_TEST(listGetSize(NULL) == -1);
+	return true;
+}
 
 
 
@@ -77,6 +81,11 @@ static bool testListGetSize() {
 }
 
 static bool testListGetFirst() {
+	ASSERT_TEST(listGetFirst(NULL) == NULL);
+	List list = listCreate(copyString,freeString);
+	ASSERT_TEST(listGetFirst(list) == NULL);
+	//TODO Success case
+	listDestroy(list);
 	return true;
 }
 
@@ -133,5 +142,6 @@ int main (int argv, char** arc){
 	RUN_TEST(testListDestroy);
 
 	RUN_TEST(testListCreateSuccess);
+	RUN_TEST(testListGetSizeFailure);
 	return 0;
 }

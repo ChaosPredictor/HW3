@@ -11,21 +11,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct ListElement {
+typedef struct listElementNode {
 	void* data;
-	struct ListElement* next;
-} *listElement;
+	struct listElementNode* next;
+} *ListElementNode;
 
 
 struct list_t {
 	//TODO
-	struct ListElement* first;
+	struct listElementNode* first;
 	int size;
 	//TODO maxSize?
 	int iterator;
 	CopyListElement copy;
 	FreeListElement free;
 };
+
+
+static ListElementNode listElementNodeCreat(ListElement listElement);
 
 
 List listCreate(CopyListElement copyElement, FreeListElement freeElement) {
@@ -49,14 +52,15 @@ List listCopy(List list) {
 }
 
 int listGetSize(List list) {
-	//TODO
+	if ( list == NULL) {
+		return -1;
+	}
 	return list->size;
 }
 
 ListElement listGetFirst(List list) {
-	//TODO
-	ListElement element = malloc(sizeof(ListElement));
-	return element;
+	if ( list == NULL ) return NULL;
+	return list->first;
 }
 
 ListElement listGetNext(List list) {
@@ -71,8 +75,21 @@ ListElement listGetCurrent(List list) {
 	return element;
 }
 
-ListResult listInsertFirst(List list, ListElement element) {
-	//TODO
+ListResult listInsertFirst(List list, ListElement listElement) {
+	if ( list == NULL) return LIST_NULL_ARGUMENT;
+
+	ListElementNode listElementNode = malloc(sizeof(*listElementNode));
+	if ( listElementNode == NULL ) return LIST_OUT_OF_MEMORY;
+	ListElement newListElement = list->copy(listElement);
+	if ( newListElement == NULL ) {
+		free(listElementNode);
+		return LIST_OUT_OF_MEMORY;
+	}
+
+	ListElementNode newNode = listElementNodeCreat(newListElement);
+
+	newNode->next = list->first;
+	list->first = newNode;
 	return LIST_SUCCESS;
 }
 
@@ -110,4 +127,13 @@ ListResult listClear(List list) {
 void listDestroy(List list) {
 	//TODO
 	free(list);
+}
+
+static ListElementNode listElementNodeCreat(ListElement listElement) {
+	ListElementNode listElementNode = malloc(sizeof(*listElementNode));
+	if( listElementNode == NULL ) return NULL;
+
+	listElementNode->data = listElement;
+	listElementNode->next = NULL;
+	return listElementNode;
 }
