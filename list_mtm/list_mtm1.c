@@ -11,12 +11,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
+struct list_t {
+	//TODO
+	int maxSize;
+	//TODO maxSize?
+	int iterator;
+	CopyListElement copy;
+	FreeListElement free;
+};
 
 List listCreate(CopyListElement copyElement, FreeListElement freeElement) {
 	//TODO
 	if (copyElement == NULL || freeElement == NULL) return NULL;
-	List list = malloc(sizeof(List*));
+	List list = malloc(sizeof(*list));
+	if (list == NULL) {
+		return NULL;
+	}
+	list->iterator = 0;
+	list->maxSize = 0;
+	list->copy = copyElement;
+	list->free = freeElement;
 	return list;
 }
 
