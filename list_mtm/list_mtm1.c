@@ -11,14 +11,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+struct ListElement {
+	void* data;
+	struct ListElement* next;
+} *listElement;
+
+
 struct list_t {
 	//TODO
-	int maxSize;
+	struct ListElement* first;
+	int size;
 	//TODO maxSize?
 	int iterator;
 	CopyListElement copy;
 	FreeListElement free;
 };
+
 
 List listCreate(CopyListElement copyElement, FreeListElement freeElement) {
 	//TODO
@@ -27,8 +35,9 @@ List listCreate(CopyListElement copyElement, FreeListElement freeElement) {
 	if (list == NULL) {
 		return NULL;
 	}
+	list->first = NULL;
 	list->iterator = 0;
-	list->maxSize = 0;
+	list->size = 0;
 	list->copy = copyElement;
 	list->free = freeElement;
 	return list;
@@ -41,7 +50,7 @@ List listCopy(List list) {
 
 int listGetSize(List list) {
 	//TODO
-	return 1;
+	return list->size;
 }
 
 ListElement listGetFirst(List list) {
