@@ -135,7 +135,27 @@ ListResult listInsertLast(List list, ListElement listElement) {
 }
 
 ListResult listInsertBeforeCurrent(List list, ListElement element) {
-	//TODO
+	if ( list == NULL) return LIST_NULL_ARGUMENT;
+
+	ListElement newListElement = list->copy(element);
+	if ( newListElement == NULL ) return LIST_OUT_OF_MEMORY;
+
+	ListElementNode newNode = listElementNodeCreat(newListElement);
+	if ( newNode == NULL ) {
+		free(newListElement);
+		return LIST_OUT_OF_MEMORY;
+	}
+
+	newNode->next = list->iterator;
+
+	ListElementNode listElementNode = list->first;
+	while ( listElementNode->next != list->iterator ) {
+		//printf("\n%s\n",(char*)listElementNode->data);
+		listElementNode = listElementNode->next;
+	}
+	listElementNode->next = newNode;
+	//list->iterator->next = newNode;
+	list->size++;
 	return LIST_SUCCESS;
 }
 
@@ -152,6 +172,7 @@ ListResult listInsertAfterCurrent(List list, ListElement element) {
 	}
 
 	newNode->next = list->iterator->next;
+
 	list->iterator->next = newNode;
 	list->size++;
 	return LIST_SUCCESS;
