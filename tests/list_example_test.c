@@ -131,6 +131,15 @@ static bool testListClear() {
 }
 
 static bool testListDestroy() {
+	List list = listCreate(copyString,freeString);
+	char* a[5] = {"aaa","bbb","NI","hello mister fish","I"};
+	for (int i=0;i <5; ++i){
+		listInsertFirst(list,a[i]);
+	}
+	ASSERT_TEST(listGetSize(list) == 5);
+	listDestroy(NULL);
+	ASSERT_TEST(listGetSize(list) == 5);
+	listDestroy(list);
 	return true;
 }
 

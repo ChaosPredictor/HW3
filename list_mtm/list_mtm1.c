@@ -18,10 +18,8 @@ typedef struct listElementNode {
 
 
 struct list_t {
-	//TODO
 	struct listElementNode* first;
 	int size;
-	//TODO maxSize?
 	int iterator;
 	CopyListElement copy;
 	FreeListElement free;
@@ -29,10 +27,10 @@ struct list_t {
 
 
 static ListElementNode listElementNodeCreat(ListElement listElement);
+static ListResult listInsertLast(List list, ListElement listElement);
 
 
 List listCreate(CopyListElement copyElement, FreeListElement freeElement) {
-	//TODO
 	if (copyElement == NULL || freeElement == NULL) return NULL;
 	List list = malloc(sizeof(*list));
 	if (list == NULL) {
@@ -47,8 +45,18 @@ List listCreate(CopyListElement copyElement, FreeListElement freeElement) {
 }
 
 List listCopy(List list) {
-	//TODO
-	return list;
+	( list == NULL) return NULL;
+	List newList = listCreat(list->copy, list->free);
+	ListElementNode tempListElementNode = list->first;
+	while( tempListElementNode == NULL) {
+		ListResult result = listInsertLast(newList, tempListElementNode->data);
+		if ( ListResult != LIST_SUCCESS ) {
+			listDestroy(newList);
+			return NULL;
+		}
+		tempListElementNode = tempListElementNode->next;
+	}
+	return newList;
 }
 
 int listGetSize(List list) {
@@ -133,9 +141,10 @@ ListResult listClear(List list) {
 }
 
 void listDestroy(List list) {
-	//TODO
+	if ( list == NULL ) return;
 	listClear(list);
 	free(list);
+	list = NULL;
 }
 
 static ListElementNode listElementNodeCreat(ListElement listElement) {
@@ -145,4 +154,28 @@ static ListElementNode listElementNodeCreat(ListElement listElement) {
 	listElementNode->data = listElement;
 	listElementNode->next = NULL;
 	return listElementNode;
+}
+
+static ListResult listInsertLast(List list, ListElement listElement) {
+	//TODO testing
+	if ( list == NULL) return LIST_NULL_ARGUMENT;
+
+	ListElement newListElement = list->copy(listElement);
+	if ( newListElement == NULL ) return LIST_OUT_OF_MEMORY;
+
+	ListElementNode newNode = listElementNodeCreat(newListElement);
+	if ( newNode == NULL ) {
+		free(newListElement);
+		return LIST_OUT_OF_MEMORY;
+	}
+
+	ListElementNode tempListElementNode = list->first;
+	if ( list->first != NULL) {
+		while ( tempListElementNode->next != NULL ) {
+			tempListElementNode = tempListElementNode->next;
+		}
+	}
+	tempListElementNode->next = newNode;
+
+	return LIST_SUCCESS;
 }
