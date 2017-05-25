@@ -68,7 +68,7 @@ ListElement listGetFirst(List list) {
 	//TODO move iterator to start
 	if ( list == NULL ) return NULL;
 	if ( list->first == NULL) return NULL;
-	list->iterator = list->first
+	list->iterator = list->first;
 	return list->first->data;
 }
 
