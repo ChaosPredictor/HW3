@@ -32,9 +32,7 @@ static ListElementNode listInsert (List list, ListElement element);
 List listCreate(CopyListElement copyElement, FreeListElement freeElement) {
 	if (copyElement == NULL || freeElement == NULL) return NULL;
 	List list = malloc(sizeof(*list));
-	if (list == NULL) {
-		return NULL;
-	}
+	if (list == NULL) return NULL;
 	list->first = NULL;
 	list->iterator = NULL;
 	list->size = 0;
@@ -178,8 +176,37 @@ ListResult listSort(List list, CompareListElements compareElement) {
 }
 
 List listFilter(List list, FilterListElement filterElement, ListFilterKey key) {
-	//TODO
-	List newList = malloc(sizeof(List*));
+	if ( list == NULL || filterElement == NULL) return NULL;
+
+	ListElementNode listElementNode = list->first;
+	if ( listElementNode == NULL ) return NULL;
+
+	List newList = malloc(sizeof(*newList));
+	if (newList == NULL) return NULL;
+	newList->first = NULL;
+	newList->copy = list->copy;
+	newList->free = list->free;
+	newList->size = 0;
+
+	ListElementNode lastNode = NULL;
+	while (listElementNode != NULL) {
+		ListElement listElement = listElementNode->data;
+		if ( filterElement(listElement, key) ) {
+			ListElementNode currentNode = listInsert(newList, listElement);
+			//TODO test that not NULL
+			if ( newList->first == NULL ) {
+				newList->first = currentNode;
+			} else {
+				lastNode->next = currentNode;
+			}
+			lastNode = currentNode;
+			newList->size++;
+			//printf("\n%s\n", (char*)listElementNode->data);
+		}
+		listElementNode = listElementNode->next;
+	}
+
+	newList->iterator = NULL;
 	return newList;
 }
 
@@ -221,7 +248,7 @@ void ListPrint(List list) {
 	}
 }
 
-static ListElementNode listInsert (List list, ListElement element) {
+static ListElementNode listInsert(List list, ListElement element) {
 	ListElement newListElement = list->copy(element);
 	if ( newListElement == NULL ) return NULL;
 
