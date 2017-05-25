@@ -201,10 +201,31 @@ static bool testListInsertAfterCurrent() {
 }
 
 static bool testListRemoveCurrent() {
+	List list = listCreate(copyString,freeString);
+	char* a[5] = {"aaa","bbb","NI","hello mister fish","I"};
+	for (int i=0;i <5; ++i){
+		listInsertFirst(list,a[i]);
+	}
+	ASSERT_TEST(listGetSize(list) == 5);
+	ASSERT_TEST(strcmp(listGetFirst(list),a[4]) == 0);
+	ASSERT_TEST(strcmp(listGetNext(list),a[3]) == 0);
+	ASSERT_TEST(strcmp(listGetNext(list),a[2]) == 0);
+	//ListPrint(list);
+	listRemoveCurrent(list);
+	//ListPrint(list);
+
+	char* b[6] = {"aaa","bbb","hello mister fish","I"};
+	ASSERT_TEST(strcmp(listGetFirst(list),b[3]) == 0);
+
+	for (int i = 2; i >= 0; --i){
+		ASSERT_TEST(strcmp(listGetNext(list),b[i]) == 0);
+	}
+	listDestroy(list);
 	return true;
 }
 
 static bool testListSort() {
+	//TODO
 	return true;
 }
 
