@@ -39,7 +39,8 @@ static bool testListCreateSuccess() {
 		listInsertFirst(list,a[i]);
 	}
 	ASSERT_TEST(listGetSize(list) == 5);
-	ASSERT_TEST(strcmp(listGetFirst(list),a[4])==0);
+	ASSERT_TEST(listGetCurrent(list) == NULL);
+	ASSERT_TEST(strcmp(listGetFirst(list),a[4]) == 0);
 
 	listDestroy(list);
 	return true;

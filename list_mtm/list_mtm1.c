@@ -82,6 +82,7 @@ ListElement listGetNext(List list) {
 ListElement listGetCurrent(List list) {
 	if ( list == NULL ) return NULL;
 	if ( list->first == NULL) return NULL;
+	if ( list->iterator == NULL) return NULL;
 	return list->iterator->data;
 }
 
