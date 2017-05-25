@@ -26,8 +26,8 @@ struct list_t {
 };
 
 
-static ListElementNode listElementNodeCreat(ListElement listElement);
-
+static ListElementNode listElementNodeCreate(ListElement listElement);
+static ListElementNode listInsert (List list, ListElement element);
 
 List listCreate(CopyListElement copyElement, FreeListElement freeElement) {
 	if (copyElement == NULL || freeElement == NULL) return NULL;
@@ -91,14 +91,8 @@ ListElement listGetCurrent(List list) {
 ListResult listInsertFirst(List list, ListElement listElement) {
 	if ( list == NULL) return LIST_NULL_ARGUMENT;
 
-	ListElement newListElement = list->copy(listElement);
-	if ( newListElement == NULL ) return LIST_OUT_OF_MEMORY;
-
-	ListElementNode newNode = listElementNodeCreat(newListElement);
-	if ( newNode == NULL ) {
-		free(newListElement);
-		return LIST_OUT_OF_MEMORY;
-	}
+	ListElementNode newNode = listInsert(list, listElement);
+	if ( newNode == NULL) return LIST_OUT_OF_MEMORY;
 
 	newNode->next = list->first;
 	list->first = newNode;
@@ -111,14 +105,8 @@ ListResult listInsertLast(List list, ListElement listElement) {
 	//TODO remove duplication of listInsert;
 	if ( list == NULL) return LIST_NULL_ARGUMENT;
 
-	ListElement newListElement = list->copy(listElement);
-	if ( newListElement == NULL ) return LIST_OUT_OF_MEMORY;
-
-	ListElementNode newNode = listElementNodeCreat(newListElement);
-	if ( newNode == NULL ) {
-		free(newListElement);
-		return LIST_OUT_OF_MEMORY;
-	}
+	ListElementNode newNode = listInsert(list, listElement);
+	if ( newNode == NULL) return LIST_OUT_OF_MEMORY;
 
 	ListElementNode tempListElementNode = list->first;
 	if ( tempListElementNode != NULL) {
@@ -137,14 +125,8 @@ ListResult listInsertLast(List list, ListElement listElement) {
 ListResult listInsertBeforeCurrent(List list, ListElement element) {
 	if ( list == NULL) return LIST_NULL_ARGUMENT;
 
-	ListElement newListElement = list->copy(element);
-	if ( newListElement == NULL ) return LIST_OUT_OF_MEMORY;
-
-	ListElementNode newNode = listElementNodeCreat(newListElement);
-	if ( newNode == NULL ) {
-		free(newListElement);
-		return LIST_OUT_OF_MEMORY;
-	}
+	ListElementNode newNode = listInsert(list, element);
+	if ( newNode == NULL) return LIST_OUT_OF_MEMORY;
 
 	newNode->next = list->iterator;
 
@@ -162,14 +144,8 @@ ListResult listInsertBeforeCurrent(List list, ListElement element) {
 ListResult listInsertAfterCurrent(List list, ListElement element) {
 	if ( list == NULL) return LIST_NULL_ARGUMENT;
 
-	ListElement newListElement = list->copy(element);
-	if ( newListElement == NULL ) return LIST_OUT_OF_MEMORY;
-
-	ListElementNode newNode = listElementNodeCreat(newListElement);
-	if ( newNode == NULL ) {
-		free(newListElement);
-		return LIST_OUT_OF_MEMORY;
-	}
+	ListElementNode newNode = listInsert(list, element);
+	if ( newNode == NULL) return LIST_OUT_OF_MEMORY;
 
 	newNode->next = list->iterator->next;
 
@@ -215,7 +191,7 @@ void listDestroy(List list) {
 	list = NULL;
 }
 
-static ListElementNode listElementNodeCreat(ListElement listElement) {
+static ListElementNode listElementNodeCreate(ListElement listElement) {
 	ListElementNode listElementNode = malloc(sizeof(*listElementNode));
 	if( listElementNode == NULL ) return NULL;
 
@@ -230,6 +206,18 @@ void ListPrint(List list) {
 		printf("\n%s\n", (char*)listElementNode->data);
 		listElementNode = listElementNode->next;
 	}
+}
+
+static ListElementNode listInsert (List list, ListElement element) {
+	ListElement newListElement = list->copy(element);
+	if ( newListElement == NULL ) return NULL;
+
+	ListElementNode newNode = listElementNodeCreate(newListElement);
+	if ( newNode == NULL ) {
+		free(newListElement);
+		return NULL;
+	}
+	return newNode;
 }
 
 
