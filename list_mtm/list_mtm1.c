@@ -79,8 +79,6 @@ ListElement listGetCurrent(List list) {
 ListResult listInsertFirst(List list, ListElement listElement) {
 	if ( list == NULL) return LIST_NULL_ARGUMENT;
 
-	//ListElementNode listElementNode = malloc(sizeof(*listElementNode));
-	//if ( listElementNode == NULL ) return LIST_OUT_OF_MEMORY;
 	ListElement newListElement = list->copy(listElement);
 	if ( newListElement == NULL ) return LIST_OUT_OF_MEMORY;
 
@@ -129,6 +127,7 @@ ListResult listClear(List list) {
 		list->first = tempListElementNode->next;
 		list->free(tempListElementNode->data);
 		free(tempListElementNode);
+		list->size--;
 	}
 	return LIST_SUCCESS;
 }
