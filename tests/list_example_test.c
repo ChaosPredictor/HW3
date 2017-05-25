@@ -120,6 +120,16 @@ static bool testListInsertFirst() {
 }
 
 static bool testListInsertLast() {
+	List list = listCreate(copyString,freeString);
+	ASSERT_TEST(listGetFirst(list) == NULL);
+	char* a[5] = {"aaa","bbb","NI","hello mister fish","I"};
+	listInsertLast(list,a[0]);
+	ASSERT_TEST(strcmp(listGetFirst(list),a[0])==0);
+	for (int i = 1; i < 5; ++i ){
+		listInsertLast(list,a[i]);
+		ASSERT_TEST(strcmp(listGetFirst(list),a[i]) != 0);
+	}
+	listDestroy(list);
 	return true;
 }
 
