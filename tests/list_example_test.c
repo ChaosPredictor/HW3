@@ -63,6 +63,17 @@ static bool testListFilter() {
 	return true;
 }
 static bool testListCopy() {
+	List list = listCreate(copyString,freeString);
+	char* a[5] = {"aaa","bbb","NI","hello mister fish","I"};
+	for (int i=0;i <5; ++i){
+		listInsertFirst(list,a[i]);
+	}
+	ASSERT_TEST(listGetSize(list) == 5);
+	List newList = listCopy(list);
+	ASSERT_TEST(listGetSize(newList) == 5);
+	ASSERT_TEST(strcmp(listGetFirst(newList),a[4])==0);
+	listDestroy(newList);
+	listDestroy(list);
 	return true;
 }
 

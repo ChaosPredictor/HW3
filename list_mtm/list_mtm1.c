@@ -27,7 +27,6 @@ struct list_t {
 
 
 static ListElementNode listElementNodeCreat(ListElement listElement);
-static ListResult listInsertLast(List list, ListElement listElement);
 
 
 List listCreate(CopyListElement copyElement, FreeListElement freeElement) {
@@ -45,12 +44,13 @@ List listCreate(CopyListElement copyElement, FreeListElement freeElement) {
 }
 
 List listCopy(List list) {
-	( list == NULL) return NULL;
-	List newList = listCreat(list->copy, list->free);
+	if ( list == NULL) return NULL;
+	List newList = listCreate(list->copy, list->free);
 	ListElementNode tempListElementNode = list->first;
-	while( tempListElementNode == NULL) {
+
+	while( tempListElementNode != NULL) {
 		ListResult result = listInsertLast(newList, tempListElementNode->data);
-		if ( ListResult != LIST_SUCCESS ) {
+		if ( result != LIST_SUCCESS ) {
 			listDestroy(newList);
 			return NULL;
 		}
@@ -98,7 +98,35 @@ ListResult listInsertFirst(List list, ListElement listElement) {
 
 	newNode->next = list->first;
 	list->first = newNode;
+
 	list->size++;
+	return LIST_SUCCESS;
+}
+
+ListResult listInsertLast(List list, ListElement listElement) {
+	//TODO remove duplication of listInsert;
+	if ( list == NULL) return LIST_NULL_ARGUMENT;
+
+	ListElement newListElement = list->copy(listElement);
+	if ( newListElement == NULL ) return LIST_OUT_OF_MEMORY;
+
+	ListElementNode newNode = listElementNodeCreat(newListElement);
+	if ( newNode == NULL ) {
+		free(newListElement);
+		return LIST_OUT_OF_MEMORY;
+	}
+
+	ListElementNode tempListElementNode = list->first;
+	if ( tempListElementNode != NULL) {
+		while ( tempListElementNode->next != NULL ) {
+			tempListElementNode = tempListElementNode->next;
+		}
+		tempListElementNode->next = newNode;
+	} else {
+		list->first = newNode;
+	}
+	list->size++;
+
 	return LIST_SUCCESS;
 }
 
@@ -156,26 +184,4 @@ static ListElementNode listElementNodeCreat(ListElement listElement) {
 	return listElementNode;
 }
 
-static ListResult listInsertLast(List list, ListElement listElement) {
-	//TODO testing
-	if ( list == NULL) return LIST_NULL_ARGUMENT;
 
-	ListElement newListElement = list->copy(listElement);
-	if ( newListElement == NULL ) return LIST_OUT_OF_MEMORY;
-
-	ListElementNode newNode = listElementNodeCreat(newListElement);
-	if ( newNode == NULL ) {
-		free(newListElement);
-		return LIST_OUT_OF_MEMORY;
-	}
-
-	ListElementNode tempListElementNode = list->first;
-	if ( list->first != NULL) {
-		while ( tempListElementNode->next != NULL ) {
-			tempListElementNode = tempListElementNode->next;
-		}
-	}
-	tempListElementNode->next = newNode;
-
-	return LIST_SUCCESS;
-}
