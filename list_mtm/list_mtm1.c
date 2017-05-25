@@ -18,9 +18,9 @@ typedef struct listElementNode {
 
 
 struct list_t {
-	struct listElementNode* first;
+	ListElementNode first;
+	ListElementNode iterator;
 	int size;
-	int iterator;
 	CopyListElement copy;
 	FreeListElement free;
 };
@@ -36,7 +36,7 @@ List listCreate(CopyListElement copyElement, FreeListElement freeElement) {
 		return NULL;
 	}
 	list->first = NULL;
-	list->iterator = 0;
+	list->iterator = NULL;
 	list->size = 0;
 	list->copy = copyElement;
 	list->free = freeElement;
@@ -60,28 +60,29 @@ List listCopy(List list) {
 }
 
 int listGetSize(List list) {
-	if ( list == NULL) {
-		return -1;
-	}
+	if ( list == NULL) return -1;
 	return list->size;
 }
 
 ListElement listGetFirst(List list) {
+	//TODO move iterator to start
 	if ( list == NULL ) return NULL;
 	if ( list->first == NULL) return NULL;
+	list->iterator = list->first
 	return list->first->data;
 }
 
 ListElement listGetNext(List list) {
-	//TODO
-	ListElement element = malloc(sizeof(ListElement));
-	return element;
+	if ( list == NULL ) return NULL;
+	if ( list->first == NULL) return NULL;
+	list->iterator = list->iterator->next;
+	return list->iterator->data;
 }
 
 ListElement listGetCurrent(List list) {
-	//TODO
-	ListElement element = malloc(sizeof(ListElement));
-	return element;
+	if ( list == NULL ) return NULL;
+	if ( list->first == NULL) return NULL;
+	return list->iterator->data;
 }
 
 ListResult listInsertFirst(List list, ListElement listElement) {
