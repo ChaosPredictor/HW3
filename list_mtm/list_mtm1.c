@@ -171,6 +171,8 @@ ListResult listClear(List list) {
 void listDestroy(List list) {
 	if ( list == NULL ) return;
 	listClear(list);
+	list->first = NULL;
+	list->size = 0;
 	free(list);
 	list = NULL;
 }
