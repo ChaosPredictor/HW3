@@ -39,19 +39,11 @@ static bool testListCreateSuccess() {
 		listInsertFirst(list,a[i]);
 	}
 	ASSERT_TEST(listGetSize(list) == 5);
-	//printf("\n%s\n", (char*)listGetFirst(list));
-
 	ASSERT_TEST(strcmp(listGetFirst(list),a[4])==0);
 
 	listDestroy(list);
 	return true;
 }
-
-static bool testListGetSizeFailure() {
-	ASSERT_TEST(listGetSize(NULL) == -1);
-	return true;
-}
-
 
 
 static bool testListFilter() {
@@ -75,13 +67,15 @@ static bool testListCopy() {
 }
 
 static bool testListGetSize() {
-	char* a[5] = {"aaa","bbb","NI","hello mister fish","I"};
+	ASSERT_TEST(listGetSize(NULL) == -1);
 	List list = listCreate(copyString,freeString);
+	ASSERT_TEST(listGetSize(list) == 0);
+	char* a[5] = {"aaa","bbb","NI","hello mister fish","I"};
 	for (int i=0;i <5; ++i){
 		listInsertFirst(list,a[i]);
 	}
 	//TODO
-	//ASSERT_TEST(listGetSize(list) == 5);
+	ASSERT_TEST(listGetSize(list) == 5);
 	listDestroy(list);
 	return true;
 }
@@ -148,6 +142,5 @@ int main (int argv, char** arc){
 	RUN_TEST(testListDestroy);
 
 	RUN_TEST(testListCreateSuccess);
-	RUN_TEST(testListGetSizeFailure);
 	return 0;
 }
