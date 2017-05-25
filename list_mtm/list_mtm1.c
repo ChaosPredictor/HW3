@@ -75,6 +75,8 @@ ListElement listGetFirst(List list) {
 ListElement listGetNext(List list) {
 	if ( list == NULL ) return NULL;
 	if ( list->first == NULL) return NULL;
+	if ( list->iterator == NULL) return NULL;
+	if ( list->iterator->next == NULL) return NULL;
 	list->iterator = list->iterator->next;
 	return list->iterator->data;
 }
