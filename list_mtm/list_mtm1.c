@@ -28,6 +28,8 @@ struct list_t {
 
 static ListElementNode listElementNodeCreate(ListElement listElement);
 static ListElementNode listInsert (List list, ListElement element);
+static ListResult exchangeNode(List list, ListElementNode listElementNode1, \
+		ListElementNode listElementNode2);
 
 List listCreate(CopyListElement copyElement, FreeListElement freeElement) {
 	if (copyElement == NULL || freeElement == NULL) return NULL;
@@ -171,7 +173,26 @@ ListResult listRemoveCurrent(List list) {
 }
 
 ListResult listSort(List list, CompareListElements compareElement) {
-	//TODO
+	if ( list == NULL || compareElement == NULL) return LIST_NULL_ARGUMENT;
+	//List newList = listCopy(list);
+	ListElementNode listElementNode1 = list->first;
+	ListElementNode listElementNode2 = listElementNode1->next;
+	while (listElementNode1->next != NULL) {
+		while( listElementNode2 != NULL) {
+			if(compareElement(listElementNode1->data,listElementNode2->data)>0){
+				exchangeNode(list, listElementNode1, listElementNode2);
+				//printf("\nexchange\n");
+				//ListPrint(newList);
+			}
+			listElementNode2 = listElementNode2->next;
+			//printf("\nloop2\n");
+		}
+		listElementNode1 = listElementNode1->next;
+		listElementNode2 = listElementNode1->next;
+		//printf("\nloop1\n");
+	}
+	//listDestroy(list);
+	//list = listCopy(newList);
 	return LIST_SUCCESS;
 }
 
@@ -181,19 +202,17 @@ List listFilter(List list, FilterListElement filterElement, ListFilterKey key) {
 	ListElementNode listElementNode = list->first;
 	if ( listElementNode == NULL ) return NULL;
 
-	List newList = malloc(sizeof(*newList));
-	if (newList == NULL) return NULL;
-	newList->first = NULL;
-	newList->copy = list->copy;
-	newList->free = list->free;
-	newList->size = 0;
+	List newList = listCreate(list->copy, list->free);
 
 	ListElementNode lastNode = NULL;
 	while (listElementNode != NULL) {
 		ListElement listElement = listElementNode->data;
 		if ( filterElement(listElement, key) ) {
 			ListElementNode currentNode = listInsert(newList, listElement);
-			//TODO test that not NULL
+			if ( currentNode == NULL) {
+				listDestroy(newList);
+				return NULL;
+			}
 			if ( newList->first == NULL ) {
 				newList->first = currentNode;
 			} else {
@@ -201,12 +220,9 @@ List listFilter(List list, FilterListElement filterElement, ListFilterKey key) {
 			}
 			lastNode = currentNode;
 			newList->size++;
-			//printf("\n%s\n", (char*)listElementNode->data);
 		}
 		listElementNode = listElementNode->next;
 	}
-
-	newList->iterator = NULL;
 	return newList;
 }
 
@@ -258,6 +274,14 @@ static ListElementNode listInsert(List list, ListElement element) {
 		return NULL;
 	}
 	return newNode;
+}
+
+static ListResult exchangeNode(List list, ListElementNode listElementNode1, \
+		ListElementNode listElementNode2) {
+	ListElement listElementTemp = listElementNode1->data;
+	listElementNode1->data = listElementNode2->data;
+	listElementNode2->data = listElementTemp;
+	return LIST_SUCCESS;
 }
 
 
