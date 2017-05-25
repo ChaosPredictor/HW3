@@ -79,14 +79,16 @@ ListElement listGetCurrent(List list) {
 ListResult listInsertFirst(List list, ListElement listElement) {
 	if ( list == NULL) return LIST_NULL_ARGUMENT;
 
-	ListElementNode listElementNode = malloc(sizeof(*listElementNode));
-	if ( listElementNode == NULL ) return LIST_OUT_OF_MEMORY;
+	//ListElementNode listElementNode = malloc(sizeof(*listElementNode));
+	//if ( listElementNode == NULL ) return LIST_OUT_OF_MEMORY;
 	ListElement newListElement = list->copy(listElement);
-	if ( newListElement == NULL ) {
-		free(listElementNode);
+	if ( newListElement == NULL ) return LIST_OUT_OF_MEMORY;
+
+	ListElementNode newNode = listElementNodeCreat(newListElement);
+	if ( newNode == NULL ) {
+		free(newListElement);
 		return LIST_OUT_OF_MEMORY;
 	}
-	ListElementNode newNode = listElementNodeCreat(newListElement);
 
 	newNode->next = list->first;
 	list->first = newNode;
@@ -121,12 +123,19 @@ List listFilter(List list, FilterListElement filterElement, ListFilterKey key) {
 }
 
 ListResult listClear(List list) {
-	//TODO
+	if( list == NULL ) return LIST_NULL_ARGUMENT;
+	while(list->first) {
+		ListElementNode tempListElementNode = list->first;
+		list->first = tempListElementNode->next;
+		list->free(tempListElementNode->data);
+		free(tempListElementNode);
+	}
 	return LIST_SUCCESS;
 }
 
 void listDestroy(List list) {
 	//TODO
+	listClear(list);
 	free(list);
 }
 
