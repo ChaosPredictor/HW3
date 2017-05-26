@@ -69,17 +69,26 @@ static bool testListFilter() {
 	for (int i=0;i <5; ++i){
 		listInsertFirst(list,a[i]);
 	}
+	ASSERT_TEST(strcmp(listGetFirst(list),a[4]) == 0);
+	ASSERT_TEST(strcmp(listGetNext(list),a[3]) == 0);
+	ASSERT_TEST(strcmp(listGetNext(list),a[2]) == 0);
+
 	int key = 2;
-	List filtered = listFilter(list,isLongerThan, &key);
+	List filtered = listFilter(list, isLongerThan, &key);
+
+	ASSERT_TEST(strcmp(listGetCurrent(list),a[2]) == 0);
+	ASSERT_TEST(strcmp(listGetFirst(list),a[4]) == 0);
+	for ( int i = 3; i > 0; --i ){
+		ASSERT_TEST( strcmp(listGetNext(list),a[i]) == 0);
+	}
 
 	ASSERT_TEST(listGetSize(filtered) == 3);
 	ASSERT_TEST(strcmp(listGetCurrent(filtered),a[3])==0);
 
-	ASSERT_TEST(strcmp(listGetFirst(filtered),a[3])==0);
-
-	ASSERT_TEST(strcmp(listGetFirst(list),a[4]) == 0);
-	for ( int i = 3; i > 0; --i ){
-		ASSERT_TEST( strcmp(listGetNext(list),a[i]) == 0);
+	char* b[3] = {"aaa","bbb","hello mister fish"};
+	ASSERT_TEST(strcmp(listGetFirst(filtered),b[2])==0);
+	for ( int i = 1; i >= 0; --i ){
+		ASSERT_TEST( strcmp(listGetNext(filtered),b[i]) == 0);
 	}
 
 	listDestroy(list);
