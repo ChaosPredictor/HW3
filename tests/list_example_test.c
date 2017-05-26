@@ -371,6 +371,9 @@ static bool testListClear() {
 }
 
 static bool testListDestroy() {
+
+	listDestroy(NULL);
+
 	List list = listCreate(copyString,freeString);
 	char* a[5] = {"aaa","bbb","NI","hello mister fish","I"};
 	for (int i=0;i <5; ++i){
