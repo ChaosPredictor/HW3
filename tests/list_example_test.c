@@ -339,11 +339,11 @@ static bool testListRemoveCurrent() {
 		listInsertFirst(list,a[i]);
 	}
 	ASSERT_TEST(listGetSize(list) == 5);
-	ASSERT_TEST(strcmp(listGetFirst(list),a[4]) == 0);
-	ASSERT_TEST(strcmp(listGetNext(list),a[3]) == 0);
-	ASSERT_TEST(strcmp(listGetNext(list),a[2]) == 0);
+	ASSERT_TEST( strcmp(listGetFirst(list),a[4]) == 0 );
+	ASSERT_TEST( strcmp(listGetNext(list),a[3]) == 0 );
+	ASSERT_TEST( strcmp(listGetNext(list),a[2]) == 0 );
 	ASSERT_TEST( listRemoveCurrent(list) == LIST_SUCCESS );
-	ASSERT_TEST(strcmp(listGetCurrent(list),a[3]) == 0);
+	ASSERT_TEST( listGetCurrent(list) == NULL );
 
 	char* b[4] = {"aaa","bbb","hello mister fish","I"};
 	ASSERT_TEST(strcmp(listGetFirst(list),b[3]) == 0);

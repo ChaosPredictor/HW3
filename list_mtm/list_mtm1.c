@@ -189,8 +189,7 @@ ListResult listRemoveCurrent(List list) {
 	listElementNode->next = list->iterator->next;
 	list->free(list->iterator->data);
 	free(list->iterator);
-	list->iterator = listElementNode;
-	//TODO
+	list->iterator = NULL;
 	return LIST_SUCCESS;
 }
 
