@@ -245,9 +245,18 @@ static bool testListInsertLast() {
 	listInsertLast(list,a[0]);
 	ASSERT_TEST(strcmp(listGetFirst(list),a[0])==0);
 
-	for ( int i = 1; i < 5; ++i ){
+	for ( int i = 1; i < 4; ++i ){
 		ASSERT_TEST( listInsertLast(list,a[i]) == LIST_SUCCESS );
 	}
+	ASSERT_TEST(strcmp(listGetFirst(list),a[0])==0);
+	ASSERT_TEST(listGetSize(list) == 4);
+	ASSERT_TEST(strcmp(listGetNext(list),a[1])==0);
+	ASSERT_TEST(strcmp(listGetCurrent(list),a[1])==0);
+
+	ASSERT_TEST( listInsertLast(list,a[4]) == LIST_SUCCESS );
+
+	ASSERT_TEST(strcmp(listGetCurrent(list),a[1])==0);
+
 	ASSERT_TEST(strcmp(listGetFirst(list),a[0]) == 0);
 	for ( int i = 1; i < 5; ++i ){
 		ASSERT_TEST(strcmp(listGetNext(list),a[i]) == 0);
