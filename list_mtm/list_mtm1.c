@@ -50,15 +50,32 @@ List listCopy(List list) {
 	if ( newList == NULL ) return NULL;
 
 	ListElementNode tempListElementNode = list->first;
+	ListElementNode currentNode;
 
 	while( tempListElementNode != NULL) {
-		ListResult result = listInsertLast(newList, tempListElementNode->data);
-		if ( result != LIST_SUCCESS ) {
+
+		ListElementNode newNode = listInsert(newList,tempListElementNode->data);
+
+		if( newNode == NULL) {
 			listDestroy(newList);
 			return NULL;
 		}
+		if ( newList->first == NULL ) {
+			newList->first = newNode;
+		} else {
+			currentNode->next = newNode;
+		}
+
+		if( list->iterator == tempListElementNode ) {
+			newList->iterator = newNode;
+		}
+
+		currentNode = newNode;
+		newList->size++;
+
 		tempListElementNode = tempListElementNode->next;
 	}
+
 	return newList;
 }
 
