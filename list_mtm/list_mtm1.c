@@ -218,6 +218,21 @@ ListResult listSort(List list, CompareListElements compareElement) {
 		listElementNode1 = listElementNode1->next;
 		listElementNode2 = listElementNode1->next;
 	}
+	ListElementNode listElementNode = listTemp->first;
+	if ( listTemp->iterator == NULL) {
+		list->iterator = NULL;
+	} else {
+		int counter = 0;
+		while(listElementNode != NULL && listTemp->iterator != listElementNode){
+			listElementNode = listElementNode->next;
+			counter++;
+		}
+		listElementNode = list->first;
+		for(int i = 0; i < counter; i++) {
+			listElementNode = listElementNode->next;
+		}
+		list->iterator = listElementNode;
+	}
 	listDestroy(listTemp);
 	return LIST_SUCCESS;
 }

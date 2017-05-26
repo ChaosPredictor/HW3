@@ -371,22 +371,28 @@ static bool testListSort() {
 	ASSERT_TEST(strcmp(listGetNext(list),a[2]) == 0);
 	ASSERT_TEST(strcmp(listGetCurrent(list),a[2]) == 0);
 
-	ASSERT_TEST(strcmp(listGetFirst(list),a[4]) == 0);
-	for (int i = 3; i >= 0; --i ){
-		ASSERT_TEST(strcmp(listGetNext(list),a[i]) == 0);
-	}
 	ASSERT_TEST(listSort(list,compareLexiStringLexicographical)==LIST_SUCCESS);
+
+	char* b[5] = {"AI","I","aaaaa","bbb","hello mister fish"};
+	ASSERT_TEST(strcmp(listGetCurrent(list),b[2]) == 0);
+
 	//TODO - check iterator location
 	//ASSERT_TEST(strcmp(listGetCurrent(list),a[2]) == 0);
 
-	char* b[5] = {"AI","I","aaaaa","bbb","hello mister fish"};
 	ASSERT_TEST(strcmp(listGetFirst(list),b[0]) == 0);
 	for (int i = 1; i < 5; ++i ){
 		ASSERT_TEST(strcmp(listGetNext(list),b[i]) == 0);
 	}
+
+	ASSERT_TEST(strcmp(listGetFirst(list),b[0]) == 0);
+	ASSERT_TEST(strcmp(listGetNext(list),b[1]) == 0);
+	ASSERT_TEST(strcmp(listGetCurrent(list),b[1]) == 0);
+
 	ASSERT_TEST(listSort(list,compareStringLength)==LIST_SUCCESS);
 
 	char* c[5] = {"I","AI","bbb","aaaaa","hello mister fish"};
+	ASSERT_TEST(strcmp(listGetCurrent(list),c[1]) == 0);
+
 	ASSERT_TEST(strcmp(listGetFirst(list),c[0]) == 0);
 	for (int i = 1; i < 5; ++i ){
 		ASSERT_TEST(strcmp(listGetNext(list),c[i]) == 0);
