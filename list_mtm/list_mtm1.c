@@ -45,7 +45,10 @@ List listCreate(CopyListElement copyElement, FreeListElement freeElement) {
 
 List listCopy(List list) {
 	if ( list == NULL) return NULL;
+
 	List newList = listCreate(list->copy, list->free);
+	if ( newList == NULL ) return NULL;
+
 	ListElementNode tempListElementNode = list->first;
 
 	while( tempListElementNode != NULL) {
