@@ -63,7 +63,7 @@ List listCopy(List list) {
 }
 
 int listGetSize(List list) {
-	if ( list == NULL) return -1;
+	if ( list == NULL ) return -1;
 	return list->size;
 }
 
@@ -127,6 +127,7 @@ ListResult listInsertLast(List list, ListElement listElement) {
 
 ListResult listInsertBeforeCurrent(List list, ListElement element) {
 	if ( list == NULL) return LIST_NULL_ARGUMENT;
+	if ( list->iterator == NULL) return LIST_INVALID_CURRENT;
 
 	ListElementNode newNode = listInsert(list, element);
 	if ( newNode == NULL) return LIST_OUT_OF_MEMORY;
@@ -160,6 +161,8 @@ ListResult listInsertAfterCurrent(List list, ListElement element) {
 
 ListResult listRemoveCurrent(List list) {
 	if ( list == NULL) return LIST_NULL_ARGUMENT;
+
+	if ( list->iterator == NULL) return LIST_INVALID_CURRENT;
 
 	ListElementNode listElementNode = list->first;
 	while ( listElementNode->next != list->iterator ) {
