@@ -8,8 +8,7 @@
  ============================================================================
  */
 #include "list_mtm1.h"
-#include <stdio.h>
-#include <stdlib.h>
+
 
 typedef struct listElementNode {
 	void* data;
