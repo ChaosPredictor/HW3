@@ -21,7 +21,7 @@ static bool isLongerThan(ListElement element, ListFilterKey number) {
     return strlen(string) > *(int*)number;
 }
 
-static int compareLexiStringLexicographically(ListElement element1, ListElement element2) {
+static int compareLexiStringLexicographical(ListElement element1, ListElement element2) {
     return strcmp((char*)element1, (char*)element2);
 }
 
@@ -329,18 +329,22 @@ static bool testListSort() {
 	ASSERT_TEST(strcmp(listGetNext(list),a[3]) == 0);
 	ASSERT_TEST(strcmp(listGetNext(list),a[2]) == 0);
 	ASSERT_TEST(strcmp(listGetCurrent(list),a[2]) == 0);
-	ListResult result = listSort(list, compareLexiStringLexicographically);
+
+	ASSERT_TEST(strcmp(listGetFirst(list),a[4]) == 0);
+	for (int i = 3; i >= 0; --i ){
+		ASSERT_TEST(strcmp(listGetNext(list),a[i]) == 0);
+	}
+	ASSERT_TEST(listSort(list,compareLexiStringLexicographical)==LIST_SUCCESS);
 	//TODO - check iterator location
 	//ASSERT_TEST(strcmp(listGetCurrent(list),a[2]) == 0);
-	ASSERT_TEST(result == 0);
+
 	char* b[5] = {"AI","I","aaaaa","bbb","hello mister fish"};
 	ASSERT_TEST(strcmp(listGetFirst(list),b[0]) == 0);
 	for (int i = 1; i < 5; ++i ){
 		ASSERT_TEST(strcmp(listGetNext(list),b[i]) == 0);
 	}
+	ASSERT_TEST(listSort(list,compareStringLength)==LIST_SUCCESS);
 
-	result = listSort(list, compareStringLength);
-	ASSERT_TEST(result == 0);
 	char* c[5] = {"I","AI","bbb","aaaaa","hello mister fish"};
 	ASSERT_TEST(strcmp(listGetFirst(list),c[0]) == 0);
 	for (int i = 1; i < 5; ++i ){
@@ -351,6 +355,8 @@ static bool testListSort() {
 }
 
 static bool testListClear() {
+	ASSERT_TEST(listClear(NULL) == LIST_NULL_ARGUMENT);
+
 	List list = listCreate(copyString,freeString);
 	char* a[5] = {"aaa","bbb","NI","hello mister fish","I"};
 	for (int i=0;i <5; ++i){
