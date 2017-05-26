@@ -281,7 +281,11 @@ static bool testListInsertBeforeCurrent() {
 	ASSERT_TEST(strcmp(listGetFirst(list),a[4]) == 0);
 	ASSERT_TEST(strcmp(listGetNext(list),a[3]) == 0);
 	ASSERT_TEST(strcmp(listGetNext(list),a[2]) == 0);
+	ASSERT_TEST(strcmp(listGetCurrent(list),a[2]) == 0);
+
 	ASSERT_TEST( listInsertBeforeCurrent(list,"ccc") == LIST_SUCCESS );
+
+	ASSERT_TEST(strcmp(listGetCurrent(list),a[2]) == 0);
 
 	char* b[6] = {"aaa","bbb","NI","ccc","hello mister fish","I"};
 	ASSERT_TEST(strcmp(listGetFirst(list),b[5]) == 0);
