@@ -75,16 +75,16 @@ ListElement listGetFirst(List list) {
 ListElement listGetNext(List list) {
 	if ( list == NULL ) return NULL;
 	if ( list->first == NULL) return NULL;
-	if ( list->iterator == NULL) return NULL;
-	if ( list->iterator->next == NULL) return NULL;
+	if ( list->iterator == NULL ) return NULL;
+	if ( list->iterator->next == NULL ) return NULL;
 	list->iterator = list->iterator->next;
 	return list->iterator->data;
 }
 
 ListElement listGetCurrent(List list) {
 	if ( list == NULL ) return NULL;
-	if ( list->first == NULL) return NULL;
-	if ( list->iterator == NULL) return NULL;
+	if ( list->first == NULL ) return NULL;
+	if ( list->iterator == NULL ) return NULL;
 	return list->iterator->data;
 }
 
@@ -174,25 +174,27 @@ ListResult listRemoveCurrent(List list) {
 
 ListResult listSort(List list, CompareListElements compareElement) {
 	if ( list == NULL || compareElement == NULL) return LIST_NULL_ARGUMENT;
-	//List newList = listCopy(list);
+	List listTemp = listCopy(list);
 	ListElementNode listElementNode1 = list->first;
 	ListElementNode listElementNode2 = listElementNode1->next;
+	ListResult result = LIST_SUCCESS;
 	while (listElementNode1->next != NULL) {
 		while( listElementNode2 != NULL) {
 			if(compareElement(listElementNode1->data,listElementNode2->data)>0){
-				exchangeNode(list, listElementNode1, listElementNode2);
-				//printf("\nexchange\n");
-				//ListPrint(newList);
+				result = exchangeNode(list, listElementNode1, listElementNode2);
+				if( result != LIST_SUCCESS ) {
+					listDestroy(list);
+					list = listCopy(listTemp);
+					listDestroy(listTemp);
+					return LIST_OUT_OF_MEMORY;
+				}
 			}
 			listElementNode2 = listElementNode2->next;
-			//printf("\nloop2\n");
 		}
 		listElementNode1 = listElementNode1->next;
 		listElementNode2 = listElementNode1->next;
-		//printf("\nloop1\n");
 	}
-	//listDestroy(list);
-	//list = listCopy(newList);
+	listDestroy(listTemp);
 	return LIST_SUCCESS;
 }
 
@@ -278,9 +280,21 @@ static ListElementNode listInsert(List list, ListElement element) {
 
 static ListResult exchangeNode(List list, ListElementNode listElementNode1, \
 		ListElementNode listElementNode2) {
-	ListElement listElementTemp = listElementNode1->data;
-	listElementNode1->data = listElementNode2->data;
-	listElementNode2->data = listElementTemp;
+	//TODO to ask if it's a good way
+	ListElement listElementTemp = list->copy(listElementNode1->data);
+	if( listElementTemp == NULL ) return LIST_OUT_OF_MEMORY;
+	list->free(listElementNode1->data);
+	listElementNode1->data = list->copy(listElementNode2->data);
+	if( listElementNode1 == NULL ) {
+		list->free(listElementTemp);
+		return LIST_OUT_OF_MEMORY;
+	}
+	list->free(listElementNode2->data);
+	listElementNode2->data = list->copy(listElementTemp);
+	list->free(listElementTemp);
+	if( listElementNode2 == NULL ) {
+		return LIST_OUT_OF_MEMORY;
+	}
 	return LIST_SUCCESS;
 }
 
