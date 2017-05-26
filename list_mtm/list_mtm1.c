@@ -250,6 +250,7 @@ List listFilter(List list, FilterListElement filterElement, ListFilterKey key) {
 		}
 		listElementNode = listElementNode->next;
 	}
+	newList->iterator = newList->first;
 	return newList;
 }
 
