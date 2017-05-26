@@ -166,7 +166,6 @@ ListResult listRemoveCurrent(List list) {
 
 	ListElementNode listElementNode = list->first;
 	while ( listElementNode->next != list->iterator ) {
-		//printf("\n%s\n",(char*)listElementNode->data);
 		listElementNode = listElementNode->next;
 	}
 
@@ -180,7 +179,10 @@ ListResult listRemoveCurrent(List list) {
 
 ListResult listSort(List list, CompareListElements compareElement) {
 	if ( list == NULL || compareElement == NULL) return LIST_NULL_ARGUMENT;
+
 	List listTemp = listCopy(list);
+	if ( listTemp == NULL) return LIST_OUT_OF_MEMORY;
+
 	ListElementNode listElementNode1 = list->first;
 	ListElementNode listElementNode2 = listElementNode1->next;
 	ListResult result = LIST_SUCCESS;

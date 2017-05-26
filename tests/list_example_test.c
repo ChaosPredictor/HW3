@@ -302,6 +302,7 @@ static bool testListRemoveCurrent() {
 	ASSERT_TEST(strcmp(listGetNext(list),a[3]) == 0);
 	ASSERT_TEST(strcmp(listGetNext(list),a[2]) == 0);
 	ASSERT_TEST( listRemoveCurrent(list) == LIST_SUCCESS );
+	ASSERT_TEST(strcmp(listGetCurrent(list),a[3]) == 0);
 
 	char* b[4] = {"aaa","bbb","hello mister fish","I"};
 	ASSERT_TEST(strcmp(listGetFirst(list),b[3]) == 0);
@@ -314,8 +315,13 @@ static bool testListRemoveCurrent() {
 }
 
 static bool testListSort() {
-	char* a[5] = {"aaaaa","bbb","AI","hello mister fish","I"};
 	List list = listCreate(copyString,freeString);
+
+	ASSERT_TEST(listSort(NULL,NULL) == LIST_NULL_ARGUMENT);
+	ASSERT_TEST(listSort(list,NULL) == LIST_NULL_ARGUMENT);
+	ASSERT_TEST(listSort(NULL, compareStringLength) == LIST_NULL_ARGUMENT);
+
+	char* a[5] = {"aaaaa","bbb","AI","hello mister fish","I"};
 	for (int i = 0; i < 5; ++i ){
 		listInsertFirst(list,a[i]);
 	}
