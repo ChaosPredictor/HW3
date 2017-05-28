@@ -8,8 +8,12 @@
 #ifndef COMPANY_H_
 #define COMPANY_H_
 
-#include "mtm_ex3.h"
+#include <assert.h>
+#include <string.h>
 
+
+#include "order.h"
+#include "mtm_escape.h"
 
 //#include "visitor_room.h"
 //TODO add related files

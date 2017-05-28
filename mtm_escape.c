@@ -12,6 +12,13 @@
 
 #define MAX_NAME_LENG 200
 
+
+struct EscapeSystem_t
+{
+	int temp;
+	Set *company;
+};
+
 int main(int argc, char *argv[]) {
 
 	FILE *file = stdin;
@@ -55,4 +62,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	fclose(file);
+}
+
+MtmErrorCode create_system(EscapeSystem *sys) {
+
+	return MTM_SUCCESS;
 }
