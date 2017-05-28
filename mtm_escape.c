@@ -47,7 +47,8 @@ int main(int argc, char *argv[]) {
 		}
 		size_t len = strlen(firstNonSpace)+1;
 		memmove(a, firstNonSpace, len);
-		if ( strcmp(a,"") != 0) {
+		//const char *firstChar[1] = &a[0];
+		if ( strcmp(a,"") != 0 && a[0] != '#' ) {
 			printf("your input a: %s", a);
 		}
 
