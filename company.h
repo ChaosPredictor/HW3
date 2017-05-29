@@ -22,7 +22,6 @@ typedef struct company_t *Company;
 
 
 
-
 MtmErrorCode addCompany(Set setCompany, const char* newEmail, TechnionFaculty faculty);
 
 SetElement copyCompany(SetElement company);

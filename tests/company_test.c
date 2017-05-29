@@ -117,45 +117,96 @@ static bool testAddCompany() {
 
 	Set companies = setCreate(copyCompany, freeCompany, compareCompanies);
 	ASSERT_TEST( companies != NULL);
-/*
-	addCompany(Set setCompany, const char* newEmail, TechnionFaculty faculty);
 
-	Company company = malloc(sizeof(struct company_t));
-	char* email = "qazxsw@edcvfr";
-	company->email = malloc(sizeof(char) * (strlen(email) + 1));
-	strcpy(company->email, email);
-	company->faculty = CIVIL_ENGINEERING;
+	ASSERT_TEST( setGetSize(companies) == 0 );
 
-	Company newCompany = copyCompany(company);
+	addCompany(companies, "sdfefdgdfh5654654fgjhfgsdf", CIVIL_ENGINEERING);
 
-	ASSERT_TEST( newCompany != NULL);
-	ASSERT_TEST( strcmp(company->email,newCompany->email) == 0);
-	ASSERT_TEST( company->faculty == newCompany->faculty );
+	ASSERT_TEST( setGetSize(companies) == 1 );
 
-	ASSERT_TEST( compareCompanies(company, newCompany) == 0 );
+	addCompany(companies, "sdfefdgdfh5654654fgjhfgsdf", CIVIL_ENGINEERING);
 
-	char* email2 = "qazxsw@edcvfp";
-	free(company->email);
-	company->email = malloc(sizeof(char) * (strlen(email2) + 1));
-	strcpy(company->email, email2);
+	ASSERT_TEST( setGetSize(companies) == 1 );
 
-	ASSERT_TEST( compareCompanies(company, newCompany) != 0 );
+	addCompany(companies, "sdfefdgdfh5654654fgjhfgsdg", CIVIL_ENGINEERING);
 
-	free(newCompany->email);
-	free(newCompany);
+	ASSERT_TEST( setGetSize(companies) == 2 );
 
-	free(company->email);
-	free(company);
-*/
+	setClear(companies);
+
+	ASSERT_TEST( setGetSize(companies) == 0 );
+
+	setDestroy(companies);
+
 	return true;
 }
 
+
+static bool testOtherSetCompanyFunctions() {
+	Set companies = setCreate(copyCompany, freeCompany, compareCompanies);
+	ASSERT_TEST( companies != NULL);
+
+	Company company1 = malloc(sizeof(struct company_t));
+	char* email1 = "sdfefdgdfh56";
+	company1->email = malloc(sizeof(char) * (strlen(email1) + 1));
+	strcpy(company1->email, email1);
+	company1->faculty = CIVIL_ENGINEERING;
+
+	Company company2 = malloc(sizeof(struct company_t));
+	char* email2 = "sdfefdgdfh57";
+	company2->email = malloc(sizeof(char) * (strlen(email2) + 1));
+	strcpy(company2->email, email2);
+	company2->faculty = CIVIL_ENGINEERING;
+
+	Company company3 = malloc(sizeof(struct company_t));
+	char* email3 = "sdfefdgdfh58";
+	company3->email = malloc(sizeof(char) * (strlen(email3) + 1));
+	strcpy(company3->email, email1);
+	company3->faculty = CIVIL_ENGINEERING;
+
+	Company company4 = malloc(sizeof(struct company_t));
+	char* email4 = "sdfefdgdfh59";
+	company4->email = malloc(sizeof(char) * (strlen(email4) + 1));
+	strcpy(company4->email, email1);
+	company4->faculty = CIVIL_ENGINEERING;
+
+	addCompany(companies, "sdfefdgdfh56", CIVIL_ENGINEERING);
+	addCompany(companies, "sdfefdgdfh57", CIVIL_ENGINEERING);
+	addCompany(companies, "sdfefdgdfh58", CIVIL_ENGINEERING);
+	addCompany(companies, "sdfefdgdfh59", CIVIL_ENGINEERING);
+
+	ASSERT_TEST( setGetSize(companies) == 4 );
+
+	ASSERT_TEST( setIsIn(companies, company1) );
+	ASSERT_TEST( setIsIn(companies, company2) );
+	ASSERT_TEST( setIsIn(companies, company3) );
+	ASSERT_TEST( setIsIn(companies, company4) );
+
+	Set newCompanies = setCopy(companies);
+
+	ASSERT_TEST( setIsIn(newCompanies, company1) );
+	ASSERT_TEST( setIsIn(newCompanies, company2) );
+	ASSERT_TEST( setIsIn(newCompanies, company3) );
+	ASSERT_TEST( setIsIn(newCompanies, company4) );
+
+
+	ASSERT_TEST( setGetSize(newCompanies) == 4 );
+
+	freeCompany(company1);
+	freeCompany(company2);
+	freeCompany(company3);
+	freeCompany(company4);
+	setDestroy(companies);
+	setDestroy(newCompanies);
+	return true;
+}
 
 int main (int argv, char** arc){
 	RUN_TEST(testCopyCompany);
 	RUN_TEST(testFreeCompany);
 	RUN_TEST(testCompareCompany);
 	RUN_TEST(testAddCompany);
+	RUN_TEST(testOtherSetCompanyFunctions);
 
 
 	return 0;

@@ -12,17 +12,19 @@ struct company_t {
 	TechnionFaculty faculty;
 };
 
+
+
 //TODO all mails together
 
 
 
-MtmErrorCode addCompany(Set setCompany, const char* email, TechnionFaculty faculty2) {
+MtmErrorCode addCompany(Set setCompany, const char* email, TechnionFaculty faculty) {
 	//TODO check email exist
 	//TODO check email not in the list
 	Company newCompany = malloc(sizeof(struct company_t));
 	newCompany->email = malloc(sizeof(char) * (strlen(email)+1));
 	strcpy(newCompany->email, email);
-	newCompany->faculty = faculty2;
+	newCompany->faculty = faculty;
 	setAdd(setCompany, newCompany);
 	free(newCompany->email);
 	free(newCompany);
@@ -60,3 +62,4 @@ void freeCompany(SetElement company){
 int compareCompanies(SetElement company1, SetElement company2) {
 	return strcmp(((Company)company1)->email, ((Company)company2)->email);
 }
+
