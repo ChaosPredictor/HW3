@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
 	createCompanySet(sys);
 
 
-	//addCompany(sys->company, "sdfefdgdfhfgjhfgsdf", CIVIL_ENGINEERING);
+	addCompany(sys->company, "sdfefdgdfh5654654fgjhfgsdf", CIVIL_ENGINEERING);
 
 	int size = setGetSize(sys->company);
 	printf("size: %d\n", size);
@@ -92,6 +92,7 @@ MtmErrorCode createSystem(EscapeSystem **sys) {
 }
 
 MtmErrorCode destroySystem(EscapeSystem *sys) {
+	setClear(sys->company);
 	setDestroy(sys->company);
 	free(sys);
 	return MTM_SUCCESS;
