@@ -10,6 +10,7 @@ typedef struct EscapeSystem_t EscapeSystem;
 
 
 MtmErrorCode createSystem(EscapeSystem **sys);
+
 MtmErrorCode destroySystem(EscapeSystem *sys);
 
 MtmErrorCode createCompanySet(EscapeSystem* sys);

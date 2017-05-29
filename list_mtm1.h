@@ -38,7 +38,7 @@
 */
 
 /** Type for defining the list */
-typedef struct List_t *List;
+typedef struct list_t *List;
 
 /** Type used for returning error codes from list functions */
 typedef enum ListResult_t {
@@ -164,7 +164,7 @@ int listGetSize(List list);
 * The list has an internal iterator (also called current element) to allow
 * iteration over the list's elements. This function sets the iterator to point
 * to the first element in the list and return it.
-* Use this to start iterating over the list, searching from the beginning of
+* Use this to start iteraing over the list, searching from the beginning of
 * the list and/or get the first element in the list.
 * (To continue iteration use listGetNext)
 * @code
@@ -283,14 +283,15 @@ ListResult listRemoveCurrent(List list);
 * For example, the following code will sort a list of integers according to
 * their distance from 0.
 * @code
-* int closerTo(ListElement num1, ListElement num2) {
-*   int distance1 = abs(*(int*)num1);
-*   int distance2 = abs(*(int*)num2);
+* int closerTo(ListElement num1, ListElement num2, ListSortKey value) {
+*   int distance1 = abs(*(int*)num1 - *(int*)value);
+*   int distance2 = abs(*(int*)num2 - *(int*)value);
 *   return distance1 - distance2;
 * }
 *
 * void sortInts(List listOfInts) {
-*   listSort(listOfInts, closerTo);
+*   int key = 0;
+*   listSort(listOfInts, closerTo, &key);
 * }
 * @endcode
 *
@@ -364,7 +365,7 @@ void listDestroy(List list);
 *
 * Declares a new variable to hold each element of the list.
 * Use this macro for iterating through the list conveniently.
-* Note that this macro modifies the internal iterator.
+* Note that this mcaro modifies the internal iterator.
 * For example, the following code will go through a list of strings and print
 * them to the standard output:
 * @code
