@@ -22,7 +22,13 @@ typedef struct company_t *Company;
 
 
 
-MtmErrorCode add_company(char* email, char* faculty);
+
+MtmErrorCode addCompany(Set *company, char* email, char* faculty);
+
+
+SetElement copyCompany(SetElement company);
+void freeCompany(SetElement company);
+int compareCompanies(SetElement company1, SetElement company2);
 
 
 

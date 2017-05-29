@@ -5,11 +5,14 @@
 #include <stdlib.h>
 #include "company.h"
 
-typedef struct EscapeSystem_t *EscapeSystem;
+typedef struct EscapeSystem_t EscapeSystem;
 
 
 
-MtmErrorCode create_system(EscapeSystem *sys);
+MtmErrorCode createSystem(EscapeSystem **sys);
+MtmErrorCode destroySystem(EscapeSystem *sys);
+
+MtmErrorCode createCompanySet(EscapeSystem* sys);
 
 
 

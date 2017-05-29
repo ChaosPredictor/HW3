@@ -16,8 +16,13 @@
 struct EscapeSystem_t
 {
 	int temp;
-	Set *company;
+	Set company;
 };
+
+
+//static SetElement copyCompany(SetElement company);
+//static void freeCompany(SetElement company);
+//static int compareCompanies(SetElement company1, SetElement company2);
 
 int main(int argc, char *argv[]) {
 
@@ -60,11 +65,67 @@ int main(int argc, char *argv[]) {
 		}
 
 	}
+	EscapeSystem *sys=NULL;
+	//Result r=OK;
+
+	//r=create_system("test_1.txt", &sys);
+
+	createSystem(&sys);
+
+	destroySystem(sys);
 
 	fclose(file);
 }
 
-MtmErrorCode create_system(EscapeSystem *sys) {
-
+MtmErrorCode createSystem(EscapeSystem **sys) {
+	*sys = malloc(sizeof(**sys));
 	return MTM_SUCCESS;
 }
+
+MtmErrorCode destroySystem(EscapeSystem *sys) {
+	free(sys);
+	return MTM_SUCCESS;
+}
+
+
+
+
+MtmErrorCode createCompanySet(EscapeSystem *sys) {
+	//Set set = setCreate(copyCompany, freeCompany, compareCompanies);
+	//int size = setGetSize(set);
+	//printf("size: %d", size);
+	//Set company = setCreate(copyCompany, freeCompany, compareCompanies);
+	//int size = setGetSize(company);
+	//printf("size: %d", size);
+	//sys->company = malloc(sizeof(*Set));
+	sys->company = setCreate(copyCompany, freeCompany, compareCompanies);
+	int size = setGetSize(sys->company);
+	printf("size: %d", size);
+	//*sys->company = setCreate(copyCompany, freeCompany, compareCompanies);
+	//TODO check not NULL
+	return MTM_SUCCESS;
+}
+
+
+/*
+static SetElement copyCompany(SetElement company){
+	assert(company);
+	Company newCompany = malloc(sizeof(newCompany));
+	//TODO return from malloc;
+
+	newCompany->email = malloc(strlen(((Company)company)->email)+1);
+	strcpy(newCompany->email, ((Company)company)->email);
+	//TODO return from malloc;
+	newCompany->faculty = ((Company)company)->faculty;
+	return newCompany != NULL ? newCompany : NULL;
+}
+
+static void freeCompany(SetElement company){
+	free(((Company)company)->email);
+	free(company);
+}
+
+static int compareCompanies(SetElement company1, SetElement company2) {
+	return strcmp(company1, company2);
+}*/
+
