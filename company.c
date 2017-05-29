@@ -10,6 +10,7 @@
 struct company_t {
 	char* email;
 	TechnionFaculty faculty;
+	int a,b,c,d;
 };
 
 //TODO all mails together
@@ -19,7 +20,7 @@ struct company_t {
 MtmErrorCode addCompany(Set setCompany, char* email, TechnionFaculty faculty) {
 	//TODO check email exist
 	//TODO check email not in the list
-	Company newCompany = malloc(sizeof(struct company_t));
+	Company newCompany = malloc(sizeof(Company));
 	newCompany->email = malloc(strlen(email)+1);
 	strcpy(newCompany->email, email);
 	newCompany->faculty = faculty;
@@ -31,18 +32,25 @@ MtmErrorCode addCompany(Set setCompany, char* email, TechnionFaculty faculty) {
 
 SetElement copyCompany(SetElement company){
 	assert(company);
-	Company newCompany = malloc(sizeof(struct company_t));
+	Company newCompany = malloc(sizeof(Company));
+	printf("size of Company1:%lu\n",sizeof(newCompany));
 	//TODO return from malloc;
-	newCompany->email = malloc(strlen(((Company)company)->email)+1);
+	//newCompany->email = malloc(strlen(((Company)company)->email)+1);
+	newCompany->email = malloc(sizeof(char) * (strlen(((Company)company)->email) + 1));
+	printf("size of Company2:%lu\n",sizeof(newCompany->email));
+
 	strcpy(newCompany->email, ((Company)company)->email);
+	printf("email of Company2:%s\n", newCompany->email);
+
 	//TODO return from malloc;
 	newCompany->faculty = ((Company)company)->faculty;
 	return newCompany != NULL ? newCompany : NULL;
 }
 
 void freeCompany(SetElement company){
-	//free((*company)->email);
-	free(company);
+	//Company tempCompany = (Company)company;
+	//free(((Company)company)->email);
+	free(((Company)company));
 }
 
 int compareCompanies(SetElement company1, SetElement company2) {

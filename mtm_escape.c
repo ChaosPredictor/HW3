@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
 	createCompanySet(sys);
 
 
-	addCompany(sys->company, "sdfsdf", CIVIL_ENGINEERING);
+	//addCompany(sys->company, "sdfefdgdfhfgjhfgsdf", CIVIL_ENGINEERING);
 
 	int size = setGetSize(sys->company);
 	printf("size: %d\n", size);
