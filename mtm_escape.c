@@ -72,6 +72,15 @@ int main(int argc, char *argv[]) {
 
 	createSystem(&sys);
 
+	createCompanySet(sys);
+
+
+	addCompany(sys->company, "sdfsdf", CIVIL_ENGINEERING);
+
+	int size = setGetSize(sys->company);
+	printf("size: %d\n", size);
+	//addCompany(Set setCompany, char* newEmail, TechnionFaculty faculty)
+
 	destroySystem(sys);
 
 	fclose(file);
@@ -83,6 +92,7 @@ MtmErrorCode createSystem(EscapeSystem **sys) {
 }
 
 MtmErrorCode destroySystem(EscapeSystem *sys) {
+	setDestroy(sys->company);
 	free(sys);
 	return MTM_SUCCESS;
 }
@@ -98,9 +108,10 @@ MtmErrorCode createCompanySet(EscapeSystem *sys) {
 	//int size = setGetSize(company);
 	//printf("size: %d", size);
 	//sys->company = malloc(sizeof(*Set));
+	//sys->company = malloc(sizeof(Set*));
 	sys->company = setCreate(copyCompany, freeCompany, compareCompanies);
-	int size = setGetSize(sys->company);
-	printf("size: %d", size);
+	//int size = setGetSize(sys->company);
+	//printf("size: %d\n", size);
 	//*sys->company = setCreate(copyCompany, freeCompany, compareCompanies);
 	//TODO check not NULL
 	return MTM_SUCCESS;

@@ -16,16 +16,23 @@ struct company_t {
 
 
 
-MtmErrorCode addCompany(Set *company, char* email, char* faculty) {
+MtmErrorCode addCompany(Set setCompany, char* email, TechnionFaculty faculty) {
+	//TODO check email exist
+	//TODO check email not in the list
+	Company newCompany = malloc(sizeof(struct company_t));
+	newCompany->email = malloc(strlen(email)+1);
+	strcpy(newCompany->email, email);
+	newCompany->faculty = faculty;
+	setAdd(setCompany, newCompany);
+
 	return MTM_SUCCESS;
 }
 
 
 SetElement copyCompany(SetElement company){
 	assert(company);
-	Company newCompany = malloc(sizeof(newCompany));
+	Company newCompany = malloc(sizeof(struct company_t));
 	//TODO return from malloc;
-
 	newCompany->email = malloc(strlen(((Company)company)->email)+1);
 	strcpy(newCompany->email, ((Company)company)->email);
 	//TODO return from malloc;
@@ -34,7 +41,7 @@ SetElement copyCompany(SetElement company){
 }
 
 void freeCompany(SetElement company){
-	free(((Company)company)->email);
+	//free((*company)->email);
 	free(company);
 }
 
