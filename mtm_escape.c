@@ -74,11 +74,11 @@ int main(int argc, char *argv[]) {
 
 	createCompanySet(sys);
 
-
 	addCompany(sys->company, "sdfefdgdfh5654654fgjhfgsdf", CIVIL_ENGINEERING);
 
 	int size = setGetSize(sys->company);
 	printf("size: %d\n", size);
+
 	//addCompany(Set setCompany, char* newEmail, TechnionFaculty faculty)
 
 	destroySystem(sys);
@@ -97,9 +97,6 @@ MtmErrorCode destroySystem(EscapeSystem *sys) {
 	free(sys);
 	return MTM_SUCCESS;
 }
-
-
-
 
 MtmErrorCode createCompanySet(EscapeSystem *sys) {
 	//Set set = setCreate(copyCompany, freeCompany, compareCompanies);
