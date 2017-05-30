@@ -24,6 +24,10 @@ typedef struct company_t *Company;
 
 MtmErrorCode addCompany(Set setCompany, const char* newEmail, TechnionFaculty faculty);
 
+MtmErrorCode removeCompany(Set setCompany, char* email);
+
+bool emailValidity(const char* email);
+
 SetElement copyCompany(SetElement company);
 
 void freeCompany(SetElement company);

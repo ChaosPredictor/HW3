@@ -19,17 +19,44 @@ struct company_t {
 
 
 MtmErrorCode addCompany(Set setCompany, const char* email, TechnionFaculty faculty) {
-	//TODO check email exist
-	//TODO check email not in the list
+	if( setCompany == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
+	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
+	//TODO print by mtm_ex3
 	Company newCompany = malloc(sizeof(struct company_t));
+	if( newCompany == NULL ) return MTM_OUT_OF_MEMORY;
 	newCompany->email = malloc(sizeof(char) * (strlen(email)+1));
+	if( newCompany->email == NULL ) {
+		free(newCompany);
+		return MTM_OUT_OF_MEMORY;
+	}
 	strcpy(newCompany->email, email);
 	newCompany->faculty = faculty;
+	if( setIsIn( setCompany, newCompany ) ) {
+		free(newCompany->email);
+		free(newCompany);
+		return MTM_EMAIL_ALREADY_EXISTS;
+	}
+
 	setAdd(setCompany, newCompany);
 	free(newCompany->email);
 	free(newCompany);
 	return MTM_SUCCESS;
 }
+
+MtmErrorCode removeCompany(Set setCompany, char* email) {
+	//TODO check email exist
+	//TODO not remove company with order
+	//TODO remove all rooms of the company
+	SET_FOREACH(Company, val, setCompany) {
+		if ( strcmp(val->email, email) == 0) {
+			//printf("remove company with email:%s\n", val->email);
+			setRemove(setCompany, val);
+		}
+	}
+
+	return MTM_SUCCESS;
+}
+
 
 SetElement copyCompany(SetElement company){
 	if ( company == NULL ) return NULL;
@@ -63,3 +90,12 @@ int compareCompanies(SetElement company1, SetElement company2) {
 	return strcmp(((Company)company1)->email, ((Company)company2)->email);
 }
 
+
+bool emailValidity(const char* email) {
+	size_t len = strlen(email);
+	int count = 0;
+	for (int i = 0; i < len; i++) {
+		if( email[i] == '@' ) count++;
+	}
+	return ( count == 1);
+}
