@@ -97,7 +97,7 @@ int compareCompanies(SetElement company1, SetElement company2) {
 }
 
 
-TechnionFaculty findFacultyFromEmail( Set setCompany, char* email ) {
+TechnionFaculty findFacultyFromEmail( Set setCompany, const char* email ) {
 	if( setCompany == NULL || email == NULL ) return UNKNOWN;
 	SET_FOREACH(Company, val, setCompany) {
 		if ( strcmp(val->email, email) == 0) {

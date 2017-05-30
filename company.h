@@ -28,7 +28,7 @@ MtmErrorCode removeCompany(Set setCompany, char* email);
 
 bool emailValidity(const char* email);
 
-TechnionFaculty findFacultyFromEmail( Set setCompany, char* email );
+TechnionFaculty findFacultyFromEmail( Set setCompany, const char* email );
 
 SetElement copyCompany(SetElement company);
 

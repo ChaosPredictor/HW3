@@ -18,8 +18,12 @@ struct room_t {
 	int difficulty;
 };
 
+int fromHour(const char* working_hrs);
+int toHour(const char* working_hrs);
+int charToInt(char c);
 
-MtmErrorCode addRoom(Set rooms, Set companies , char* email, int id, int price, int num_ppl, int from_hrs, int to_hrs, int difficulty) {
+
+MtmErrorCode addRoom(Set rooms, Set companies, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty) {
 	if ( rooms == NULL || companies == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	if ( !emailValidity(email) )  return MTM_INVALID_PARAMETER;
 	TechnionFaculty faculty = findFacultyFromEmail(companies, email);
@@ -34,9 +38,29 @@ MtmErrorCode addRoom(Set rooms, Set companies , char* email, int id, int price, 
 		return MTM_OUT_OF_MEMORY;
 	}
 	newRoom->email = malloc(sizeof(char) * (strlen(email)+1));
-	if ( newRoom == NULL) {
+	if ( newRoom->email == NULL) {
 		free(newRoom);
 		return MTM_OUT_OF_MEMORY;
+	}
+	if ( id < 1 || price < 1 || price % 4 != 0 || num_ppl < 1) {
+		free(newRoom->email);
+		free(newRoom);
+		return MTM_INVALID_PARAMETER;
+	}
+
+	int from =  fromHour(working_hrs);
+	int to =  toHour(working_hrs);
+
+	if ( from < 0 || from >= to || to > 23) {
+		free(newRoom->email);
+		free(newRoom);
+		return MTM_INVALID_PARAMETER;
+	}
+
+	if ( difficulty < 1 || difficulty > 10 ) {
+		free(newRoom->email);
+		free(newRoom);
+		return MTM_INVALID_PARAMETER;
 	}
 
 	strcpy(newRoom->email, email);
@@ -44,8 +68,8 @@ MtmErrorCode addRoom(Set rooms, Set companies , char* email, int id, int price, 
 	newRoom->faculty = faculty;
 	newRoom->price = price;
 	newRoom->num_ppl = num_ppl;
-	newRoom->from_hrs = from_hrs;
-	newRoom->to_hrs = to_hrs;
+	newRoom->from_hrs = from;
+	newRoom->to_hrs = to;
 	newRoom->difficulty = difficulty;
 	setAdd(rooms, newRoom);
 	free(newRoom->email);
@@ -55,11 +79,22 @@ MtmErrorCode addRoom(Set rooms, Set companies , char* email, int id, int price, 
 
 
 MtmErrorCode removeRoom(Set setRoom, TechnionFaculty faculty, int id) {
-	//TODO check email exist
-	//TODO check email not in the list
-	//TODO find rigth room
-	//TODO remove the room
-	return MTM_SUCCESS;
+	if( setRoom == NULL ) return MTM_INVALID_PARAMETER;
+	//TODO not remove company with order
+	//TODO remove all rooms of the company
+	SET_FOREACH(Room, val, setRoom) {
+		if ( val->faculty == faculty && val->id == id ) {
+			//TODO if is order
+			if ( false ) {
+				return MTM_RESERVATION_EXISTS;
+			} else {
+				//TODO remove all rooms
+				setRemove(setRoom, val);
+				return MTM_SUCCESS;
+			}
+		}
+	}
+	return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
 }
 
 
@@ -105,3 +140,14 @@ int compareRooms(SetElement room1, SetElement room2) {
 	}
 }
 
+int fromHour(const char* working_hrs) {
+	return ( charToInt(working_hrs[1]) + ( charToInt(working_hrs[0]) * 10 ));
+}
+
+int toHour(const char* working_hrs) {
+	return ( charToInt(working_hrs[4]) + ( charToInt(working_hrs[3]) * 10 ));
+}
+
+int charToInt(char c) {
+	return (c - (int)'0');
+}

@@ -25,7 +25,7 @@ typedef struct room_t *Room;
 
 
 
-MtmErrorCode addRoom(Set rooms, Set companies, char* email, int id, int price, int num_ppl, int from_hrs, int to_hrs, int difficulty);
+MtmErrorCode addRoom(Set rooms, Set companies, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty);
 
 SetElement copyRoom(SetElement room);
 
