@@ -11,7 +11,7 @@
 
 static bool testCopyEscaper() {
 
-/*	ASSERT_TEST( copyEscaper(NULL) == NULL);
+	ASSERT_TEST( copyEscaper(NULL) == NULL);
 
 	Escaper escaper = malloc(sizeof(struct escaper_t));
 	char* email = "qazxsw@edcvfr";
@@ -31,12 +31,12 @@ static bool testCopyEscaper() {
 
 	free(escaper->email);
 	free(escaper);
-*/
+
 	return true;
 }
 
 static bool testFreeEscaper() {
-/*
+
 	//ASSERT_TEST( freeEscaper(NULL) == NULL);
 	freeEscaper(NULL);
 
@@ -50,12 +50,12 @@ static bool testFreeEscaper() {
 
 	freeEscaper(newEscaper);
 	freeEscaper(escaper);
-*/
+
 	return true;
 }
 
 static bool testCompareEscaper() {
-/*
+
 	ASSERT_TEST( copyEscaper(NULL) == NULL);
 
 	Escaper escaper = malloc(sizeof(struct escaper_t));
@@ -70,55 +70,55 @@ static bool testCompareEscaper() {
 	ASSERT_TEST( strcmp(escaper->email,newEscaper->email) == 0);
 	ASSERT_TEST( escaper->faculty == newEscaper->faculty );
 
-	ASSERT_TEST( compareEscaperes(escaper, newEscaper) == 0 );
+	ASSERT_TEST( compareEscapers(escaper, newEscaper) == 0 );
 
 	char* email2 = "qazxsw@edcvfp";
 	free(escaper->email);
 	escaper->email = malloc(sizeof(char) * (strlen(email2) + 1));
 	strcpy(escaper->email, email2);
 
-	ASSERT_TEST( compareCompanies(escaper, newEscaper) != 0 );
+	ASSERT_TEST( compareEscapers(escaper, newEscaper) != 0 );
 
 	free(newEscaper->email);
 	free(newEscaper);
 
 	free(escaper->email);
 	free(escaper);
-*/
+
 	return true;
 }
 
 static bool testAddEscaper() {
-/*
-	Set companies = setCreate(copyEscaper, freeEscaper, compareCompanies);
-	ASSERT_TEST( companies != NULL);
 
-	ASSERT_TEST( setGetSize(companies) == 0 );
+	Set escapers = setCreate(copyEscaper, freeEscaper, compareEscapers);
+	ASSERT_TEST( escapers != NULL);
 
-	addEscaper(companies, "sdfefdgdfh5654654fgjhfgsdf", CIVIL_ENGINEERING);
+	ASSERT_TEST( setGetSize(escapers) == 0 );
 
-	ASSERT_TEST( setGetSize(companies) == 1 );
+	addEscaper(escapers, "sdfefdgdfh5654654fgjhfgsdf", CIVIL_ENGINEERING, 1);
 
-	addEscaper(companies, "sdfefdgdfh5654654fgjhfgsdf", CIVIL_ENGINEERING);
+	ASSERT_TEST( setGetSize(escapers) == 1 );
 
-	ASSERT_TEST( setGetSize(companies) == 1 );
+	addEscaper(escapers, "sdfefdgdfh5654654fgjhfgsdf", CIVIL_ENGINEERING, 2);
 
-	addEscaper(companies, "sdfefdgdfh5654654fgjhfgsdg", CIVIL_ENGINEERING);
+	ASSERT_TEST( setGetSize(escapers) == 1 );
 
-	ASSERT_TEST( setGetSize(companies) == 2 );
+	addEscaper(escapers, "sdfefdgdfh5654654fgjhfgsdg", CIVIL_ENGINEERING, 3);
 
-	setClear(companies);
+	ASSERT_TEST( setGetSize(escapers) == 2 );
 
-	ASSERT_TEST( setGetSize(companies) == 0 );
+	setClear(escapers);
 
-	setDestroy(companies);
-*/
+	ASSERT_TEST( setGetSize(escapers) == 0 );
+
+	setDestroy(escapers);
+
 	return true;
 }
 
 static bool testOtherSetEscaperFunctions() {
-/*	Set companies = setCreate(copyEscaper, freeEscaper, compareCompanies);
-	ASSERT_TEST( companies != NULL);
+	Set escapers = setCreate(copyEscaper, freeEscaper, compareEscapers);
+	ASSERT_TEST( escapers != NULL);
 
 	Escaper escaper1 = malloc(sizeof(struct escaper_t));
 	char* email1 = "sdfefdgdfh56";
@@ -144,19 +144,19 @@ static bool testOtherSetEscaperFunctions() {
 	strcpy(escaper4->email, email1);
 	escaper4->faculty = CIVIL_ENGINEERING;
 
-	addEscaper(companies, "sdfefdgdfh56", CIVIL_ENGINEERING);
-	addEscaper(companies, "sdfefdgdfh57", CIVIL_ENGINEERING);
-	addEscaper(companies, "sdfefdgdfh58", CIVIL_ENGINEERING);
-	addEscaper(companies, "sdfefdgdfh59", CIVIL_ENGINEERING);
+	addEscaper(escapers, "sdfefdgdfh56", CIVIL_ENGINEERING, 1);
+	addEscaper(escapers, "sdfefdgdfh57", CIVIL_ENGINEERING, 2);
+	addEscaper(escapers, "sdfefdgdfh58", CIVIL_ENGINEERING, 3);
+	addEscaper(escapers, "sdfefdgdfh59", CIVIL_ENGINEERING, 4);
 
-	ASSERT_TEST( setGetSize(companies) == 4 );
+	ASSERT_TEST( setGetSize(escapers) == 4 );
 
-	ASSERT_TEST( setIsIn(companies, escaper1) );
-	ASSERT_TEST( setIsIn(companies, escaper2) );
-	ASSERT_TEST( setIsIn(companies, escaper3) );
-	ASSERT_TEST( setIsIn(companies, escaper4) );
+	ASSERT_TEST( setIsIn(escapers, escaper1) );
+	ASSERT_TEST( setIsIn(escapers, escaper2) );
+	ASSERT_TEST( setIsIn(escapers, escaper3) );
+	ASSERT_TEST( setIsIn(escapers, escaper4) );
 
-	Set newCompanies = setCopy(companies);
+	Set newCompanies = setCopy(escapers);
 
 	ASSERT_TEST( setIsIn(newCompanies, escaper1) );
 	ASSERT_TEST( setIsIn(newCompanies, escaper2) );
@@ -169,8 +169,8 @@ static bool testOtherSetEscaperFunctions() {
 	freeEscaper(escaper2);
 	freeEscaper(escaper3);
 	freeEscaper(escaper4);
-	setDestroy(companies);
-	setDestroy(newCompanies);*/
+	setDestroy(escapers);
+	setDestroy(newCompanies);
 	return true;
 }
 
