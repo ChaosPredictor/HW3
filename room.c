@@ -20,14 +20,28 @@ struct room_t {
 
 
 MtmErrorCode addRoom(Set rooms, Set companies , char* email, int id, int price, int num_ppl, int from_hrs, int to_hrs, int difficulty) {
+	if ( rooms == NULL || companies == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
+	if ( !emailValidity(email) )  return MTM_INVALID_PARAMETER;
+	TechnionFaculty faculty = findFacultyFromEmail(companies, email);
+	if ( faculty == UNKNOWN ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
+
+
 	//TODO check email exist
 	//TODO check email not in the list
 	//TODO faculty & id unic
 	Room newRoom = malloc(sizeof(struct room_t));
+	if ( newRoom == NULL) {
+		return MTM_OUT_OF_MEMORY;
+	}
 	newRoom->email = malloc(sizeof(char) * (strlen(email)+1));
+	if ( newRoom == NULL) {
+		free(newRoom);
+		return MTM_OUT_OF_MEMORY;
+	}
+
 	strcpy(newRoom->email, email);
 	newRoom->id = id;
-	newRoom->faculty = findFacultyFromEmail(companies, email);
+	newRoom->faculty = faculty;
 	newRoom->price = price;
 	newRoom->num_ppl = num_ppl;
 	newRoom->from_hrs = from_hrs;
@@ -61,6 +75,7 @@ SetElement copyRoom(SetElement room){
 	strcpy(newRoom->email, ((Room)room)->email);
 
 	newRoom->id = ((Room)room)->id;
+	newRoom->faculty = ((Room)room)->faculty;
 	newRoom->price = ((Room)room)->price;
 	newRoom->num_ppl = ((Room)room)->num_ppl;
 	newRoom->from_hrs = ((Room)room)->from_hrs;
@@ -81,12 +96,12 @@ int compareRooms(SetElement room1, SetElement room2) {
 		//TODO print that is null;
 		return 0;
 	}
-	int emailCompare = strcmp( ((Room)room1)->email, ((Room)room2)->email );
-
-	if ( emailCompare == 0 ) {
+	//int emailCompare = strcmp( ((Room)room1)->email, ((Room)room2)->email );
+	int facultyCompare = (((Room)room1)->faculty - ((Room)room2)->faculty);
+	if ( facultyCompare == 0 ) {
 		return ( ((Room)room1)->id - ((Room)room2)->id );
 	} else {
-		return emailCompare;
+		return facultyCompare;
 	}
 }
 

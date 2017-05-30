@@ -141,7 +141,6 @@ static bool testAddCompany() {
 	return true;
 }
 
-
 static bool testRemoveCompany() {
 
 	Set companies = setCreate(copyCompany, freeCompany, compareCompanies);
@@ -167,7 +166,6 @@ static bool testRemoveCompany() {
 
 	return true;
 }
-
 
 static bool testFindFacultyFromEmail() {
 
@@ -203,7 +201,6 @@ static bool testFindFacultyFromEmail() {
 
 	return true;
 }
-
 
 static bool testEmailValidity() {
 	ASSERT_TEST( emailValidity("45@$#") );
@@ -271,7 +268,7 @@ static bool testOtherSetCompanyFunctions() {
 	return true;
 }
 
-int main (int argv, char** arc){
+int companyTests (int argv, char** arc){
 	RUN_TEST(testCopyCompany);
 	RUN_TEST(testFreeCompany);
 	RUN_TEST(testCompareCompany);
@@ -280,7 +277,5 @@ int main (int argv, char** arc){
 	RUN_TEST(testEmailValidity);
 	RUN_TEST(testFindFacultyFromEmail);
 	RUN_TEST(testOtherSetCompanyFunctions);
-
-
 	return 0;
 }

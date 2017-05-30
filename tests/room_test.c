@@ -88,6 +88,7 @@ static bool testCompareRoom() {
 	room->email = malloc(sizeof(char) * (strlen(email) + 1));
 	strcpy(room->email, email);
 	room->id = 1;
+	room->faculty = 1;
 	room->price = 10;
 	room->num_ppl = 4;
 	room->from_hrs = 3;
@@ -98,6 +99,7 @@ static bool testCompareRoom() {
 
 	ASSERT_TEST( newRoom != NULL);
 	ASSERT_TEST( strcmp(room->email,newRoom->email) == 0);
+	ASSERT_TEST( room->faculty == newRoom->faculty );
 	ASSERT_TEST( room->id == newRoom->id );
 	ASSERT_TEST( room->price == newRoom->price );
 	ASSERT_TEST( room->num_ppl == newRoom->num_ppl );
@@ -107,10 +109,12 @@ static bool testCompareRoom() {
 
 	ASSERT_TEST( compareRooms(room, newRoom) == 0 );
 
-	char* email2 = "qazxsw@edcvfp";
-	free(room->email);
-	room->email = malloc(sizeof(char) * (strlen(email2) + 1));
-	strcpy(room->email, email2);
+	//char* email2 = "qazxsw@edcvfp";
+	//free(room->email);
+	//room->email = malloc(sizeof(char) * (strlen(email2) + 1));
+	//strcpy(room->email, email2);
+
+	room->faculty = 2;
 
 	ASSERT_TEST( compareRooms(room, newRoom) != 0 );
 
@@ -138,23 +142,37 @@ static bool testAddRoom() {
 	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdf", AEROSPACE_ENGINEERING);
 	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdg", INDUSTRIAL_ENGINEERING_AND_MANAGEMENT);
 	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdh", MATHEMATICS);
-
+	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdi", CIVIL_ENGINEERING);
 
 
 	Set rooms = setCreate(copyRoom, freeRoom, compareRooms);
 	ASSERT_TEST( rooms != NULL);
 
+	addRoom(NULL, companies, "sdfefdgdfh565#654fgjhfgsda", 0, 1, 3, 5, 7, 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
+	addRoom(rooms, NULL, "sdfefdgdfh565#654fgjhfgsda", 0, 1, 3, 5, 7, 10);
+	ASSERT_TEST( setGetSize(rooms) == 0 );
+	addRoom(rooms, companies, NULL, 0, 1, 3, 5, 7, 10);
+	ASSERT_TEST( setGetSize(rooms) == 0 );
+
+	//illegal email
+	addRoom(rooms, companies, "sdfefdgdfh565#654fgjhfgsda", 0, 1, 3, 5, 7, 10);
+	ASSERT_TEST( setGetSize(rooms) == 0 );
+
+	//company email does not exist
+	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsdz", 0, 1, 3, 5, 7, 10);
+	ASSERT_TEST( setGetSize(rooms) == 0 );
+
 	//TODO check email validity
 	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 0, 1, 3, 5, 7, 10);
 
 	ASSERT_TEST( setGetSize(rooms) == 1 );
 
-	addRoom(rooms, companies, "sdfefdgdfh5654654fgjhfgsdf", 0, 1, 3, 5, 7, 10);
+	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 0, 1, 3, 5, 7, 10);
 
 	ASSERT_TEST( setGetSize(rooms) == 1 );
 
-	addRoom(rooms, companies, "sdfefdgdfh5654654fgjhfgsdg", 0, 1, 3, 5, 7, 10);
+	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsdg", 0, 1, 3, 5, 7, 10);
 
 	ASSERT_TEST( setGetSize(rooms) == 2 );
 
@@ -162,6 +180,7 @@ static bool testAddRoom() {
 
 	ASSERT_TEST( setGetSize(rooms) == 0 );
 
+	setDestroy(companies);
 	setDestroy(rooms);
 
 	return true;
@@ -187,10 +206,11 @@ static bool testOtherSetRoomFunctions() {
 
 
 	Room room1 = malloc(sizeof(struct room_t));
-	char* email1 = "sdfefdgdfh565@154fgjhfgsda";
+	char* email1 = "sdfefdgdfh565@654fgjhfgsda";
 	room1->email = malloc(sizeof(char) * (strlen(email1) + 1));
 	strcpy(room1->email, email1);
 	room1->id = 1;
+	room1->faculty = CIVIL_ENGINEERING;
 	room1->price = 10;
 	room1->num_ppl = 4;
 	room1->from_hrs = 3;
@@ -198,10 +218,11 @@ static bool testOtherSetRoomFunctions() {
 	room1->difficulty = 5;
 
 	Room room2 = malloc(sizeof(struct room_t));
-	char* email2 = "sdfefdgdfh565@254fgjhfgsda";
+	char* email2 = "sdfefdgdfh565@654fgjhfgsdd";
 	room2->email = malloc(sizeof(char) * (strlen(email2) + 1));
 	strcpy(room2->email, email2);
-	room2->id = 1;
+	room2->id = 2;
+	room2->faculty = MECHANICAL_ENGINEERING;
 	room2->price = 10;
 	room2->num_ppl = 4;
 	room2->from_hrs = 3;
@@ -209,10 +230,11 @@ static bool testOtherSetRoomFunctions() {
 	room2->difficulty = 5;
 
 	Room room3 = malloc(sizeof(struct room_t));
-	char* email3 = "sdfefdgdfh565@354fgjhfgsda";
+	char* email3 = "sdfefdgdfh565@654fgjhfgsdc";
 	room3->email = malloc(sizeof(char) * (strlen(email3) + 1));
 	strcpy(room3->email, email1);
-	room3->id = 1;
+	room3->id = 3;
+	room3->faculty = ELECTRICAL_ENGINEERING;
 	room3->price = 10;
 	room3->num_ppl = 4;
 	room3->from_hrs = 3;
@@ -220,21 +242,23 @@ static bool testOtherSetRoomFunctions() {
 	room3->difficulty = 5;
 
 	Room room4 = malloc(sizeof(struct room_t));
-	char* email4 = "sdfefdgdfh565@454fgjhfgsda";
+	char* email4 = "sdfefdgdfh565@654fgjhfgsdd";
 	room4->email = malloc(sizeof(char) * (strlen(email4) + 1));
 	strcpy(room4->email, email1);
-	room4->id = 1;
+	room4->id = 4;
+	room4->faculty = CHEMICAL_ENGINEERING;
 	room4->price = 10;
 	room4->num_ppl = 4;
 	room4->from_hrs = 3;
 	room4->to_hrs = 7;
 	room4->difficulty = 5;
 
-	addRoom(rooms, companies, "sdfefdgdfh565@154fgjhfgsda", 1, 1, 3, 5, 7, 10);
-	addRoom(rooms, companies, "sdfefdgdfh565@254fgjhfgsda", 1, 1, 3, 5, 7, 10);
-	addRoom(rooms, companies, "sdfefdgdfh565@354fgjhfgsda", 1, 1, 3, 5, 7, 10);
-	addRoom(rooms, companies, "sdfefdgdfh565@454fgjhfgsda", 1, 1, 3, 5, 7, 10);
-
+	//int r;
+	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 1, 1, 3, 5, 7, 10);
+	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsdb", 2, 1, 3, 5, 7, 10);
+	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsdc", 3, 1, 3, 5, 7, 10);
+	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsdd", 4, 1, 3, 5, 7, 10);
+	//printf("result: %d", r);
 	ASSERT_TEST( setGetSize(rooms) == 4 );
 
 	ASSERT_TEST( setIsIn(rooms, room1) );
@@ -242,25 +266,29 @@ static bool testOtherSetRoomFunctions() {
 	ASSERT_TEST( setIsIn(rooms, room3) );
 	ASSERT_TEST( setIsIn(rooms, room4) );
 
-	Set newCompanies = setCopy(rooms);
+	Set newRooms = setCopy(rooms);
 
-	ASSERT_TEST( setIsIn(newCompanies, room1) );
-	ASSERT_TEST( setIsIn(newCompanies, room2) );
-	ASSERT_TEST( setIsIn(newCompanies, room3) );
-	ASSERT_TEST( setIsIn(newCompanies, room4) );
+	ASSERT_TEST( setGetSize(newRooms) == 4 );
 
-	ASSERT_TEST( setGetSize(newCompanies) == 4 );
+	ASSERT_TEST( setIsIn(newRooms, room1) );
+	ASSERT_TEST( setIsIn(newRooms, room2) );
+	ASSERT_TEST( setIsIn(newRooms, room3) );
+	ASSERT_TEST( setIsIn(newRooms, room4) );
+
 
 	freeRoom(room1);
 	freeRoom(room2);
 	freeRoom(room3);
 	freeRoom(room4);
+
+	setDestroy(companies);
 	setDestroy(rooms);
-	setDestroy(newCompanies);
+	setDestroy(newRooms);
 	return true;
 }
 
-int main (int argv, char** arc) {
+int roomTests (int argv, char** arc) {
+//int main (int argv, char** arc) {
 	RUN_TEST(testCopyRoom);
 	RUN_TEST(testFreeRoom);
 	RUN_TEST(testCompareRoom);

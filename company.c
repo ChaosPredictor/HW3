@@ -96,6 +96,7 @@ int compareCompanies(SetElement company1, SetElement company2) {
 	return strcmp(((Company)company1)->email, ((Company)company2)->email);
 }
 
+
 TechnionFaculty findFacultyFromEmail( Set setCompany, char* email ) {
 	if( setCompany == NULL || email == NULL ) return UNKNOWN;
 	SET_FOREACH(Company, val, setCompany) {
