@@ -28,6 +28,8 @@ MtmErrorCode removeCompany(Set setCompany, char* email);
 
 bool emailValidity(const char* email);
 
+TechnionFaculty findFacultyFromEmail( Set setCompany, char* email );
+
 SetElement copyCompany(SetElement company);
 
 void freeCompany(SetElement company);

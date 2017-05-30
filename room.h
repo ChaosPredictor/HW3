@@ -14,7 +14,9 @@
 #include <string.h>
 
 #include "order.h"
+#include "company.h"
 #include "mtm_escape.h"
+
 
 //#include "visitor_room.h"
 //TODO add related files
@@ -23,7 +25,7 @@ typedef struct room_t *Room;
 
 
 
-MtmErrorCode addRoom(Set setRoom, const char* email, int id, int price, int num_ppl, int from_hrs, int to_hrs, int difficulty);
+MtmErrorCode addRoom(Set rooms, Set companies, char* email, int id, int price, int num_ppl, int from_hrs, int to_hrs, int difficulty);
 
 SetElement copyRoom(SetElement room);
 

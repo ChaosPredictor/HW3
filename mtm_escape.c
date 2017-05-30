@@ -16,7 +16,8 @@
 struct EscapeSystem_t
 {
 	int temp;
-	Set company;
+	Set companies;
+	Set rooms;
 };
 
 

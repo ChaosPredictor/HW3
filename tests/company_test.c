@@ -169,6 +169,42 @@ static bool testRemoveCompany() {
 }
 
 
+static bool testFindFacultyFromEmail() {
+
+	Set companies = setCreate(copyCompany, freeCompany, compareCompanies);
+	ASSERT_TEST( companies != NULL);
+
+	ASSERT_TEST( setGetSize(companies) == 0 );
+
+	addCompany( companies, "sdfefdgdfh565@654fgjhfgsda", CIVIL_ENGINEERING);
+	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdb", MECHANICAL_ENGINEERING);
+	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdc", ELECTRICAL_ENGINEERING);
+	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdd", CHEMICAL_ENGINEERING);
+	addCompany( companies, "sdfefdgdfh565@654fgjhfgsde", BIOTECHNOLOGY_AND_FOOD_ENGINEERING);
+	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdf", AEROSPACE_ENGINEERING);
+	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdg", INDUSTRIAL_ENGINEERING_AND_MANAGEMENT);
+	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdh", MATHEMATICS);
+
+	ASSERT_TEST( findFacultyFromEmail(NULL, NULL) == UNKNOWN);
+	ASSERT_TEST( findFacultyFromEmail(NULL, "sdfefdgdfh565@654fgjhfgsd0") == UNKNOWN);
+	ASSERT_TEST( findFacultyFromEmail(companies, NULL) == UNKNOWN);
+
+	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsda") == CIVIL_ENGINEERING);
+	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsdb") == MECHANICAL_ENGINEERING);
+	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsdc") == ELECTRICAL_ENGINEERING);
+	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsdd") == CHEMICAL_ENGINEERING);
+	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsde") == BIOTECHNOLOGY_AND_FOOD_ENGINEERING);
+	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsdf") == AEROSPACE_ENGINEERING);
+	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsdg") == INDUSTRIAL_ENGINEERING_AND_MANAGEMENT);
+	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsdh") == MATHEMATICS);
+	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsd0") == UNKNOWN);
+
+	setDestroy(companies);
+
+	return true;
+}
+
+
 static bool testEmailValidity() {
 	ASSERT_TEST( emailValidity("45@$#") );
 	ASSERT_TEST( !emailValidity("45^$#") );
@@ -242,6 +278,7 @@ int main (int argv, char** arc){
 	RUN_TEST(testAddCompany);
 	RUN_TEST(testRemoveCompany);
 	RUN_TEST(testEmailValidity);
+	RUN_TEST(testFindFacultyFromEmail);
 	RUN_TEST(testOtherSetCompanyFunctions);
 
 
