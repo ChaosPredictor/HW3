@@ -126,127 +126,139 @@ static bool testCompareRoom() {
 
 	return true;
 }
+/*
+static Set testHelperAddUsers() {
+	Set users = setCreate(copyUser, freeUser, compareUsers);
+	ASSERT_TEST( users != NULL);
+	ASSERT_TEST( setGetSize(users) == 0 );
+
+	addUser( users, "company1@civil", CIVIL_ENGINEERING, COMPANY );
+	addUser( users, "company1@mechanical", MECHANICAL_ENGINEERING, COMPANY );
+	addUser( users, "company1@electrical", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( users, "company1@chemical", CHEMICAL_ENGINEERING, COMPANY );
+	addUser( users, "company1@biotechnology", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, COMPANY );
+	addUser( users, "company1@aerospace", AEROSPACE_ENGINEERING, COMPANY );
+	addUser( users, "company1@industrial", INDUSTRIAL_ENGINEERING_AND_MANAGEMENT, COMPANY );
+	addUser( users, "company1@mathematics", MATHEMATICS, COMPANY );
+	addUser( users, "company2@civil", CIVIL_ENGINEERING, COMPANY );
+	addUser( users, "escaper1@civil", CIVIL_ENGINEERING, ESCAPER_1 );
+	addUser( users, "escaper2@civil", CIVIL_ENGINEERING, ESCAPER_5 );
+	return users;
+}*/
 
 static bool testAddRoom() {
-	Set companies = setCreate(copyCompany, freeCompany, compareCompanies);
-	ASSERT_TEST( companies != NULL);
-
-	ASSERT_TEST( setGetSize(companies) == 0 );
-
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsda", CIVIL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdaa", CIVIL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdb", MECHANICAL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdc", ELECTRICAL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdd", CHEMICAL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsde", BIOTECHNOLOGY_AND_FOOD_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdf", AEROSPACE_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdg", INDUSTRIAL_ENGINEERING_AND_MANAGEMENT);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdh", MATHEMATICS);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdi", CIVIL_ENGINEERING);
+	Set users = testHelperAddUsers();
 
 	Set rooms = setCreate(copyRoom, freeRoom, compareRooms);
 	ASSERT_TEST( rooms != NULL);
 
-	addRoom(NULL, companies, "sdfefdgdfh565#654fgjhfgsda", 1, 1, 3, "05-07", 10);
+	addRoom(NULL, users, "sdfefdgdfh565#654fgjhfgsda", 1, 1, 3, "05-07", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
 	addRoom(rooms, NULL, "sdfefdgdfh565#654fgjhfgsda", 1, 1, 3, "05-07", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
-	addRoom(rooms, companies, NULL, 0, 1, 3, "05-07", 10);
+	addRoom(rooms, users, NULL, 0, 1, 3, "05-07", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
 
 	//illegal email
-	addRoom(rooms, companies, "sdfefdgdfh565#654fgjhfgsda", 1, 1, 3, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565#654fgjhfgsda", 1, 1, 3, "05-07", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
 
 	//company email does not exist
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsdz", 1, 1, 3, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsdz", 1, 1, 3, "05-07", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
 
 	//0 & -1 id
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsdg", 0, 1, 3, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsdg", 0, 1, 3, "05-07", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsdg", -1, 1, 3, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsdg", -1, 1, 3, "05-07", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
 
 	//price
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 1, 0, 3, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsda", 1, 0, 3, "05-07", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 1, -1, 3, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsda", 1, -1, 3, "05-07", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 1, 3, 3, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsda", 1, 3, 3, "05-07", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
 
 	//num_ppl
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 0, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 0, "05-07", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 1, 4, -1, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsda", 1, 4, -1, "05-07", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
 
 	//working hours
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 3, "07-05", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 3, "07-05", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 3, "05-05", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 3, "05-05", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 3, "05-24", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 3, "05-24", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 3, "24-05", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 3, "24-05", 10);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
 
 	//difficulty
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 3, "05-07", 0);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 3, "05-07", 0);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 3, "05-07", 11);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 3, "05-07", 11);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
 
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 3, "05-07", 10);
+	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, 4, 3, "05-07", 10) == MTM_SUCCESS );
 	ASSERT_TEST( setGetSize(rooms) == 1 );
 
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsdaa", 1, 1, 3, "05-07", 10);
+	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, 4, 3, "05-07", 10) == MTM_ID_ALREADY_EXIST );
+	ASSERT_TEST( setGetSize(rooms) == 1 );
+
+	//price
+	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, 1, 3, "05-07", 10) == MTM_INVALID_PARAMETER );
 	ASSERT_TEST( setGetSize(rooms) == 1 );
 
 	//same faculty, different id
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 2, 8, 3, "05-07", 10);
+	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 2, 4, 3, "05-07", 10) == MTM_SUCCESS );
 	ASSERT_TEST( setGetSize(rooms) == 2 );
 
 	//same id, different faculty
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsdg", 1, 12, 3, "05-07", 10);
+	ASSERT_TEST( addRoom(rooms, users, "company1@mechanical", 1, 4, 3, "05-07", 10) == MTM_SUCCESS );
+	ASSERT_TEST( setGetSize(rooms) == 3 );
+
+	//fail case different company same faculty
+	ASSERT_TEST( addRoom(rooms, users, "company2@civil", 1, 4, 3, "05-07", 10) == MTM_ID_ALREADY_EXIST );
 	ASSERT_TEST( setGetSize(rooms) == 3 );
 
 	setClear(rooms);
 
 	ASSERT_TEST( setGetSize(rooms) == 0 );
 
-	setDestroy(companies);
+	setDestroy(users);
 	setDestroy(rooms);
 
 	return true;
 }
 
 static bool testRemoveRoom() {
-	Set companies = setCreate(copyCompany, freeCompany, compareCompanies);
-	ASSERT_TEST( companies != NULL);
+	Set users = setCreate(copyUser, freeUser, compareUsers);
+	ASSERT_TEST( users != NULL);
 
-	ASSERT_TEST( setGetSize(companies) == 0 );
+	ASSERT_TEST( setGetSize(users) == 0 );
 
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsda", CIVIL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdaa", CIVIL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdb", MECHANICAL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdc", ELECTRICAL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdd", CHEMICAL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsde", BIOTECHNOLOGY_AND_FOOD_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdf", AEROSPACE_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdg", INDUSTRIAL_ENGINEERING_AND_MANAGEMENT);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdh", MATHEMATICS);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdi", CIVIL_ENGINEERING);
+	addUser( users, "sdfefdgdfh565@654fgjhfgsda", CIVIL_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdb", MECHANICAL_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdc", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdd", CHEMICAL_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsde", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdf", AEROSPACE_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdg", INDUSTRIAL_ENGINEERING_AND_MANAGEMENT, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdh", MATHEMATICS, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdi", CIVIL_ENGINEERING, COMPANY );
 
 	Set rooms = setCreate(copyRoom, freeRoom, compareRooms);
 	ASSERT_TEST( rooms != NULL);
 
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 3, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsda", 1, 4, 3, "05-07", 10);
 	ASSERT_TEST( setGetSize(rooms) == 1 );
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 2, 8, 3, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsda", 2, 8, 3, "05-07", 10);
 	ASSERT_TEST( setGetSize(rooms) == 2 );
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsdg", 1, 12, 3, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsdg", 1, 12, 3, "05-07", 10);
 	ASSERT_TEST( setGetSize(rooms) == 3 );
 
 	removeRoom(rooms, CIVIL_ENGINEERING, 1);
@@ -262,7 +274,7 @@ static bool testRemoveRoom() {
 
 	ASSERT_TEST( setGetSize(rooms) == 0 );
 
-	setDestroy(companies);
+	setDestroy(users);
 	setDestroy(rooms);
 
 	return true;
@@ -274,20 +286,19 @@ static bool testOtherSetRoomFunctions() {
 	Set rooms = setCreate(copyRoom, freeRoom, compareRooms);
 	ASSERT_TEST( rooms != NULL);
 
-	Set companies = setCreate(copyCompany, freeCompany, compareCompanies);
-	ASSERT_TEST( companies != NULL);
+	Set users = setCreate(copyUser, freeUser, compareUsers);
+	ASSERT_TEST( users != NULL);
 
-	ASSERT_TEST( setGetSize(companies) == 0 );
+	ASSERT_TEST( setGetSize(users) == 0 );
 
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsda", CIVIL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdb", MECHANICAL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdc", ELECTRICAL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdd", CHEMICAL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsde", BIOTECHNOLOGY_AND_FOOD_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdf", AEROSPACE_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdg", INDUSTRIAL_ENGINEERING_AND_MANAGEMENT);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdh", MATHEMATICS);
-
+	addUser( users, "sdfefdgdfh565@654fgjhfgsda", CIVIL_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdb", MECHANICAL_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdc", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdd", CHEMICAL_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsde", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdf", AEROSPACE_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdg", INDUSTRIAL_ENGINEERING_AND_MANAGEMENT, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdh", MATHEMATICS, COMPANY );
 
 	Room room1 = malloc(sizeof(struct room_t));
 	char* email1 = "sdfefdgdfh565@654fgjhfgsda";
@@ -338,10 +349,10 @@ static bool testOtherSetRoomFunctions() {
 	room4->difficulty = 5;
 
 	//int r;
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsda", 1, 40, 3, "05-07", 10);
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsdb", 2, 36, 3, "05-07", 10);
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsdc", 3, 32, 3, "05-07", 10);
-	addRoom(rooms, companies, "sdfefdgdfh565@654fgjhfgsdd", 4, 28, 3, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsda", 1, 40, 3, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsdb", 2, 36, 3, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsdc", 3, 32, 3, "05-07", 10);
+	addRoom(rooms, users, "sdfefdgdfh565@654fgjhfgsdd", 4, 28, 3, "05-07", 10);
 	//printf("result: %d", r);
 	ASSERT_TEST( setGetSize(rooms) == 4 );
 
@@ -365,7 +376,7 @@ static bool testOtherSetRoomFunctions() {
 	freeRoom(room3);
 	freeRoom(room4);
 
-	setDestroy(companies);
+	setDestroy(users);
 	setDestroy(rooms);
 	setDestroy(newRooms);
 	return true;

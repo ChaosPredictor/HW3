@@ -1,6 +1,7 @@
 #include "./test_utilities.h"
 //#include "../set.h"
 #include "./../company.c"
+#include "./../company.h"
 #include <stdio.h>
 #include <assert.h>
 #include <stdbool.h>
@@ -8,7 +9,6 @@
 #include "./../mtm_escape.h"
 #include <string.h>
 #include <ctype.h>
-#include "./../company.h"
 
 /*
 static ListElement copyString(ListElement str){
@@ -35,169 +35,223 @@ static int compareStringLength(ListElement element1, ListElement element2) {
 }*/
 
 
-static bool testCopyCompany() {
+static bool testCopyUser() {
 
-	ASSERT_TEST( copyCompany(NULL) == NULL);
+	ASSERT_TEST( copyUser(NULL) == NULL);
 
-	Company company = malloc(sizeof(struct company_t));
+	User user = malloc(sizeof(struct user_t));
 	char* email = "qazxsw@edcvfr";
-	company->email = malloc(sizeof(char) * (strlen(email) + 1));
-	strcpy(company->email, email);
-	company->faculty = CIVIL_ENGINEERING;
+	user->email = malloc(sizeof(char) * (strlen(email) + 1));
+	strcpy(user->email, email);
+	user->faculty = CIVIL_ENGINEERING;
 
-	Company newCompany = copyCompany(company);
+	User newUser = copyUser(user);
 
-	ASSERT_TEST( newCompany != NULL);
-	ASSERT_TEST( strcmp(company->email,newCompany->email) == 0);
-	ASSERT_TEST( company->faculty == newCompany->faculty );
+	ASSERT_TEST( newUser != NULL);
+	ASSERT_TEST( strcmp(user->email,newUser->email) == 0);
+	ASSERT_TEST( user->faculty == newUser->faculty );
 
-	free(newCompany->email);
-	free(newCompany);
+	free(newUser->email);
+	free(newUser);
 
-	free(company->email);
-	free(company);
+	free(user->email);
+	free(user);
 
 	return true;
 }
 
-static bool testFreeCompany() {
+static bool testFreeUser() {
 
 	//ASSERT_TEST( freeCompany(NULL) == NULL);
-	freeCompany(NULL);
+	freeUser(NULL);
 
-	Company company = malloc(sizeof(struct company_t));
+	User user = malloc(sizeof(struct user_t));
 	char* email = "qazxsw@edcvfr";
-	company->email = malloc(sizeof(char) * (strlen(email) + 1));
-	strcpy(company->email, email);
-	company->faculty = CIVIL_ENGINEERING;
+	user->email = malloc(sizeof(char) * (strlen(email) + 1));
+	strcpy(user->email, email);
+	user->faculty = CIVIL_ENGINEERING;
 
-	Company newCompany = copyCompany(company);
+	User newUser = copyUser(user);
 
-	freeCompany(newCompany);
-	freeCompany(company);
+	freeUser(newUser);
+	freeUser(user);
 
 	return true;
 }
 
-static bool testCompareCompany() {
+static bool testCompareUser() {
 
-	ASSERT_TEST( copyCompany(NULL) == NULL);
+	ASSERT_TEST( copyUser(NULL) == NULL);
 
-	Company company = malloc(sizeof(struct company_t));
+	User user = malloc(sizeof(struct user_t));
 	char* email = "qazxsw@edcvfr";
-	company->email = malloc(sizeof(char) * (strlen(email) + 1));
-	strcpy(company->email, email);
-	company->faculty = CIVIL_ENGINEERING;
+	user->email = malloc(sizeof(char) * (strlen(email) + 1));
+	strcpy(user->email, email);
+	user->faculty = CIVIL_ENGINEERING;
 
-	Company newCompany = copyCompany(company);
+	User newUser = copyUser(user);
 
-	ASSERT_TEST( newCompany != NULL);
-	ASSERT_TEST( strcmp(company->email,newCompany->email) == 0);
-	ASSERT_TEST( company->faculty == newCompany->faculty );
+	ASSERT_TEST( newUser != NULL);
+	ASSERT_TEST( strcmp(user->email,newUser->email) == 0);
+	ASSERT_TEST( user->faculty == newUser->faculty );
 
-	ASSERT_TEST( compareCompanies(company, newCompany) == 0 );
+	ASSERT_TEST( compareUsers(user, newUser) == 0 );
 
 	char* email2 = "qazxsw@edcvfp";
-	free(company->email);
-	company->email = malloc(sizeof(char) * (strlen(email2) + 1));
-	strcpy(company->email, email2);
+	free(user->email);
+	user->email = malloc(sizeof(char) * (strlen(email2) + 1));
+	strcpy(user->email, email2);
 
-	ASSERT_TEST( compareCompanies(company, newCompany) != 0 );
+	ASSERT_TEST( compareUsers(user, newUser) != 0 );
 
-	free(newCompany->email);
-	free(newCompany);
+	free(newUser->email);
+	free(newUser);
 
-	free(company->email);
-	free(company);
+	free(user->email);
+	free(user);
 
 	return true;
 }
 
-static bool testAddCompany() {
+static bool testAddUser() {
 
-	Set companies = setCreate(copyCompany, freeCompany, compareCompanies);
-	ASSERT_TEST( companies != NULL);
+	Set users = setCreate(copyUser, freeUser, compareUsers);
+	ASSERT_TEST( users != NULL);
+	ASSERT_TEST( setGetSize(users) == 0 );
 
-	ASSERT_TEST( setGetSize(companies) == 0 );
+	//Invalid parameters
+	ASSERT_TEST( addUser(NULL, "company1@civil", CIVIL_ENGINEERING, COMPANY ) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( setGetSize(users) == 0 );
+	ASSERT_TEST( addUser(users, NULL, CIVIL_ENGINEERING, COMPANY ) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( setGetSize(users) == 0 );
+	ASSERT_TEST( addUser(users, "company1@civil", CIVIL_ENGINEERING, 11 ) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( setGetSize(users) == 0 );
+	ASSERT_TEST( addUser(users, "company1@civil", CIVIL_ENGINEERING, -1 ) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( setGetSize(users) == 0 );
+	ASSERT_TEST( addUser(users, "company1@civil", CIVIL_ENGINEERING, 18 ) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( setGetSize(users) == 0 );
+	ASSERT_TEST( addUser(users, "company1@civil", CIVIL_ENGINEERING, -1 ) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( setGetSize(users) == 0 );
+	ASSERT_TEST( addUser(users, "company1#civil", CIVIL_ENGINEERING, COMPANY ) == MTM_INVALID_PARAMETER);
+	ASSERT_TEST( setGetSize(users) == 0 );
 
-	addCompany(companies, "sdfefdgdfh565@654fgjhfgsdf", CIVIL_ENGINEERING);
+	ASSERT_TEST( addUser(users, "company1@civil", CIVIL_ENGINEERING, COMPANY ) == MTM_SUCCESS );
+	ASSERT_TEST( setGetSize(users) == 1 );
+	//same email
+	ASSERT_TEST( addUser(users, "company1@civil", CIVIL_ENGINEERING, COMPANY ) == MTM_EMAIL_ALREADY_EXISTS );
+	ASSERT_TEST( setGetSize(users) == 1 );
+	ASSERT_TEST( addUser(users, "company1@civil", MECHANICAL_ENGINEERING, COMPANY ) == MTM_EMAIL_ALREADY_EXISTS );
+	ASSERT_TEST( setGetSize(users) == 1 );
+	ASSERT_TEST( addUser(users, "company1@civil", CIVIL_ENGINEERING,  ESCAPER_2 ) == MTM_EMAIL_ALREADY_EXISTS );
+	ASSERT_TEST( setGetSize(users) == 1 );
+	ASSERT_TEST( addUser(users, "company1@civil", MECHANICAL_ENGINEERING,  ESCAPER_2 ) == MTM_EMAIL_ALREADY_EXISTS );
+	ASSERT_TEST( setGetSize(users) == 1 );
 
-	ASSERT_TEST( setGetSize(companies) == 1 );
+	ASSERT_TEST( addUser(users, "company2@civil", CIVIL_ENGINEERING, COMPANY ) == MTM_SUCCESS );
+	ASSERT_TEST( setGetSize(users) == 2 );
 
-	addCompany(companies, "sdfefdgdfh565@654fgjhfgsdf", CIVIL_ENGINEERING);
+	ASSERT_TEST( addUser(users, "escaper1@civil", CIVIL_ENGINEERING, ESCAPER_1 ) == MTM_SUCCESS );
+	ASSERT_TEST( setGetSize(users) == 3 );
 
-	ASSERT_TEST( setGetSize(companies) == 1 );
+	//same email
+	ASSERT_TEST( addUser(users, "escaper1@civil", MECHANICAL_ENGINEERING, ESCAPER_1 ) == MTM_EMAIL_ALREADY_EXISTS );
+	ASSERT_TEST( setGetSize(users) == 3 );
+	ASSERT_TEST( addUser(users, "escaper1@civil", CIVIL_ENGINEERING, ESCAPER_2 ) == MTM_EMAIL_ALREADY_EXISTS );
+	ASSERT_TEST( setGetSize(users) == 3 );
+	ASSERT_TEST( addUser(users, "escaper1@civil", MECHANICAL_ENGINEERING, ESCAPER_2 ) == MTM_EMAIL_ALREADY_EXISTS );
+	ASSERT_TEST( setGetSize(users) == 3 );
 
-	addCompany(companies, "sdfefdgdfh565@654fgjhfgsdg", CIVIL_ENGINEERING);
+	ASSERT_TEST( addUser(users, "escaper2@civil", CIVIL_ENGINEERING, ESCAPER_1 ) == MTM_SUCCESS );
+	ASSERT_TEST( setGetSize(users) == 4 );
 
-	ASSERT_TEST( setGetSize(companies) == 2 );
-
-	setClear(companies);
-
-	ASSERT_TEST( setGetSize(companies) == 0 );
-
-	setDestroy(companies);
+	setClear(users);
+	ASSERT_TEST( setGetSize(users) == 0 );
+	setDestroy(users);
 
 	return true;
+}
+
+static Set testHelperAddUsers() {
+	Set users = setCreate(copyUser, freeUser, compareUsers);
+	addUser( users, "company1@civil", CIVIL_ENGINEERING, COMPANY );
+	addUser( users, "company2@civil", CIVIL_ENGINEERING, COMPANY );
+	addUser( users, "company1@mechanical", MECHANICAL_ENGINEERING, COMPANY );
+	addUser( users, "company1@electrical", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( users, "company1@chemical", CHEMICAL_ENGINEERING, COMPANY );
+	addUser( users, "company1@biotechnology", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, COMPANY );
+	addUser( users, "company1@aerospace", AEROSPACE_ENGINEERING, COMPANY );
+	addUser( users, "company1@industrial", INDUSTRIAL_ENGINEERING_AND_MANAGEMENT, COMPANY );
+	addUser( users, "company1@mathematics", MATHEMATICS, COMPANY );
+	addUser( users, "escaper1@civil", CIVIL_ENGINEERING, ESCAPER_1 );
+	addUser( users, "escaper2@civil", CIVIL_ENGINEERING, ESCAPER_5 );
+	addUser( users, "escaper3@civil", MECHANICAL_ENGINEERING, ESCAPER_2 );
+	ASSERT_TEST( setGetSize(users) == 12 );
+	return users;
 }
 
 static bool testRemoveCompany() {
 
-	Set companies = setCreate(copyCompany, freeCompany, compareCompanies);
-	ASSERT_TEST( companies != NULL);
+	Set users = testHelperAddUsers();
 
-	ASSERT_TEST( setGetSize(companies) == 0 );
+	int numberOfUsers = setGetSize(users);
+	//invalid email
+	ASSERT_TEST( removeCompany( users, NULL ) ==  MTM_INVALID_PARAMETER );
+	ASSERT_TEST( setGetSize(users) == numberOfUsers );
+	ASSERT_TEST( removeCompany( users, "company2#civil" ) ==  MTM_INVALID_PARAMETER );
+	ASSERT_TEST( setGetSize(users) == numberOfUsers );
+	//company email does not exist
+	ASSERT_TEST( removeCompany( users, "company3@civil" ) ==  MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
+	ASSERT_TEST( setGetSize(users) == numberOfUsers );
+	//escaper email
+	ASSERT_TEST( removeCompany( users, "escaper1@civil" ) ==  MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
+	ASSERT_TEST( setGetSize(users) == numberOfUsers );
+	//TODO company with order
 
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdf", CIVIL_ENGINEERING);
+	ASSERT_TEST( removeCompany( users, "company2@civil" ) ==  MTM_SUCCESS );
+	numberOfUsers--;
+	ASSERT_TEST( setGetSize(users) == numberOfUsers );
 
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdg", CIVIL_ENGINEERING);
+	ASSERT_TEST( removeCompany( users, "company2@civil" ) ==  MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
+	ASSERT_TEST( setGetSize(users) == numberOfUsers );
 
-	ASSERT_TEST( setGetSize(companies) == 2 );
+	setClear(users);
 
-	removeCompany( companies, "sdfefdgdfh565@654fgjhfgsdg" );
-
-	ASSERT_TEST( setGetSize(companies) == 1 );
-
-	setClear(companies);
-
-	ASSERT_TEST( setGetSize(companies) == 0 );
-
-	setDestroy(companies);
-
+	ASSERT_TEST( setGetSize(users) == 0 );
+	setDestroy(users);
 	return true;
 }
 
 static bool testFindFacultyFromEmail() {
 
-	Set companies = setCreate(copyCompany, freeCompany, compareCompanies);
-	ASSERT_TEST( companies != NULL);
+	Set users = setCreate(copyUser, freeUser, compareUsers);
+	ASSERT_TEST( users != NULL);
 
-	ASSERT_TEST( setGetSize(companies) == 0 );
+	ASSERT_TEST( setGetSize(users) == 0 );
 
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsda", CIVIL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdb", MECHANICAL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdc", ELECTRICAL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdd", CHEMICAL_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsde", BIOTECHNOLOGY_AND_FOOD_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdf", AEROSPACE_ENGINEERING);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdg", INDUSTRIAL_ENGINEERING_AND_MANAGEMENT);
-	addCompany( companies, "sdfefdgdfh565@654fgjhfgsdh", MATHEMATICS);
+	addUser( users, "sdfefdgdfh565@654fgjhfgsda", CIVIL_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdb", MECHANICAL_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdc", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdd", CHEMICAL_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsde", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdf", AEROSPACE_ENGINEERING, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdg", INDUSTRIAL_ENGINEERING_AND_MANAGEMENT, COMPANY );
+	addUser( users, "sdfefdgdfh565@654fgjhfgsdh", MATHEMATICS, COMPANY );
 
-	ASSERT_TEST( findFacultyFromEmail(NULL, NULL) == UNKNOWN);
-	ASSERT_TEST( findFacultyFromEmail(NULL, "sdfefdgdfh565@654fgjhfgsd0") == UNKNOWN);
-	ASSERT_TEST( findFacultyFromEmail(companies, NULL) == UNKNOWN);
+	ASSERT_TEST( findCompanyFacultyFromEmail(NULL, NULL) == UNKNOWN);
+	ASSERT_TEST( findCompanyFacultyFromEmail(NULL, "sdfefdgdfh565@654fgjhfgsd0") == UNKNOWN);
+	ASSERT_TEST( findCompanyFacultyFromEmail(users, NULL) == UNKNOWN);
 
-	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsda") == CIVIL_ENGINEERING);
-	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsdb") == MECHANICAL_ENGINEERING);
-	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsdc") == ELECTRICAL_ENGINEERING);
-	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsdd") == CHEMICAL_ENGINEERING);
-	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsde") == BIOTECHNOLOGY_AND_FOOD_ENGINEERING);
-	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsdf") == AEROSPACE_ENGINEERING);
-	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsdg") == INDUSTRIAL_ENGINEERING_AND_MANAGEMENT);
-	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsdh") == MATHEMATICS);
-	ASSERT_TEST( findFacultyFromEmail(companies, "sdfefdgdfh565@654fgjhfgsd0") == UNKNOWN);
+	ASSERT_TEST( findCompanyFacultyFromEmail(users, "sdfefdgdfh565@654fgjhfgsda") == CIVIL_ENGINEERING);
+	ASSERT_TEST( findCompanyFacultyFromEmail(users, "sdfefdgdfh565@654fgjhfgsdb") == MECHANICAL_ENGINEERING);
+	ASSERT_TEST( findCompanyFacultyFromEmail(users, "sdfefdgdfh565@654fgjhfgsdc") == ELECTRICAL_ENGINEERING);
+	ASSERT_TEST( findCompanyFacultyFromEmail(users, "sdfefdgdfh565@654fgjhfgsdd") == CHEMICAL_ENGINEERING);
+	ASSERT_TEST( findCompanyFacultyFromEmail(users, "sdfefdgdfh565@654fgjhfgsde") == BIOTECHNOLOGY_AND_FOOD_ENGINEERING);
+	ASSERT_TEST( findCompanyFacultyFromEmail(users, "sdfefdgdfh565@654fgjhfgsdf") == AEROSPACE_ENGINEERING);
+	ASSERT_TEST( findCompanyFacultyFromEmail(users, "sdfefdgdfh565@654fgjhfgsdg") == INDUSTRIAL_ENGINEERING_AND_MANAGEMENT);
+	ASSERT_TEST( findCompanyFacultyFromEmail(users, "sdfefdgdfh565@654fgjhfgsdh") == MATHEMATICS);
+	ASSERT_TEST( findCompanyFacultyFromEmail(users, "sdfefdgdfh565@654fgjhfgsd0") == UNKNOWN);
 
-	setDestroy(companies);
+	setDestroy(users);
 
 	return true;
 }
@@ -209,73 +263,73 @@ static bool testEmailValidity() {
 	return true;
 }
 
-static bool testOtherSetCompanyFunctions() {
-	Set companies = setCreate(copyCompany, freeCompany, compareCompanies);
-	ASSERT_TEST( companies != NULL );
+static bool testOtherSetUserFunctions() {
+	Set users = setCreate(copyUser, freeUser, compareUsers);
+	ASSERT_TEST( users != NULL );
 
-	Company company1 = malloc(sizeof(struct company_t));
+	User user1 = malloc(sizeof(struct user_t));
 	char* email1 = "sdf@fdgdfh56";
-	company1->email = malloc(sizeof(char) * (strlen(email1) + 1));
-	strcpy(company1->email, email1);
-	company1->faculty = CIVIL_ENGINEERING;
+	user1->email = malloc(sizeof(char) * (strlen(email1) + 1));
+	strcpy(user1->email, email1);
+	user1->faculty = CIVIL_ENGINEERING;
 
-	Company company2 = malloc(sizeof(struct company_t));
+	User user2 = malloc(sizeof(struct user_t));
 	char* email2 = "sdf@fdgdfh57";
-	company2->email = malloc(sizeof(char) * (strlen(email2) + 1));
-	strcpy(company2->email, email2);
-	company2->faculty = CIVIL_ENGINEERING;
+	user2->email = malloc(sizeof(char) * (strlen(email2) + 1));
+	strcpy(user2->email, email2);
+	user2->faculty = CIVIL_ENGINEERING;
 
-	Company company3 = malloc(sizeof(struct company_t));
+	User user3 = malloc(sizeof(struct user_t));
 	char* email3 = "sdf@fdgdfh58";
-	company3->email = malloc(sizeof(char) * (strlen(email3) + 1));
-	strcpy(company3->email, email1);
-	company3->faculty = CIVIL_ENGINEERING;
+	user3->email = malloc(sizeof(char) * (strlen(email3) + 1));
+	strcpy(user3->email, email1);
+	user3->faculty = CIVIL_ENGINEERING;
 
-	Company company4 = malloc(sizeof(struct company_t));
+	User user4 = malloc(sizeof(struct user_t));
 	char* email4 = "sdf@fdgdfh59";
-	company4->email = malloc(sizeof(char) * (strlen(email4) + 1));
-	strcpy(company4->email, email1);
-	company4->faculty = CIVIL_ENGINEERING;
+	user4->email = malloc(sizeof(char) * (strlen(email4) + 1));
+	strcpy(user4->email, email1);
+	user4->faculty = CIVIL_ENGINEERING;
 
-	addCompany(companies, "sdf@fdgdfh56", CIVIL_ENGINEERING);
-	addCompany(companies, "sdf@fdgdfh57", CIVIL_ENGINEERING);
-	addCompany(companies, "sdf@fdgdfh58", CIVIL_ENGINEERING);
-	addCompany(companies, "sdf@fdgdfh59", CIVIL_ENGINEERING);
+	addUser(users, "sdf@fdgdfh56", CIVIL_ENGINEERING, COMPANY);
+	addUser(users, "sdf@fdgdfh57", CIVIL_ENGINEERING, COMPANY);
+	addUser(users, "sdf@fdgdfh58", CIVIL_ENGINEERING, COMPANY);
+	addUser(users, "sdf@fdgdfh59", CIVIL_ENGINEERING, COMPANY);
 
-	ASSERT_TEST( setGetSize(companies) == 4 );
+	ASSERT_TEST( setGetSize(users) == 4 );
 
-	ASSERT_TEST( setIsIn(companies, company1) );
-	ASSERT_TEST( setIsIn(companies, company2) );
-	ASSERT_TEST( setIsIn(companies, company3) );
-	ASSERT_TEST( setIsIn(companies, company4) );
+	ASSERT_TEST( setIsIn(users, user1) );
+	ASSERT_TEST( setIsIn(users, user2) );
+	ASSERT_TEST( setIsIn(users, user3) );
+	ASSERT_TEST( setIsIn(users, user4) );
 
-	Set newCompanies = setCopy(companies);
+	Set newUsers = setCopy(users);
 
-	ASSERT_TEST( setIsIn(newCompanies, company1) );
-	ASSERT_TEST( setIsIn(newCompanies, company2) );
-	ASSERT_TEST( setIsIn(newCompanies, company3) );
-	ASSERT_TEST( setIsIn(newCompanies, company4) );
+	ASSERT_TEST( setIsIn(newUsers, user1) );
+	ASSERT_TEST( setIsIn(newUsers, user2) );
+	ASSERT_TEST( setIsIn(newUsers, user3) );
+	ASSERT_TEST( setIsIn(newUsers, user4) );
 
 
-	ASSERT_TEST( setGetSize(newCompanies) == 4 );
+	ASSERT_TEST( setGetSize(newUsers) == 4 );
 
-	freeCompany(company1);
-	freeCompany(company2);
-	freeCompany(company3);
-	freeCompany(company4);
-	setDestroy(companies);
-	setDestroy(newCompanies);
+	freeUser(user1);
+	freeUser(user2);
+	freeUser(user3);
+	freeUser(user4);
+	setDestroy(users);
+	setDestroy(newUsers);
 	return true;
 }
 
-int companyTests (int argv, char** arc){
-	RUN_TEST(testCopyCompany);
-	RUN_TEST(testFreeCompany);
-	RUN_TEST(testCompareCompany);
-	RUN_TEST(testAddCompany);
+int userTests (int argv, char** arc){
+	RUN_TEST(testCopyUser);
+	RUN_TEST(testFreeUser);
+	RUN_TEST(testCompareUser);
+	RUN_TEST(testAddUser);
 	RUN_TEST(testRemoveCompany);
 	RUN_TEST(testEmailValidity);
 	RUN_TEST(testFindFacultyFromEmail);
-	RUN_TEST(testOtherSetCompanyFunctions);
+	RUN_TEST(testOtherSetUserFunctions);
 	return 0;
 }

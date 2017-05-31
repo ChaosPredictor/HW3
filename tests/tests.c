@@ -9,6 +9,6 @@
 #include "room_test.c"
 
 int main(int argv, char** arc) {
-	companyTests(argv, arc);
+	userTests(argv, arc);
 	roomTests(argv, arc);
 }

@@ -7,48 +7,46 @@
 
 #include "company.h"
 
-struct company_t {
-	char* email;
-	TechnionFaculty faculty;
-};
-
-
 
 //TODO all mails together
 
 
+static SetElement findUserFromEmail( Set setUser, const char* email );
 
-MtmErrorCode addCompany(Set setCompany, const char* email, TechnionFaculty faculty) {
-	if( setCompany == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
+MtmErrorCode addUser(Set setUser, const char* email, TechnionFaculty faculty, TypeSkill typeSkill) {
+	if( setUser == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
+	if( faculty < 0 || faculty>17 || typeSkill < 0  || typeSkill > 10 ) return MTM_INVALID_PARAMETER;
 	//TODO print by mtm_ex3
-	Company newCompany = malloc(sizeof(struct company_t));
-	if( newCompany == NULL ) return MTM_OUT_OF_MEMORY;
-	newCompany->email = malloc(sizeof(char) * (strlen(email)+1));
-	if( newCompany->email == NULL ) {
-		free(newCompany);
+	User newUser = malloc(sizeof(struct user_t));
+	if( newUser == NULL ) return MTM_OUT_OF_MEMORY;
+	newUser->email = malloc(sizeof(char) * (strlen(email)+1));
+	if( newUser->email == NULL ) {
+		free(newUser);
 		return MTM_OUT_OF_MEMORY;
 	}
-	strcpy(newCompany->email, email);
-	newCompany->faculty = faculty;
-	if( setIsIn( setCompany, newCompany ) ) {
-		free(newCompany->email);
-		free(newCompany);
+	strcpy(newUser->email, email);
+	newUser->faculty = faculty;
+	newUser->typeSkill = typeSkill;
+	if( setIsIn( setUser, newUser ) ) {
+		free(newUser->email);
+		free(newUser);
 		return MTM_EMAIL_ALREADY_EXISTS;
 	}
 
-	setAdd(setCompany, newCompany);
-	free(newCompany->email);
-	free(newCompany);
+	setAdd(setUser, newUser);
+	free(newUser->email);
+	free(newUser);
 	return MTM_SUCCESS;
 }
 
-MtmErrorCode removeCompany(Set setCompany, char* email) {
+MtmErrorCode removeCompany(Set setCompany, const char* email) {
 	if( setCompany == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
+	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
 	//TODO not remove company with order
 	//TODO remove all rooms of the company
-	SET_FOREACH(Company, val, setCompany) {
-		if ( strcmp(val->email, email) == 0) {
+	SET_FOREACH(User, val, setCompany) {
+		if ( strcmp(val->email, email) == 0 && val->typeSkill == 0) {
 			//TODO if is order
 			if ( false ) {
 				return MTM_RESERVATION_EXISTS;
@@ -64,48 +62,57 @@ MtmErrorCode removeCompany(Set setCompany, char* email) {
 }
 
 
-SetElement copyCompany(SetElement company){
-	if ( company == NULL ) return NULL;
-	assert(company);
-	Company newCompany = malloc(sizeof(struct company_t));
-	//TODO return from malloc
-	//printf("size of Company1:%lu\n",sizeof(newCompany));
+SetElement copyUser(SetElement user) {
+	if ( user == NULL ) return NULL;
+	assert(user);
+	User newUser = malloc(sizeof(struct user_t));
+	if ( newUser == NULL) return MTM_OUT_OF_MEMORY;
 
-	newCompany->email = malloc(sizeof(char) * (strlen(((Company)company)->email) + 1));
-	//TODO return from malloc
-	//printf("size of Company2:%lu\n",sizeof(newCompany->email));
+	newUser->email = malloc(sizeof(char) * (strlen(((User)user)->email) + 1));
+	if ( newUser == NULL) {
+		free( newUser );
+		return MTM_OUT_OF_MEMORY;
+	}
 
-	strcpy(newCompany->email, ((Company)company)->email);
-	//printf("email of Company2:%s\n", newCompany->email);
+	strcpy(newUser->email, ((User)user)->email);
+	newUser->typeSkill = ((User)user)->typeSkill;
+	newUser->faculty = ((User)user)->faculty;
 
-	//TODO return from malloc;
-	newCompany->faculty = ((Company)company)->faculty;
-	return newCompany != NULL ? newCompany : NULL;
+	return newUser;
 }
 
-void freeCompany(SetElement company){
-	if ( company == NULL ) return;
+void freeUser(SetElement user) {
+	if ( user == NULL ) return;
 	//Company tempCompany = (Company)company;
 	//printf("email of Company4:%s\n", ((Company)company)->email);
 	//char* temp = (((Company)company)->email);
-	free(((Company)company)->email);
-	free((Company)company);
+	free(((User)user)->email);
+	free((User)user);
 }
 
-int compareCompanies(SetElement company1, SetElement company2) {
-	return strcmp(((Company)company1)->email, ((Company)company2)->email);
+int compareUsers(SetElement user1, SetElement user2) {
+	return strcmp(((User)user1)->email, ((User)user2)->email);
 }
 
 
-TechnionFaculty findFacultyFromEmail( Set setCompany, const char* email ) {
-	if( setCompany == NULL || email == NULL ) return UNKNOWN;
-	SET_FOREACH(Company, val, setCompany) {
+TechnionFaculty findCompanyFacultyFromEmail( Set setUser, const char* email ) {
+	User user = findUserFromEmail( setUser, email );
+	if ( user == NULL ) return UNKNOWN;
+	if ( user->typeSkill != COMPANY ) return UNKNOWN;
+	return user->faculty;
+}
+
+static SetElement findUserFromEmail( Set setUser, const char* email ) {
+	if( setUser == NULL || email == NULL ) return NULL;
+	SET_FOREACH(User, val, setUser) {
 		if ( strcmp(val->email, email) == 0) {
-			return val->faculty;
+			return val;
 		}
 	}
-	return UNKNOWN;
+	return NULL;
 }
+
+
 
 bool emailValidity(const char* email) {
 	size_t len = strlen(email);
@@ -115,3 +122,5 @@ bool emailValidity(const char* email) {
 	}
 	return ( count == 1);
 }
+
+

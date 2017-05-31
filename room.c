@@ -24,9 +24,10 @@ int charToInt(char c);
 
 
 MtmErrorCode addRoom(Set rooms, Set companies, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty) {
-	if ( rooms == NULL || companies == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
-	if ( !emailValidity(email) )  return MTM_INVALID_PARAMETER;
-	TechnionFaculty faculty = findFacultyFromEmail(companies, email);
+	if ( rooms == NULL || companies == NULL ) return MTM_INVALID_PARAMETER;
+	if ( email == NULL || !emailValidity(email) )  return MTM_INVALID_PARAMETER;
+
+	TechnionFaculty faculty = findCompanyFacultyFromEmail(companies, email);
 	if ( faculty == UNKNOWN ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
 
 
@@ -71,6 +72,13 @@ MtmErrorCode addRoom(Set rooms, Set companies, const char* email, int id, int pr
 	newRoom->from_hrs = from;
 	newRoom->to_hrs = to;
 	newRoom->difficulty = difficulty;
+	//printf("faculty: %d id: %d\n", faculty, id);
+	if( setIsIn(rooms, newRoom) ) {
+		free(newRoom->email);
+		free(newRoom);
+		return MTM_ID_ALREADY_EXIST;
+	}
+
 	setAdd(rooms, newRoom);
 	free(newRoom->email);
 	free(newRoom);

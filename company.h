@@ -11,30 +11,46 @@
 #include <assert.h>
 #include <string.h>
 
-
 #include "order.h"
 #include "mtm_escape.h"
 
 //#include "visitor_room.h"
 //TODO add related files
+typedef enum {
+    COMPANY,
+	ESCAPER_1,
+	ESCAPER_2,
+	ESCAPER_3,
+	ESCAPER_4,
+	ESCAPER_5,
+	ESCAPER_6,
+	ESCAPER_7,
+	ESCAPER_8,
+	ESCAPER_9,
+	ESCAPER_10
+} TypeSkill;
 
-typedef struct company_t *Company;
+typedef struct user_t {
+	char* email;
+	TechnionFaculty faculty;
+	TypeSkill typeSkill;
+} *User;
 
 
 
-MtmErrorCode addCompany(Set setCompany, const char* newEmail, TechnionFaculty faculty);
+MtmErrorCode addUser(Set setUser, const char* email, TechnionFaculty faculty, TypeSkill typeSkill);
 
-MtmErrorCode removeCompany(Set setCompany, char* email);
+MtmErrorCode removeCompany(Set setCompany, const char* email);
 
 bool emailValidity(const char* email);
 
 TechnionFaculty findFacultyFromEmail( Set setCompany, const char* email );
 
-SetElement copyCompany(SetElement company);
+SetElement copyUser(SetElement user);
 
-void freeCompany(SetElement company);
+void freeUser(SetElement user);
 
-int compareCompanies(SetElement company1, SetElement company2);
+int compareUsers(SetElement user1, SetElement user2);
 
 
 
