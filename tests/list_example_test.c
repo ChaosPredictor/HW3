@@ -434,7 +434,7 @@ static bool testListDestroy() {
 	return true;
 }
 
-int main (int argv, char** arc){
+int main2 (int argv, char** arc){
 	RUN_TEST(testListCreate);
 	RUN_TEST(testListFilter);
 	RUN_TEST(testListCopy);

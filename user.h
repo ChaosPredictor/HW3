@@ -5,8 +5,8 @@
  *      Author: master
  */
 
-#ifndef COMPANY_H_
-#define COMPANY_H_
+#ifndef USER_H_
+#define USER_H_
 
 #include <assert.h>
 #include <string.h>
@@ -37,14 +37,13 @@ typedef struct user_t {
 } *User;
 
 
-
 MtmErrorCode addUser(Set setUser, const char* email, TechnionFaculty faculty, TypeSkill typeSkill);
 
 MtmErrorCode removeCompany(Set setCompany, const char* email);
 
 bool emailValidity(const char* email);
 
-TechnionFaculty findFacultyFromEmail( Set setCompany, const char* email );
+TechnionFaculty findCompanyFacultyFromEmail( Set setCompany, const char* email );
 
 SetElement copyUser(SetElement user);
 
@@ -54,4 +53,4 @@ int compareUsers(SetElement user1, SetElement user2);
 
 
 
-#endif /* COMPANY_H_ */
+#endif /* USER_H_ */

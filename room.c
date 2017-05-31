@@ -7,7 +7,7 @@
 
 
 #include "room.h"
-
+/*
 struct room_t {
 	char* email;
 	int id;
@@ -16,18 +16,18 @@ struct room_t {
 	int num_ppl;
 	int from_hrs, to_hrs;
 	int difficulty;
-};
+};*/
 
 int fromHour(const char* working_hrs);
 int toHour(const char* working_hrs);
 int charToInt(char c);
 
 
-MtmErrorCode addRoom(Set rooms, Set companies, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty) {
-	if ( rooms == NULL || companies == NULL ) return MTM_INVALID_PARAMETER;
+MtmErrorCode addRoom(Set rooms, Set users, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty) {
+	if ( rooms == NULL || users == NULL ) return MTM_INVALID_PARAMETER;
 	if ( email == NULL || !emailValidity(email) )  return MTM_INVALID_PARAMETER;
 
-	TechnionFaculty faculty = findCompanyFacultyFromEmail(companies, email);
+	TechnionFaculty faculty = findCompanyFacultyFromEmail(users, email);
 	if ( faculty == UNKNOWN ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
 
 
@@ -107,7 +107,7 @@ MtmErrorCode removeRoom(Set setRoom, TechnionFaculty faculty, int id) {
 }
 
 
-SetElement copyRoom(SetElement room){
+SetElement copyRoom(SetElement room) {
 	if ( room == NULL ) return NULL;
 	//TODO maybe assert
 	Room newRoom = malloc(sizeof(struct room_t));

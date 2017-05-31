@@ -6,17 +6,8 @@
  */
 
 
-#include "./test_utilities.h"
-#include "./../room.c"
-#include <stdio.h>
-#include <assert.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include "./../mtm_escape.h"
-#include <string.h>
-#include <ctype.h>
-#include "./../room.h"
-#include "./../company.h"
+#include "./room_test.h"
+
 
 static bool testCopyRoom() {
 

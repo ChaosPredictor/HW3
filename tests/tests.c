@@ -5,8 +5,8 @@
  *      Author: master
  */
 
-#include "company_test.c"
-#include "room_test.c"
+#include "room_test.h"
+#include "user_test.h"
 
 int main(int argv, char** arc) {
 	userTests(argv, arc);

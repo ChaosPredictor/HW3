@@ -1,7 +1,8 @@
+/*
+#include "../user.c"
 #include "./test_utilities.h"
 //#include "../set.h"
-#include "./../company.c"
-#include "./../company.h"
+#include "./../user.h"
 #include <stdio.h>
 #include <assert.h>
 #include <stdbool.h>
@@ -9,6 +10,8 @@
 #include "./../mtm_escape.h"
 #include <string.h>
 #include <ctype.h>
+*/
+#include "./user_test.h"
 
 /*
 static ListElement copyString(ListElement str){
@@ -171,7 +174,7 @@ static bool testAddUser() {
 	return true;
 }
 
-static Set testHelperAddUsers() {
+Set testHelperAddUsers() {
 	Set users = setCreate(copyUser, freeUser, compareUsers);
 	ASSERT_TEST( users != NULL);
 

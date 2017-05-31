@@ -3,7 +3,8 @@
 
 #include <stdio.h> //TODO remove it
 #include <stdlib.h>
-#include "company.h"
+
+#include "user.h"
 
 typedef struct EscapeSystem_t EscapeSystem;
 
