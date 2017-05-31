@@ -41,6 +41,9 @@ MtmErrorCode addUser(Set setUser, const char* email, TechnionFaculty faculty, Ty
 
 MtmErrorCode removeCompany(Set setCompany, const char* email);
 
+MtmErrorCode removeEscaper(Set setCompany, const char* email);
+
+
 bool emailValidity(const char* email);
 
 TechnionFaculty findCompanyFacultyFromEmail( Set setCompany, const char* email );

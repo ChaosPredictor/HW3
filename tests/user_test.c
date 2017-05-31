@@ -206,24 +206,27 @@ static bool testRemoveEscaper() {
 	Set users = testHelperAddUsers();
 
 	int numberOfUsers = setGetSize(users);
+
+	ASSERT_TEST( removeEscaper( NULL, "escaper1@civil" ) ==  MTM_INVALID_PARAMETER );
+	ASSERT_TEST( setGetSize(users) == numberOfUsers );
 	//invalid email
-	ASSERT_TEST( removeCompany( users, NULL ) ==  MTM_INVALID_PARAMETER );
+	ASSERT_TEST( removeEscaper( users, NULL ) ==  MTM_INVALID_PARAMETER );
 	ASSERT_TEST( setGetSize(users) == numberOfUsers );
-	ASSERT_TEST( removeCompany( users, "company2#civil" ) ==  MTM_INVALID_PARAMETER );
+	ASSERT_TEST( removeEscaper( users, "escaper1#civil" ) ==  MTM_INVALID_PARAMETER );
 	ASSERT_TEST( setGetSize(users) == numberOfUsers );
-	//company email does not exist
-	ASSERT_TEST( removeCompany( users, "company3@civil" ) ==  MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
+	//escaper email does not exist
+	ASSERT_TEST( removeEscaper( users, "escaper11@civil" ) ==  MTM_CLIENT_EMAIL_DOES_NOT_EXIST );
 	ASSERT_TEST( setGetSize(users) == numberOfUsers );
 	//escaper email
-	ASSERT_TEST( removeCompany( users, "escaper1@civil" ) ==  MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
+	ASSERT_TEST( removeEscaper( users, "company1@civil" ) ==  MTM_CLIENT_EMAIL_DOES_NOT_EXIST );
 	ASSERT_TEST( setGetSize(users) == numberOfUsers );
 	//TODO company with order
 
-	ASSERT_TEST( removeCompany( users, "company2@civil" ) ==  MTM_SUCCESS );
+	ASSERT_TEST( removeEscaper( users, "escaper1@civil" ) ==  MTM_SUCCESS );
 	numberOfUsers--;
 	ASSERT_TEST( setGetSize(users) == numberOfUsers );
 
-	ASSERT_TEST( removeCompany( users, "company2@civil" ) ==  MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
+	ASSERT_TEST( removeEscaper( users, "escaper1@civil" ) ==  MTM_CLIENT_EMAIL_DOES_NOT_EXIST );
 	ASSERT_TEST( setGetSize(users) == numberOfUsers );
 
 	setClear(users);

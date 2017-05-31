@@ -40,26 +40,33 @@ MtmErrorCode addUser(Set setUser, const char* email, TechnionFaculty faculty, Ty
 	return MTM_SUCCESS;
 }
 
-MtmErrorCode removeCompany(Set setCompany, const char* email) {
-	if( setCompany == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
+MtmErrorCode removeCompany(Set setUser, const char* email) {
+	if( setUser == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
+
+	User user = findUserFromEmail( setUser, email );
+	if ( user == NULL || user->typeSkill != 0 ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
+
 	//TODO not remove company with order
 	//TODO remove all rooms of the company
-	SET_FOREACH(User, val, setCompany) {
-		if ( strcmp(val->email, email) == 0 && val->typeSkill == 0) {
-			//TODO if is order
-			if ( false ) {
-				return MTM_RESERVATION_EXISTS;
-			} else {
-				//TODO remove all rooms
-				setRemove(setCompany, val);
-				return MTM_SUCCESS;
-			}
-		}
-	}
-	return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
+	setRemove(setUser, user);
+	return MTM_SUCCESS;
 
 }
+
+MtmErrorCode removeEscaper(Set setUser, const char* email) {
+	if( setUser == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
+	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
+
+	User user = findUserFromEmail( setUser, email );
+	if ( user == NULL || user->typeSkill == 0 ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+
+	//TODO remove all his orders
+	setRemove(setUser, user);
+	return MTM_SUCCESS;
+
+}
+
 
 
 SetElement copyUser(SetElement user) {
