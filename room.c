@@ -7,16 +7,6 @@
 
 
 #include "room.h"
-/*
-struct room_t {
-	char* email;
-	int id;
-	TechnionFaculty faculty;
-	int price;
-	int num_ppl;
-	int from_hrs, to_hrs;
-	int difficulty;
-};*/
 
 int fromHour(const char* working_hrs);
 int toHour(const char* working_hrs);
@@ -111,11 +101,12 @@ SetElement copyRoom(SetElement room) {
 	if ( room == NULL ) return NULL;
 	//TODO maybe assert
 	Room newRoom = malloc(sizeof(struct room_t));
-	//TODO return from malloc
-
+	if( newRoom == NULL ) return NULL;
 	newRoom->email = malloc(sizeof(char) * (strlen(((Room)room)->email) + 1));
-	//TODO return from malloc
-
+	if( newRoom->email == NULL ) {
+		free(newRoom);
+		return NULL;
+	}
 	strcpy(newRoom->email, ((Room)room)->email);
 
 	newRoom->id = ((Room)room)->id;
