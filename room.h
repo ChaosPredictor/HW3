@@ -12,7 +12,7 @@
 
 #include <assert.h>
 #include <string.h>
-
+#include "set.h"
 #include "order.h"
 #include "mtm_escape.h"
 #include "user.h"

@@ -35,8 +35,6 @@ static bool testCopyRoom() {
 	ASSERT_TEST( room->to_hrs == newRoom->to_hrs );
 	ASSERT_TEST( room->difficulty == newRoom->difficulty );
 
-
-
 	free(newRoom->email);
 	free(newRoom);
 

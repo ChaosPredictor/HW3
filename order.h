@@ -8,6 +8,8 @@
 #ifndef ORDER_H_
 #define ORDER_H_
 
+#include <stdlib.h>
+#include <string.h>
 #include "mtm_ex3.h"
 #include "list.h"
 
@@ -24,6 +26,6 @@ typedef struct order_t{
 
 MtmErrorCode add_order(char* email, char* faculty);
 
-
+ListElement copyOrder(ListElement order);
 
 #endif /* ORDER_H_ */

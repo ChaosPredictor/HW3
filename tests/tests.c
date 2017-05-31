@@ -7,8 +7,10 @@
 
 #include "room_test.h"
 #include "user_test.h"
+#include "order_test.h"
 
 int main(int argv, char** arc) {
 	userTests(argv, arc);
 	roomTests(argv, arc);
+	orderTests(argv, arc);
 }
