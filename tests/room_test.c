@@ -258,7 +258,6 @@ static bool testRemoveRoom() {
 	removeRoom(rooms, INDUSTRIAL_ENGINEERING_AND_MANAGEMENT, 1);
 	ASSERT_TEST( setGetSize(rooms) == 0 );
 
-
 	setClear(rooms);
 
 	ASSERT_TEST( setGetSize(rooms) == 0 );
