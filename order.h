@@ -28,4 +28,6 @@ MtmErrorCode add_order(char* email, char* faculty);
 
 ListElement copyOrder(ListElement order);
 
+void freeOrder(ListElement order);
+
 #endif /* ORDER_H_ */

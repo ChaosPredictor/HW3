@@ -43,12 +43,35 @@ static bool testCopyOrder() {
 	return true;
 }
 
+static bool testFreeOrder() {
+
+	//ASSERT_TEST( freeOrder(NULL) == NULL);
+	freeOrder(NULL);
+
+	Order order = malloc(sizeof(struct order_t));
+	char* email = "qazxsw@edcvfr";
+	order->email = malloc(sizeof(char) * (strlen(email) + 1));
+	strcpy(order->email, email);
+	order->faculty = CIVIL_ENGINEERING;
+	order->id = 1;
+	order->price = 16;
+	order->num_ppl = 5;
+	order->day = 2;
+	order->hour = 8;
+
+	Order newOrder = copyOrder(order);
+
+	freeOrder(newOrder);
+	freeOrder(order);
+
+	return true;
+}
 
 
 int orderTests (int argv, char** arc) {
 //int main (int argv, char** arc) {
 	RUN_TEST(testCopyOrder);
-	//RUN_TEST(testFreeOrder);
+	RUN_TEST(testFreeOrder);
 	/*RUN_TEST(testCompareRoom);
 	RUN_TEST(testAddRoom);
 	RUN_TEST(testRemoveRoom);
