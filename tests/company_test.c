@@ -173,6 +173,8 @@ static bool testAddUser() {
 
 static Set testHelperAddUsers() {
 	Set users = setCreate(copyUser, freeUser, compareUsers);
+	ASSERT_TEST( users != NULL);
+
 	addUser( users, "company1@civil", CIVIL_ENGINEERING, COMPANY );
 	addUser( users, "company2@civil", CIVIL_ENGINEERING, COMPANY );
 	addUser( users, "company1@mechanical", MECHANICAL_ENGINEERING, COMPANY );

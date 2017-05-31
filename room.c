@@ -88,8 +88,9 @@ MtmErrorCode addRoom(Set rooms, Set companies, const char* email, int id, int pr
 
 MtmErrorCode removeRoom(Set setRoom, TechnionFaculty faculty, int id) {
 	if( setRoom == NULL ) return MTM_INVALID_PARAMETER;
+	if( faculty < 0 || faculty > 17 ) return MTM_INVALID_PARAMETER;
+	if( id < 1 ) return MTM_INVALID_PARAMETER;
 	//TODO not remove company with order
-	//TODO remove all rooms of the company
 	SET_FOREACH(Room, val, setRoom) {
 		if ( val->faculty == faculty && val->id == id ) {
 			//TODO if is order
@@ -102,7 +103,7 @@ MtmErrorCode removeRoom(Set setRoom, TechnionFaculty faculty, int id) {
 			}
 		}
 	}
-	return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
+	return MTM_ID_DOES_NOT_EXIST;
 }
 
 
