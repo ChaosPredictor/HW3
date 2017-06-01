@@ -21,7 +21,6 @@ static bool testCopyOrder() {
 	order->id = 1;
 	order->price = 16;
 	order->num_ppl = 5;
-	order->day = 2;
 	order->hour = 8;
 
 	Order newOrder = copyOrder(order);
@@ -31,7 +30,6 @@ static bool testCopyOrder() {
 	ASSERT_TEST( order->id == newOrder->id );
 	ASSERT_TEST( order->price == newOrder->price );
 	ASSERT_TEST( order->num_ppl == newOrder->num_ppl );
-	ASSERT_TEST( order->day == newOrder->day );
 	ASSERT_TEST( order->hour == newOrder->hour );
 
 	free(newOrder->email);
@@ -56,7 +54,6 @@ static bool testFreeOrder() {
 	order->id = 1;
 	order->price = 16;
 	order->num_ppl = 5;
-	order->day = 2;
 	order->hour = 8;
 
 	Order newOrder = copyOrder(order);
@@ -70,92 +67,71 @@ static bool testFreeOrder() {
 
 static bool testAddOrder() {
 
-	List orders = listCreate(copyOrder ,freeOrder);
-	ASSERT_TEST( orders != NULL);
-
-	ASSERT_TEST( addOrder(orders, "escaper1@civil", MECHANICAL_ENGINEERING, 1, "0-6", 3) == MTM_SUCCESS );
-	ASSERT_TEST( listGetSize(orders) == 1 );
+	//TODO create list of days;
+	List days = listCreate(copyDay, freeDay);
+	Set users = testHelperAddUsers();
 
 
-/*
+	//ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", MECHANICAL_ENGINEERING, 1, "1-6", 3) == MTM_SUCCESS );
+	//ASSERT_TEST( listGetSize(orders) == 1 );
+
+	setDestroy(users);
+	listDestroy(days);
+	return true;
+}
+
+
+static bool testAddOrderToADay() {
+
+	List days = listCreate(copyDay, freeDay);
+	addToday(days);
+	Day day = listGetFirst(days);
+	List orders = day->dayOrders;
 
 	//rooms set, users set or email is NULL
-	ASSERT_TEST( addRoom(NULL, users, "company1@civil", 1, 4, 3, "05-07", 10) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
-	ASSERT_TEST( addRoom(rooms, NULL, "company1@civil", 1, 4, 3, "05-07", 10) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
-	ASSERT_TEST( addRoom(rooms, users, NULL, 1, 4, 3, "05-07", 10) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
+	ASSERT_TEST( addOrderToADay(NULL, "escaper1@civil", MECHANICAL_ENGINEERING, 1, 6, 3) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( listGetSize(orders) == 0 );
+	ASSERT_TEST( addOrderToADay(orders, NULL, MECHANICAL_ENGINEERING, 1, 6, 3) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( listGetSize(orders) == 0 );
 
-	//illegal email
-	ASSERT_TEST( addRoom(rooms, users, "company1#civil", 1, 4, 3, "05-07", 10) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
 
-	//company email does not exist
-	ASSERT_TEST( addRoom(rooms, users, "company5@civil", 1, 4, 3, "05-07", 10) == MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
-	ASSERT_TEST( addRoom(rooms, users, "escaper1@civil", 1, 4, 3, "05-07", 10) == MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
+	ASSERT_TEST( addOrderToADay(orders, "escaper1@civil", MECHANICAL_ENGINEERING, 1, 6, 3) == MTM_SUCCESS );
+	ASSERT_TEST( listGetSize(orders) == 1 );
+	ASSERT_TEST( addOrderToADay(orders, "escaper1@civil", MECHANICAL_ENGINEERING, 1, 6, 3) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay(orders, "escaper2@civil", MECHANICAL_ENGINEERING, 4, 8, 6) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay(orders, "escaper3@civil", MECHANICAL_ENGINEERING, 6, 5, 8) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay(orders, "escaper4@civil", MECHANICAL_ENGINEERING, 2, 10, 3) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay(orders, "escaper5@civil", MECHANICAL_ENGINEERING, 1, 12, 3) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay(orders, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 6, 8) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay(orders, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 6, 3) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay(orders, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 6, 3) == MTM_SUCCESS );
 
-	//0 & -1 id
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil",0, 4, 3, "05-07", 10) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil",-1, 4, 3, "05-07", 10) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
+	listDestroy(days);
+	return true;
+}
 
-	//price
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, 0, 3, "05-07", 10) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, -1, 3, "05-07", 10) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, 9, 3, "05-07", 10) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
+/*
+static List testHelperAddOrderToADay() {
 
-	//num_ppl
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, 4, 0, "05-07", 10) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, 4, -1, "05-07", 10) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
+	List orders = listCreate(copyOrder ,freeOrder);
+	ASSERT_TEST( orders != NULL);
+	ASSERT_TEST( addOrderToADay(orders, "escaper1@civil", MECHANICAL_ENGINEERING, 1, 6, 3) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay(orders, "escaper2@civil", MECHANICAL_ENGINEERING, 4, 8, 6) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay(orders, "escaper3@civil", MECHANICAL_ENGINEERING, 6, 5, 8) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay(orders, "escaper4@civil", MECHANICAL_ENGINEERING, 2, 10, 3) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay(orders, "escaper5@civil", MECHANICAL_ENGINEERING, 1, 12, 3) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay(orders, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 6, 8) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay(orders, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 6, 3) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay(orders, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 6, 3) == MTM_SUCCESS );
 
-	//working hours
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, 4, 3, "07-05", 10) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, 4, 3, "05-05", 10) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, 4, 3, "05-24", 10) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, 4, 3, "24-05", 10) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
+}*/
 
-	//difficulty
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, 4, 3, "05-07", 0) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, 4, 3, "05-07", 11) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( setGetSize(rooms) == 0 );
-	//pass
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, 4, 3, "05-07", 10) == MTM_SUCCESS );
-	ASSERT_TEST( setGetSize(rooms) == 1 );
-	//fail - same company same id
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 1, 4, 3, "05-07", 10) == MTM_ID_ALREADY_EXIST );
-	ASSERT_TEST( setGetSize(rooms) == 1 );
 
-	//pass - same faculty, different id
-	ASSERT_TEST( addRoom(rooms, users, "company1@civil", 2, 4, 3, "05-07", 10) == MTM_SUCCESS );
-	ASSERT_TEST( setGetSize(rooms) == 2 );
 
-	//pass - same id, different faculty
-	ASSERT_TEST( addRoom(rooms, users, "company1@mechanical", 1, 4, 3, "05-07", 10) == MTM_SUCCESS );
-	ASSERT_TEST( setGetSize(rooms) == 3 );
+static bool testCopyDay() {
 
-	//fail - different company same id
-	ASSERT_TEST( addRoom(rooms, users, "company2@civil", 1, 4, 3, "05-07", 10) == MTM_ID_ALREADY_EXIST );
-	ASSERT_TEST( setGetSize(rooms) == 3 );
+	//TODO
 
-	setClear(rooms);
-
-	ASSERT_TEST( setGetSize(rooms) == 0 );
-*/
-	listDestroy(orders);
 	return true;
 }
 
@@ -164,6 +140,9 @@ int orderTests (int argv, char** arc) {
 	RUN_TEST(testCopyOrder);
 	RUN_TEST(testFreeOrder);
 	RUN_TEST(testAddOrder);
+	RUN_TEST(testAddOrderToADay);
+
+	RUN_TEST(testCopyDay);
 
 	/*RUN_TEST(testCompareRoom);
 	RUN_TEST(testRemoveRoom);

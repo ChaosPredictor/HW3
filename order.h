@@ -12,6 +12,7 @@
 #include <string.h>
 #include "mtm_ex3.h"
 #include "list.h"
+#include "user.h"
 
 typedef struct order_t{
 	char* email;
@@ -19,12 +20,12 @@ typedef struct order_t{
 	int id;
 	int price;
 	int num_ppl;
-	int day;
 	int hour;
 } *Order;
 
 typedef struct day_t{
-	List *dayOrders;
+	List dayOrders;
+	int day;
 } *Day;
 
 
@@ -40,7 +41,19 @@ ListElement copyOrder(ListElement order);
 
 void freeOrder(ListElement order);
 
-MtmErrorCode addOrder(List orders, char* email, TechnionFaculty faculty, int id, char* time, int num_ppl);
+MtmErrorCode createOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
+
+MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty faculty, int id, int hour, int num_ppl);
+
+
+
+ListElement copyDay(ListElement day);
+
+void freeDay(ListElement day);
+
+int ordersForToday(List days);
+
+MtmErrorCode addToday(List days);
 
 #endif /* ORDER_H_ */

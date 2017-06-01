@@ -24,92 +24,82 @@ ListElement copyOrder(ListElement order) {
 	newOrder->id = ((Order)order)->id;
 	newOrder->price = ((Order)order)->price;
 	newOrder->num_ppl = ((Order)order)->num_ppl;
-	newOrder->day = ((Order)order)->day;
 	newOrder->hour = ((Order)order)->hour;
 	return newOrder;
 }
 
 
-void freeOrder(ListElement order){
+void freeOrder(ListElement order) {
 	if ( order == NULL ) return;
 	free(((Order)order)->email);
 	free((Order)order);
 }
 
 
-MtmErrorCode addOrder(List orders, char* email, TechnionFaculty faculty, int id, char* time, int num_ppl) {
+MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty faculty, int id, int hour, int num_ppl) {
+	//TODO escaper email should be checked before this function
+
+	if ( orders == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
+
 
 	Order newOrder = malloc(sizeof(struct order_t));
-	newOrder->email = malloc(sizeof(char) * 10);
-	strcpy(newOrder->email, "dfsdf");
+	if ( newOrder == NULL) {
+		return MTM_OUT_OF_MEMORY;
+	}
+	newOrder->email = malloc(sizeof(char) * (strlen(email) + 1));
+	if ( newOrder->email == NULL) {
+		free(newOrder);
+		return MTM_OUT_OF_MEMORY;
+	}
+	strcpy(newOrder->email, email);
+	newOrder->faculty = faculty;
+	newOrder->id = id;
+	newOrder->hour = hour;
+	newOrder->num_ppl = num_ppl;
 
 	listInsertFirst(orders, newOrder);
 	free(newOrder->email);
 	free(newOrder);
-
-	/*
-	if ( rooms == NULL || users == NULL ) return MTM_INVALID_PARAMETER;
-	if ( email == NULL || !emailValidity(email) )  return MTM_INVALID_PARAMETER;
-
-	TechnionFaculty faculty = findCompanyFacultyFromEmail(users, email);
-	if ( faculty == UNKNOWN ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
-
-
-	//TODO check email exist
-	//TODO check email not in the list
-	//TODO faculty & id unic
-	Room newRoom = malloc(sizeof(struct room_t));
-	if ( newRoom == NULL) {
-		return MTM_OUT_OF_MEMORY;
-	}
-	newRoom->email = malloc(sizeof(char) * (strlen(email)+1));
-	if ( newRoom->email == NULL) {
-		free(newRoom);
-		return MTM_OUT_OF_MEMORY;
-	}
-	if ( id < 1 || price < 1 || price % 4 != 0 || num_ppl < 1) {
-		free(newRoom->email);
-		free(newRoom);
-		return MTM_INVALID_PARAMETER;
-	}
-
-	int from =  fromHour(working_hrs);
-	int to =  toHour(working_hrs);
-
-	if ( from < 0 || from >= to || to > 23) {
-		free(newRoom->email);
-		free(newRoom);
-		return MTM_INVALID_PARAMETER;
-	}
-
-	if ( difficulty < 1 || difficulty > 10 ) {
-		free(newRoom->email);
-		free(newRoom);
-		return MTM_INVALID_PARAMETER;
-	}
-
-	strcpy(newRoom->email, email);
-	newRoom->id = id;
-	newRoom->faculty = faculty;
-	newRoom->price = price;
-	newRoom->num_ppl = num_ppl;
-	newRoom->from_hrs = from;
-	newRoom->to_hrs = to;
-	newRoom->difficulty = difficulty;
-	//printf("faculty: %d id: %d\n", faculty, id);
-	if( setIsIn(rooms, newRoom) ) {
-		free(newRoom->email);
-		free(newRoom);
-		return MTM_ID_ALREADY_EXIST;
-	}
-
-	setAdd(rooms, newRoom);
-	free(newRoom->email);
-	free(newRoom);*/
+	//TODO check that the room (facultyid) available in the hour;
 	return MTM_SUCCESS;
 }
 
 
+
+MtmErrorCode createOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
+	//TODO escaper email should be checked before this function
+
+	if(days==NULL || users==NULL || rooms==NULL) return MTM_INVALID_PARAMETER;
+
+/*
+	Order newOrder = malloc(sizeof(struct order_t));
+	if ( newOrder == NULL) {
+		return MTM_OUT_OF_MEMORY;
+	}
+	newOrder->email = malloc(sizeof(char) * (strlen(email) + 1));
+	if ( newOrder->email == NULL) {
+		free(newOrder);
+		return MTM_OUT_OF_MEMORY;
+	}
+	strcpy(newOrder->email, email);
+	newOrder->faculty = faculty;
+	newOrder->id = id;
+	newOrder->hour = hour;
+	newOrder->num_ppl = num_ppl;
+
+	listInsertFirst(orders, newOrder);
+	free(newOrder->email);
+	free(newOrder);*/
+	//TODO check that the room (facultyid) available in the hour;
+	return MTM_SUCCESS;
+}
+
+//TODO maybe should be deleted
+int orderForToday (List days) {
+	if( days==NULL ) return MTM_INVALID_PARAMETER;
+
+	return 0;
+}
 
 
 ListElement copyDay(ListElement day) {
@@ -117,11 +107,29 @@ ListElement copyDay(ListElement day) {
 	//TODO maybe assert
 	Day newDay = malloc(sizeof(struct day_t));
 	if( newDay == NULL ) return NULL;
-	List newList = listCreate(copyOrder ,freeOrder);
-	List list = *((Day)day)->dayOrders;
-	newList = listCopy(list);
-	newDay->dayOrders = &newList;
+	List newList;
+	if (((Day)day)->dayOrders != NULL ) {
+		List list = ((Day)day)->dayOrders;
+		newList = listCopy(list);
+	} else {
+		newList = listCreate(copyOrder ,freeOrder);
+	}
+	newDay->dayOrders = newList;
 	return newDay;
 }
 
+void freeDay(ListElement day) {
+	if ( day == NULL ) return;
+	listDestroy(((Day)day)->dayOrders);
+	free((Day)day);
+}
 
+MtmErrorCode addToday(List days) {
+	if ( days == NULL ) return MTM_INVALID_PARAMETER;
+	Day newDay = malloc(sizeof(struct day_t));
+	newDay->dayOrders = NULL;
+	newDay->day = 0;
+	listInsertFirst(days, newDay);
+	printf("\nnumber of days: %d\n", listGetSize(days));
+	return MTM_SUCCESS;
+}
