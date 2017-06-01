@@ -23,11 +23,24 @@ typedef struct order_t{
 	int hour;
 } *Order;
 
+typedef struct day_t{
+	List *dayOrders;
+} *Day;
 
-MtmErrorCode add_order(char* email, char* faculty);
+
+
+ListElement copyDay(ListElement day);
+
+void freeDay(ListElement day);
+
+
+
 
 ListElement copyOrder(ListElement order);
 
 void freeOrder(ListElement order);
+
+MtmErrorCode addOrder(List orders, char* email, TechnionFaculty faculty, int id, char* time, int num_ppl);
+
 
 #endif /* ORDER_H_ */
