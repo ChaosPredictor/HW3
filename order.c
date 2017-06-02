@@ -110,6 +110,21 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, Techni
 		if ( day == NULL ) {
 			Day newDay = createDay(dayNumber + daysFromToday);
 			orders = newDay->dayOrders;
+
+
+			List filteredOrders = listFilter(orders, filterOrderByHour, &hour);
+			if ( listGetSize(filteredOrders) != 0 ) {
+				List filteredOrdersEscaper = listFilter(filteredOrders, filterOrderByEscaper, &email);
+				if ( listGetSize(filteredOrdersEscaper) != 0 ) {
+					listDestroy(filteredOrders);
+					listDestroy(filteredOrdersEscaper);
+					return MTM_CLIENT_IN_ROOM;
+				}
+				listDestroy(filteredOrdersEscaper);
+
+			}
+			listDestroy(filteredOrders);
+
 			addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
 			listInsertLast(days, newDay);
 			freeDay(newDay);
@@ -209,6 +224,10 @@ MtmErrorCode addToday(List days) {
 	return MTM_SUCCESS;
 }
 
-bool filterOrderByHour(ListElement listElement, ListFilterKey hour) {
+bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour) {
 	return ((((Order)listElement)->hour) == *(int*)hour);
+}
+
+bool filterOrderByEscaper(const ListElement listElement, const ListFilterKey email) {
+	return (strcmp((((Order)listElement)->email), (char*)email) == 0);
 }

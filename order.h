@@ -48,6 +48,10 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, Techni
 
 MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty faculty, int id, int price, int hour, int num_ppl);
 
+bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour);
+
+bool filterOrderByEscaper(const ListElement listElement, const ListFilterKey email);
+
 
 
 ListElement copyDay(ListElement day);
