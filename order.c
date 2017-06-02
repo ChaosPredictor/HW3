@@ -62,7 +62,9 @@ MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty facu
 	listInsertFirst(orders, newOrder);
 	free(newOrder->email);
 	free(newOrder);
-	//TODO check that the room (facultyid) available in the hour;
+
+	//TODO check that the room (faculty&id) available in the hour;
+	//TODO check that the escaper available in the hour;
 	return MTM_SUCCESS;
 }
 
@@ -93,6 +95,8 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, Techni
 	int hour = atoi( strtok(NULL, "-") );
 	free( temp );
 
+	if( hour < room->from_hrs || hour >= room->to_hrs ) return MTM_ROOM_NOT_AVAILABLE;
+
 	Day day = listGetFirst(days);
 	List orders = NULL;
 	if ( day != NULL && daysFromToday != 0 ) {
@@ -101,7 +105,7 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, Techni
 		//printf("\nday today: %d || day Number: %d || days from today: %d\n", day->day, dayNumber, daysFromToday);
 		while ( day != NULL && day->dayNumber < dayNumber + daysFromToday ) {
 			day = listGetNext(days);
-			printf("\nrun\n");
+			//printf("\nrun\n");
 		}
 		if ( day == NULL ) {
 			Day newDay = createDay(dayNumber + daysFromToday);
@@ -110,15 +114,15 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, Techni
 			listInsertLast(days, newDay);
 			freeDay(newDay);
 			//TODO check return;
-			printf("\nend of list\n");
+			//printf("\nend of list\n");
 		} else {
 			if ( day->dayNumber ==  dayNumber + daysFromToday ) {
 				orders = day->dayOrders;
 				addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
-				printf("\nday found\n");
+				//printf("\nday found\n");
 
 			} else {
-				printf("\nday does not found\n");
+				//printf("\nday does not found\n");
 				Day newDay = createDay(dayNumber + daysFromToday);
 				orders = newDay->dayOrders;
 				addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
@@ -129,7 +133,7 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, Techni
 	} else {
 		orders = day->dayOrders;
 		addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
-		printf("\ntoday\n");
+		//printf("\ntoday\n");
 	}
 
 
@@ -203,4 +207,8 @@ MtmErrorCode addToday(List days) {
 	listInsertFirst(days, newDay);
 	printf("\nnumber of days: %d\n", listGetSize(days));
 	return MTM_SUCCESS;
+}
+
+bool filterOrderByHour(ListElement listElement, ListFilterKey hour) {
+	return ((((Order)listElement)->hour) == *(int*)hour);
 }
