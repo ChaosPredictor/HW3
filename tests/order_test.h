@@ -16,6 +16,7 @@
 
 #include "./test_utilities.h"
 #include "./user_test.h"
+#include "./room_test.h"
 #include "./../order.h"
 
 /*

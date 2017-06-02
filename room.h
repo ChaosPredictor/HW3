@@ -43,6 +43,10 @@ void freeRoom(SetElement room);
 
 int compareRooms(SetElement room1, SetElement room2);
 
+int getRoomPrice(const Set rooms, TechnionFaculty faculty, int id);
 
+SetElement findRoom(const Set rooms, TechnionFaculty faculty, int id);
+
+int getRoomPrice(const Set rooms, TechnionFaculty faculty, int id);
 
 #endif /* ROOM_H_ */

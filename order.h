@@ -13,6 +13,7 @@
 #include "mtm_ex3.h"
 #include "list.h"
 #include "user.h"
+#include "room.h"
 
 typedef struct order_t{
 	char* email;
@@ -43,8 +44,9 @@ void freeOrder(ListElement order);
 
 MtmErrorCode createOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
+MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
-MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty faculty, int id, int hour, int num_ppl);
+MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty faculty, int id, int price, int hour, int num_ppl);
 
 
 

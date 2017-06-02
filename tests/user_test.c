@@ -156,11 +156,12 @@ Set testHelperAddUsers() {
 	addUser( users, "escaper1@civil", CIVIL_ENGINEERING, ESCAPER_1 );
 	addUser( users, "escaper2@civil", CIVIL_ENGINEERING, ESCAPER_5 );
 	addUser( users, "escaper3@mechanical", MECHANICAL_ENGINEERING, ESCAPER_2 );
+	addUser( users, "escaper1@mechanical", MECHANICAL_ENGINEERING, ESCAPER_8 );
 	addUser( users, "escaper1@electrical", ELECTRICAL_ENGINEERING, ESCAPER_10 );
 	addUser( users, "escaper1@biotechnology", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, ESCAPER_1 );
 	addUser( users, "escaper1@aerospace", AEROSPACE_ENGINEERING, ESCAPER_7 );
 
-	ASSERT_TEST( setGetSize(users) == 15 );
+	ASSERT_TEST( setGetSize(users) == 16 );
 	return users;
 }
 

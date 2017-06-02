@@ -8,6 +8,7 @@
 
 #include "order.h"
 
+#define DISCONT 25 //Percents
 
 ListElement copyOrder(ListElement order) {
 	if ( order == NULL ) return NULL;
@@ -36,7 +37,7 @@ void freeOrder(ListElement order) {
 }
 
 
-MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty faculty, int id, int hour, int num_ppl) {
+MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty faculty, int id, int price, int hour, int num_ppl) {
 	//TODO escaper email should be checked before this function
 
 	if ( orders == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
@@ -54,6 +55,7 @@ MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty facu
 	strcpy(newOrder->email, email);
 	newOrder->faculty = faculty;
 	newOrder->id = id;
+	newOrder->price = price;
 	newOrder->hour = hour;
 	newOrder->num_ppl = num_ppl;
 
@@ -66,10 +68,25 @@ MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty facu
 
 
 
-MtmErrorCode createOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
-	//TODO escaper email should be checked before this function
-
+MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
 	if(days==NULL || users==NULL || rooms==NULL) return MTM_INVALID_PARAMETER;
+
+	Day firstDay = listGetFirst(days);
+	List orders = firstDay->dayOrders;
+	//TODO email check;
+
+	TechnionFaculty escaperFaculty = findEscaperFacultyFromEmail( users, email );
+
+	//TODO check faculty
+	int price = getRoomPrice(rooms, faculty, id);
+	//if ( price != -1 )
+	if ( escaperFaculty == faculty ) {
+		price *= (100 - DISCONT)/100;
+	}
+
+	addOrderToADay(orders, email, faculty, id, price, 7, 4);
+
+	//TODO escaper email should be checked before this function
 
 /*
 	Order newOrder = malloc(sizeof(struct order_t));

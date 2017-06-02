@@ -223,7 +223,7 @@ static bool testAddRoom() {
 	return true;
 }
 
-static Set testHelperAddRooms(Set users) {
+Set testHelperAddRooms(Set users) {
 	Set rooms = setCreate(copyRoom, freeRoom, compareRooms);
 	ASSERT_TEST( rooms != NULL);
 	addRoom(rooms, users, "company1@civil", 1, 4, 3, "05-07", 10);

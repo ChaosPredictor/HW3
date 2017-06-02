@@ -13,6 +13,51 @@ int toHour(const char* working_hrs);
 int charToInt(char c);
 
 
+
+SetElement copyRoom(SetElement room) {
+	if ( room == NULL ) return NULL;
+	//TODO maybe assert
+	Room newRoom = malloc(sizeof(struct room_t));
+	if( newRoom == NULL ) return NULL;
+	newRoom->email = malloc(sizeof(char) * (strlen(((Room)room)->email) + 1));
+	if( newRoom->email == NULL ) {
+		free(newRoom);
+		return NULL;
+	}
+	strcpy(newRoom->email, ((Room)room)->email);
+
+	newRoom->id = ((Room)room)->id;
+	newRoom->faculty = ((Room)room)->faculty;
+	newRoom->price = ((Room)room)->price;
+	newRoom->num_ppl = ((Room)room)->num_ppl;
+	newRoom->from_hrs = ((Room)room)->from_hrs;
+	newRoom->to_hrs = ((Room)room)->to_hrs;
+	newRoom->difficulty = ((Room)room)->difficulty;
+	return newRoom;
+}
+
+void freeRoom(SetElement room){
+	if ( room == NULL ) return;
+	free(((Room)room)->email);
+	free((Room)room);
+}
+
+int compareRooms(SetElement room1, SetElement room2) {
+	//TODO email to faculty
+	if ( room1 == NULL || room2 == NULL ) {
+		//TODO print that is null;
+		return 0;
+	}
+	//int emailCompare = strcmp( ((Room)room1)->email, ((Room)room2)->email );
+	int facultyCompare = (((Room)room1)->faculty - ((Room)room2)->faculty);
+	if ( facultyCompare == 0 ) {
+		return ( ((Room)room1)->id - ((Room)room2)->id );
+	} else {
+		return facultyCompare;
+	}
+}
+
+
 MtmErrorCode addRoom(Set rooms, Set users, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty) {
 	if ( rooms == NULL || users == NULL ) return MTM_INVALID_PARAMETER;
 	if ( email == NULL || !emailValidity(email) )  return MTM_INVALID_PARAMETER;
@@ -97,48 +142,24 @@ MtmErrorCode removeRoom(Set setRoom, TechnionFaculty faculty, int id) {
 }
 
 
-SetElement copyRoom(SetElement room) {
-	if ( room == NULL ) return NULL;
-	//TODO maybe assert
-	Room newRoom = malloc(sizeof(struct room_t));
-	if( newRoom == NULL ) return NULL;
-	newRoom->email = malloc(sizeof(char) * (strlen(((Room)room)->email) + 1));
-	if( newRoom->email == NULL ) {
-		free(newRoom);
-		return NULL;
-	}
-	strcpy(newRoom->email, ((Room)room)->email);
 
-	newRoom->id = ((Room)room)->id;
-	newRoom->faculty = ((Room)room)->faculty;
-	newRoom->price = ((Room)room)->price;
-	newRoom->num_ppl = ((Room)room)->num_ppl;
-	newRoom->from_hrs = ((Room)room)->from_hrs;
-	newRoom->to_hrs = ((Room)room)->to_hrs;
-	newRoom->difficulty = ((Room)room)->difficulty;
-	return newRoom;
+
+
+int getRoomPrice(const Set rooms, TechnionFaculty faculty, int id) {
+	Room room = findRoom(rooms, faculty, id);
+	if( room != NULL ) return room->price;
+	return -1;
 }
 
-void freeRoom(SetElement room){
-	if ( room == NULL ) return;
-	free(((Room)room)->email);
-	free((Room)room);
+SetElement findRoom(const Set rooms, TechnionFaculty faculty, int id) {
+	SET_FOREACH(Room, val, rooms) {
+		if ( val->faculty == faculty && val->id == id ) {
+			return val;
+		}
+	}
+	return NULL;
 }
 
-int compareRooms(SetElement room1, SetElement room2) {
-	//TODO email to faculty
-	if ( room1 == NULL || room2 == NULL ) {
-		//TODO print that is null;
-		return 0;
-	}
-	//int emailCompare = strcmp( ((Room)room1)->email, ((Room)room2)->email );
-	int facultyCompare = (((Room)room1)->faculty - ((Room)room2)->faculty);
-	if ( facultyCompare == 0 ) {
-		return ( ((Room)room1)->id - ((Room)room2)->id );
-	} else {
-		return facultyCompare;
-	}
-}
 
 int fromHour(const char* working_hrs) {
 	return ( charToInt(working_hrs[1]) + ( charToInt(working_hrs[0]) * 10 ));

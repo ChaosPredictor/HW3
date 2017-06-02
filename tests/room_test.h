@@ -23,4 +23,6 @@
 
 int roomTests (int argv, char** arc);
 
+Set testHelperAddRooms(Set users);
+
 #endif /* TESTS_ROOM_TEST_H_ */
