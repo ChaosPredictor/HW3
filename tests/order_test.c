@@ -69,11 +69,13 @@ static bool testAddOrder() {
 
 	//TODO create list of days;
 	//List days = listCreate(copyDay, freeDay);
-	List days = daysCreate();
+	List days = createDays();
 	Set users = testHelperAddUsers();
 	Set rooms = testHelperAddRooms(users);
 
 	int numberOfOrders = 0;
+	int numberOfDays = 0;
+
 
 	TechnionFaculty faculty = MECHANICAL_ENGINEERING;
 	int id = 1;
@@ -96,29 +98,31 @@ static bool testAddOrder() {
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "0-6", 3) == MTM_SUCCESS );
 	numberOfOrders++;
-	ASSERT_TEST( listGetSize(days) == 1 );
+	numberOfDays++;
+	ASSERT_TEST( listGetSize(days) == numberOfDays );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	List orders = firstDay->dayOrders;
 	Order order = listGetFirst(orders);
 	int price = getRoomPrice(rooms, faculty, id);
 	ASSERT_TEST( order->price == price );
-/*
+
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "1-6", 3) == MTM_SUCCESS );
-	numberOfOrders++;
-	ASSERT_TEST( listGetSize(days) == 2 );
+	//numberOfOrders++;
+	numberOfDays++;
+	ASSERT_TEST( listGetSize(days) == numberOfDays );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	orders = firstDay->dayOrders;
 	order = listGetFirst(orders);
 	price = getRoomPrice(rooms, faculty, id);
 	ASSERT_TEST( order->price == price );
-*/
+
 
 
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@mechanical", faculty, id, "1-6", 3) == MTM_SUCCESS );
-	numberOfOrders++;
-	ASSERT_TEST( listGetSize(days) == 1 );
+	//numberOfOrders++;
+	ASSERT_TEST( listGetSize(days) == numberOfDays );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	firstDay = listGetFirst(days);
 	orders = firstDay->dayOrders;
@@ -140,7 +144,7 @@ static bool testAddOrderToADay() {
 /*	List days = listCreate(copyDay, freeDay);
 	addToday(days);
 	*/
-	List days = daysCreate();
+	List days = createDays();
 
 	Day day = listGetFirst(days);
 	List orders = day->dayOrders;

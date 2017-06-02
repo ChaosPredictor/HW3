@@ -91,21 +91,39 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, Techni
 	free( temp );
 
 	Day day = listGetFirst(days);
+	List orders = NULL;
 	if ( day != NULL && daysFromToday != 0 ) {
-		int dayNumber = day->day;
+		int dayNumber = day->dayNumber;
 		//printf("\nday today: %d \n", day->day);
 		//printf("\nday today: %d || day Number: %d || days from today: %d\n", day->day, dayNumber, daysFromToday);
-		while ( day != NULL && day->day < dayNumber + daysFromToday ) {
+		while ( day != NULL && day->dayNumber < dayNumber + daysFromToday ) {
 			day = listGetNext(days);
+			printf("\nrun\n");
+		}
+		if ( day == NULL ) {
+			Day newDay = createDay(dayNumber + daysFromToday);
+			orders = newDay->dayOrders;
+			addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
+			listInsertLast(days, newDay);
+			freeDay(newDay);
+			//TODO check return;
+			printf("\nend of list\n");
+		} else {
+			if ( day->dayNumber ==  dayNumber + daysFromToday ) {
+				printf("\nday found\n");
+
+			} else {
+				printf("\nday does not found\n");
+			}
 		}
 	} else {
+		orders = day->dayOrders;
+		addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
 		printf("\ntoday\n");
 	}
 
-	Day firstDay = listGetFirst(days);
-	List orders = firstDay->dayOrders;
+	//Day firstDay = listGetFirst(days);
 
-	addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
 
 	//TODO escaper email should be checked before this function
 
@@ -152,7 +170,7 @@ ListElement copyDay(ListElement day) {
 	} else {
 		newList = listCreate(copyOrder ,freeOrder);
 	}
-	newDay->day = ((Day)day)->day;
+	newDay->dayNumber = ((Day)day)->dayNumber;
 	newDay->dayOrders = newList;
 	return newDay;
 }
@@ -163,8 +181,15 @@ void freeDay(ListElement day) {
 	free((Day)day);
 }
 
+ListElement createDay(int dayNumber) {
+	Day newDay = malloc(sizeof(struct day_t));
+	if( newDay == NULL ) return NULL;
+	newDay->dayNumber = dayNumber;
+	newDay->dayOrders = listCreate(copyOrder ,freeOrder);
+	return newDay;
+}
 
-List daysCreate() {
+List createDays() {
 	List days = listCreate(copyDay, freeDay);
 	if ( days == NULL ) return NULL;
 	Day newDay = malloc(sizeof(struct day_t));
@@ -173,7 +198,7 @@ List daysCreate() {
 		return NULL;
 	}
 	newDay->dayOrders = NULL;
-	newDay->day = 8;
+	newDay->dayNumber = 8;
 	listInsertFirst(days, newDay);
 	free(newDay);
 	return days;
@@ -184,7 +209,7 @@ MtmErrorCode addToday(List days) {
 	if ( days == NULL ) return MTM_INVALID_PARAMETER;
 	Day newDay = malloc(sizeof(struct day_t));
 	newDay->dayOrders = NULL;
-	newDay->day = 0;
+	newDay->dayNumber = 0;
 	listInsertFirst(days, newDay);
 	printf("\nnumber of days: %d\n", listGetSize(days));
 	return MTM_SUCCESS;

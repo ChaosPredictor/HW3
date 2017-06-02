@@ -26,7 +26,7 @@ typedef struct order_t{
 
 typedef struct day_t{
 	List dayOrders;
-	int day;
+	int dayNumber;
 } *Day;
 
 
@@ -58,6 +58,8 @@ int ordersForToday(List days);
 
 MtmErrorCode addToday(List days);
 
-List daysCreate();
+ListElement createDay(int dayNumber);
+
+List createDays();
 
 #endif /* ORDER_H_ */
