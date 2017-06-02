@@ -75,19 +75,37 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, Techni
 	if( escaperFaculty == UNKNOWN ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 
 
-	Day firstDay = listGetFirst(days);
-	List orders = firstDay->dayOrders;
+
 
 	Room room = findRoom(rooms, faculty, id);
 	if ( room == NULL ) return MTM_ID_DOES_NOT_EXIST;
 
-	int price = getRoomPrice(rooms, faculty, id);
-	//if ( price != -1 )
+	int price = room->price;
 	if ( escaperFaculty == faculty ) {
 		price *= (100 - DISCONT)/100;
 	}
+	char *temp = malloc(sizeof(char) * (strlen(time) + 1));
+	strcpy(temp,time);
+	int daysFromToday = atoi( strtok(temp, "-") );
+	int hour = atoi( strtok(NULL, "-") );
+	free( temp );
 
-	addOrderToADay(orders, email, faculty, id, price, 7, 4);
+	Day day = listGetFirst(days);
+	if ( day != NULL && daysFromToday != 0 ) {
+		int dayNumber = day->day;
+		//printf("\nday today: %d \n", day->day);
+		//printf("\nday today: %d || day Number: %d || days from today: %d\n", day->day, dayNumber, daysFromToday);
+		while ( day != NULL && day->day < dayNumber + daysFromToday ) {
+			day = listGetNext(days);
+		}
+	} else {
+		printf("\ntoday\n");
+	}
+
+	Day firstDay = listGetFirst(days);
+	List orders = firstDay->dayOrders;
+
+	addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
 
 	//TODO escaper email should be checked before this function
 
@@ -134,6 +152,7 @@ ListElement copyDay(ListElement day) {
 	} else {
 		newList = listCreate(copyOrder ,freeOrder);
 	}
+	newDay->day = ((Day)day)->day;
 	newDay->dayOrders = newList;
 	return newDay;
 }
@@ -154,7 +173,7 @@ List daysCreate() {
 		return NULL;
 	}
 	newDay->dayOrders = NULL;
-	newDay->day = 0;
+	newDay->day = 8;
 	listInsertFirst(days, newDay);
 	free(newDay);
 	return days;
