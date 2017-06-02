@@ -227,16 +227,17 @@ Set testHelperAddRooms(Set users) {
 	Set rooms = setCreate(copyRoom, freeRoom, compareRooms);
 	ASSERT_TEST( rooms != NULL);
 	addRoom(rooms, users, "company1@civil", 1, 4, 3, "05-07", 10);
-	addRoom(rooms, users, "company1@civil", 2, 4, 3, "05-07", 10);
-	addRoom(rooms, users, "company1@mechanical", 1, 4, 3, "05-07", 10);
-	addRoom(rooms, users, "company1@electrical", 1, 4, 3, "05-07", 10);
-	addRoom(rooms, users, "company1@chemical", 1, 4, 3, "05-07", 10);
-	addRoom(rooms, users, "company1@biotechnology", 1, 4, 3, "05-07", 10);
-	addRoom(rooms, users, "company1@aerospace", 1, 4, 3, "05-07", 10);
-	addRoom(rooms, users, "company1@industrial", 1, 4, 3, "05-07", 10);
-	addRoom(rooms, users, "company1@mathematics", 1, 4, 3, "05-07", 10);
+	addRoom(rooms, users, "company1@civil", 2, 8, 3, "05-07", 10);
+	addRoom(rooms, users, "company1@mechanical", 1, 12, 3, "05-07", 10);
+	addRoom(rooms, users, "company1@electrical", 1, 44, 3, "05-07", 10);
+	addRoom(rooms, users, "company1@electrical", 2, 48, 3, "05-07", 10);
+	addRoom(rooms, users, "company1@chemical", 1, 20, 3, "05-07", 10);
+	addRoom(rooms, users, "company1@biotechnology", 1, 24, 3, "05-07", 10);
+	addRoom(rooms, users, "company1@aerospace", 1, 28, 3, "05-07", 10);
+	addRoom(rooms, users, "company1@industrial", 1, 36, 3, "05-07", 10);
+	addRoom(rooms, users, "company1@mathematics", 1, 40, 3, "05-07", 10);
 
-	ASSERT_TEST( setGetSize(rooms) == 9 );
+	ASSERT_TEST( setGetSize(rooms) == 10 );
 	return rooms;
 }
 

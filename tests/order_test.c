@@ -95,41 +95,69 @@ static bool testAddOrder() {
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "1-6", 3) == MTM_ID_DOES_NOT_EXIST );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	id = 1;
+
+
+	printf("case1\n");
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "0-6", 3) == MTM_SUCCESS );
 	numberOfOrders++;
 	numberOfDays++;
 	ASSERT_TEST( listGetSize(days) == numberOfDays );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
-	List orders = firstDay->dayOrders;
-	Order order = listGetFirst(orders);
-	int price = getRoomPrice(rooms, faculty, id);
-	ASSERT_TEST( order->price == price );
+	Order order = listGetFirst(firstDay->dayOrders);
+	ASSERT_TEST( order->price == getRoomPrice(rooms, faculty, id) );
 
+
+	printf("case2\n");
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
-	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "1-6", 3) == MTM_SUCCESS );
+	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "5-6", 3) == MTM_SUCCESS );
 	//numberOfOrders++;
 	numberOfDays++;
 	ASSERT_TEST( listGetSize(days) == numberOfDays );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
-	orders = firstDay->dayOrders;
-	order = listGetFirst(orders);
-	price = getRoomPrice(rooms, faculty, id);
-	ASSERT_TEST( order->price == price );
+	order = listGetFirst(firstDay->dayOrders);
+	ASSERT_TEST( order->price == getRoomPrice(rooms, faculty, id) );
 
 
-
+	printf("case3\n");
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
-	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@mechanical", faculty, id, "1-6", 3) == MTM_SUCCESS );
-	//numberOfOrders++;
+	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@mechanical", faculty, id, "0-6", 3) == MTM_SUCCESS );
+	numberOfOrders++;
 	ASSERT_TEST( listGetSize(days) == numberOfDays );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
-	firstDay = listGetFirst(days);
-	orders = firstDay->dayOrders;
-	listGetFirst(orders);
-	order = listGetNext(orders);
-	price = getRoomPrice(rooms, faculty, id);
-	//ASSERT_TEST( order->price == price * 0.75 );
+	List orders = firstDay->dayOrders;
+	order = listGetFirst(orders);
+	ASSERT_TEST( order->price == getRoomPrice(rooms, faculty, id) * 75 / 100 );
+
+
+	printf("case4\n");
+	faculty = ELECTRICAL_ENGINEERING;
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
+	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "3-6", 3) == MTM_SUCCESS );
+	//numberOfOrders++;
+	numberOfDays++;
+	ASSERT_TEST( listGetSize(days) == numberOfDays );
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
+	listGetFirst(days);
+	Day day = listGetNext(days);
+	order = listGetFirst(day->dayOrders);
+	ASSERT_TEST( order->price == getRoomPrice(rooms, faculty, id) );
+
+
+	printf("case5\n");
+	id = 2;
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
+	ASSERT_TEST( addOrder(days, users, rooms, "escaper2@civil", faculty, id, "3-6", 3) == MTM_SUCCESS );
+	//numberOfOrders++;
+	//numberOfDays++;
+	ASSERT_TEST( listGetSize(days) == numberOfDays );
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
+	listGetFirst(days);
+	day = listGetNext(days);
+	order = listGetFirst(day->dayOrders);
+	//printf("\nprice: %d/%d\n", order->price, getRoomPrice(rooms, faculty, id));
+	ASSERT_TEST( order->price == getRoomPrice(rooms, faculty, id) );
+
 
 
 	setDestroy(rooms);

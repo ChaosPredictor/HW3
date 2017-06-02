@@ -81,8 +81,11 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, Techni
 	if ( room == NULL ) return MTM_ID_DOES_NOT_EXIST;
 
 	int price = room->price;
+	//printf("\nroom price: %d\n", price);
+
 	if ( escaperFaculty == faculty ) {
-		price *= (100 - DISCONT)/100;
+		price *= (100 - DISCONT);
+		price /= 100;
 	}
 	char *temp = malloc(sizeof(char) * (strlen(time) + 1));
 	strcpy(temp,time);
@@ -110,10 +113,17 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, Techni
 			printf("\nend of list\n");
 		} else {
 			if ( day->dayNumber ==  dayNumber + daysFromToday ) {
+				orders = day->dayOrders;
+				addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
 				printf("\nday found\n");
 
 			} else {
 				printf("\nday does not found\n");
+				Day newDay = createDay(dayNumber + daysFromToday);
+				orders = newDay->dayOrders;
+				addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
+				listInsertBeforeCurrent(days, newDay);
+				freeDay(newDay);
 			}
 		}
 	} else {
@@ -122,30 +132,10 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, Techni
 		printf("\ntoday\n");
 	}
 
-	//Day firstDay = listGetFirst(days);
 
 
 	//TODO escaper email should be checked before this function
 
-/*
-	Order newOrder = malloc(sizeof(struct order_t));
-	if ( newOrder == NULL) {
-		return MTM_OUT_OF_MEMORY;
-	}
-	newOrder->email = malloc(sizeof(char) * (strlen(email) + 1));
-	if ( newOrder->email == NULL) {
-		free(newOrder);
-		return MTM_OUT_OF_MEMORY;
-	}
-	strcpy(newOrder->email, email);
-	newOrder->faculty = faculty;
-	newOrder->id = id;
-	newOrder->hour = hour;
-	newOrder->num_ppl = num_ppl;
-
-	listInsertFirst(orders, newOrder);
-	free(newOrder->email);
-	free(newOrder);*/
 	//TODO check that the room (facultyid) available in the hour;
 	return MTM_SUCCESS;
 }
