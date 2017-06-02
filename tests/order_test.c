@@ -116,8 +116,24 @@ static bool testAddOrder() {
 	Order order = listGetFirst(firstDay->dayOrders);
 	ASSERT_TEST( order->price == getRoomPrice(rooms, faculty, id) );
 
+
+	//fail - escaper have other order same time
+	//printf("case2\n");
+	faculty = CIVIL_ENGINEERING;
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
+	//printf("case2 %d\n", addOrder(days, users, rooms, "escaper1@civil", faculty, id, "0-6", 3));
+
+	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "0-6", 3) == MTM_CLIENT_IN_ROOM );
+	//numberOfOrders++;
+	//numberOfDays++;
+	ASSERT_TEST( listGetSize(days) == numberOfDays );
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
+
+
+
 	//success - add to not exist day
 	//printf("case2\n");
+	faculty = MECHANICAL_ENGINEERING;
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "5-6", 3) == MTM_SUCCESS );
 	//numberOfOrders++;

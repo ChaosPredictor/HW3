@@ -44,13 +44,13 @@ void freeOrder(ListElement order);
 
 MtmErrorCode createOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
-MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
+MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
 MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty faculty, int id, int price, int hour, int num_ppl);
 
 bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour);
 
-bool filterOrderByEscaper(const ListElement listElement, const ListFilterKey email);
+bool filterOrderByEscaper(const ListElement listElement, ListFilterKey email);
 
 
 

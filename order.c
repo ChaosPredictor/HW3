@@ -70,7 +70,7 @@ MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty facu
 
 
 
-MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
+MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
 	if(days==NULL || users==NULL || rooms==NULL) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
 	TechnionFaculty escaperFaculty = findEscaperFacultyFromEmail( users, email );
@@ -99,7 +99,7 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, Techni
 
 	Day day = listGetFirst(days);
 	List orders = NULL;
-	if ( day != NULL && daysFromToday != 0 ) {
+	if ( daysFromToday != 0 ) {
 		int dayNumber = day->dayNumber;
 		//printf("\nday today: %d \n", day->day);
 		//printf("\nday today: %d || day Number: %d || days from today: %d\n", day->day, dayNumber, daysFromToday);
@@ -112,18 +112,7 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, Techni
 			orders = newDay->dayOrders;
 
 
-			List filteredOrders = listFilter(orders, filterOrderByHour, &hour);
-			if ( listGetSize(filteredOrders) != 0 ) {
-				List filteredOrdersEscaper = listFilter(filteredOrders, filterOrderByEscaper, &email);
-				if ( listGetSize(filteredOrdersEscaper) != 0 ) {
-					listDestroy(filteredOrders);
-					listDestroy(filteredOrdersEscaper);
-					return MTM_CLIENT_IN_ROOM;
-				}
-				listDestroy(filteredOrdersEscaper);
 
-			}
-			listDestroy(filteredOrders);
 
 			addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
 			listInsertLast(days, newDay);
@@ -147,7 +136,29 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, Techni
 		}
 	} else {
 		orders = day->dayOrders;
+
+		//printf("\ntoday list size1 %d\n", listGetSize(orders));
+
+		List filteredOrders = listFilter(orders, filterOrderByHour, &hour);
+		//printf("\ntoday list size2 %d\n", listGetSize(filteredOrders));
+
+		if ( listGetSize(filteredOrders) > 0 ) {
+			List filteredOrdersEscaper = listFilter(filteredOrders, filterOrderByEscaper, email);
+			//printf("\ntoday list size3 %d\n", listGetSize(filteredOrdersEscaper));
+
+			if ( listGetSize(filteredOrdersEscaper) > 0 ) {
+				listDestroy(filteredOrders);
+				listDestroy(filteredOrdersEscaper);
+				return MTM_CLIENT_IN_ROOM;
+			}
+			listDestroy(filteredOrdersEscaper);
+
+		}
+		listDestroy(filteredOrders);
+
 		addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
+
+
 		//printf("\ntoday\n");
 	}
 
@@ -228,6 +239,6 @@ bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour) 
 	return ((((Order)listElement)->hour) == *(int*)hour);
 }
 
-bool filterOrderByEscaper(const ListElement listElement, const ListFilterKey email) {
+bool filterOrderByEscaper(const ListElement listElement, ListFilterKey email) {
 	return (strcmp((((Order)listElement)->email), (char*)email) == 0);
 }
