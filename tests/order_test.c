@@ -73,19 +73,26 @@ static bool testAddOrder() {
 	Set users = testHelperAddUsers();
 	Set rooms = testHelperAddRooms(users);
 
-	//fail email
 	int numberOfOrders = 0;
 
 	TechnionFaculty faculty = MECHANICAL_ENGINEERING;
 	int id = 1;
 
 	Day firstDay = listGetFirst(days);
+
+	//fail - email
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper1#civil", faculty, id, "1-6", 3) == MTM_INVALID_PARAMETER );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper7@civil", faculty, id, "1-6", 3) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
+	//fail - faculty&id
+	id = 7;
+	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "1-6", 3) == MTM_ID_DOES_NOT_EXIST );
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 
+
+	id = 1;
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "1-6", 3) == MTM_SUCCESS );
 	numberOfOrders++;

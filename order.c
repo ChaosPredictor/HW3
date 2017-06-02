@@ -78,7 +78,9 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, Techni
 	Day firstDay = listGetFirst(days);
 	List orders = firstDay->dayOrders;
 
-	//TODO check faculty
+	Room room = findRoom(rooms, faculty, id);
+	if ( room == NULL ) return MTM_ID_DOES_NOT_EXIST;
+
 	int price = getRoomPrice(rooms, faculty, id);
 	//if ( price != -1 )
 	if ( escaperFaculty == faculty ) {
