@@ -120,9 +120,26 @@ ListElement copyDay(ListElement day) {
 
 void freeDay(ListElement day) {
 	if ( day == NULL ) return;
-	listDestroy(((Day)day)->dayOrders);
+	listDestroy((((Day)day)->dayOrders));
 	free((Day)day);
 }
+
+
+List daysCreate() {
+	List days = listCreate(copyDay, freeDay);
+	if ( days == NULL ) return NULL;
+	Day newDay = malloc(sizeof(struct day_t));
+	if ( newDay == NULL ) {
+		listDestroy(days);
+		return NULL;
+	}
+	newDay->dayOrders = NULL;
+	newDay->day = 0;
+	listInsertFirst(days, newDay);
+	free(newDay);
+	return days;
+}
+
 
 MtmErrorCode addToday(List days) {
 	if ( days == NULL ) return MTM_INVALID_PARAMETER;

@@ -56,4 +56,6 @@ int ordersForToday(List days);
 
 MtmErrorCode addToday(List days);
 
+List daysCreate();
+
 #endif /* ORDER_H_ */

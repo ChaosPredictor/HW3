@@ -83,8 +83,11 @@ static bool testAddOrder() {
 
 static bool testAddOrderToADay() {
 
-	List days = listCreate(copyDay, freeDay);
+/*	List days = listCreate(copyDay, freeDay);
 	addToday(days);
+	*/
+	List days = daysCreate();
+
 	Day day = listGetFirst(days);
 	List orders = day->dayOrders;
 
@@ -107,6 +110,8 @@ static bool testAddOrderToADay() {
 	ASSERT_TEST( addOrderToADay(orders, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 6, 3) == MTM_SUCCESS );
 
 	listDestroy(days);
+	//printf("\nnumber of days: %d\n", listGetSize(days));
+
 	return true;
 }
 
