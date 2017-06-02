@@ -73,23 +73,35 @@ static bool testAddOrder() {
 	Set users = testHelperAddUsers();
 	Set rooms = testHelperAddRooms(users);
 
-	int id = 1;
+	//fail email
+	int numberOfOrders = 0;
+
 	TechnionFaculty faculty = MECHANICAL_ENGINEERING;
+	int id = 1;
+
 	Day firstDay = listGetFirst(days);
-	ASSERT_TEST( listGetSize(firstDay->dayOrders) == 0 );
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
+	ASSERT_TEST( addOrder(days, users, rooms, "escaper1#civil", faculty, id, "1-6", 3) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
+	ASSERT_TEST( addOrder(days, users, rooms, "escaper7@civil", faculty, id, "1-6", 3) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST );
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
+
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "1-6", 3) == MTM_SUCCESS );
+	numberOfOrders++;
 	ASSERT_TEST( listGetSize(days) == 1 );
-	ASSERT_TEST( listGetSize(firstDay->dayOrders) == 1 );
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	List orders = firstDay->dayOrders;
 	Order order = listGetFirst(orders);
 	int price = getRoomPrice(rooms, faculty, id);
 	ASSERT_TEST( order->price == price );
 
 
-	ASSERT_TEST( listGetSize(firstDay->dayOrders) == 1 );
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@mechanical", faculty, id, "1-6", 3) == MTM_SUCCESS );
+	numberOfOrders++;
 	ASSERT_TEST( listGetSize(days) == 1 );
-	ASSERT_TEST( listGetSize(firstDay->dayOrders) == 2 );
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	firstDay = listGetFirst(days);
 	orders = firstDay->dayOrders;
 	listGetFirst(orders);

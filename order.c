@@ -70,12 +70,13 @@ MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty facu
 
 MtmErrorCode addOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
 	if(days==NULL || users==NULL || rooms==NULL) return MTM_INVALID_PARAMETER;
+	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
+	TechnionFaculty escaperFaculty = findEscaperFacultyFromEmail( users, email );
+	if( escaperFaculty == UNKNOWN ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+
 
 	Day firstDay = listGetFirst(days);
 	List orders = firstDay->dayOrders;
-	//TODO email check;
-
-	TechnionFaculty escaperFaculty = findEscaperFacultyFromEmail( users, email );
 
 	//TODO check faculty
 	int price = getRoomPrice(rooms, faculty, id);
