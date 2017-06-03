@@ -154,7 +154,7 @@ static bool testAddRoom() {
 	ASSERT_TEST( setGetSize(rooms) == 0 );
 
 	//company email does not exist
-	ASSERT_TEST( addRoom(rooms, users, "company5@civil", 1, 4, 3, "05-07", 10) == MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
+	ASSERT_TEST( addRoom(rooms, users, "company8@civil", 1, 4, 3, "05-07", 10) == MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
 	ASSERT_TEST( setGetSize(rooms) == 0 );
 	ASSERT_TEST( addRoom(rooms, users, "escaper1@civil", 1, 4, 3, "05-07", 10) == MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
 	ASSERT_TEST( setGetSize(rooms) == 0 );
@@ -226,6 +226,44 @@ static bool testAddRoom() {
 Set testHelperAddRooms(Set users) {
 	Set rooms = setCreate(copyRoom, freeRoom, compareRooms);
 	ASSERT_TEST( rooms != NULL);
+	addRoom(rooms, users, "company1@civil", 1, 20, 6, "11-17", 9);
+	addRoom(rooms, users, "company3@civil", 3, 24, 11, "08-10", 9);
+	addRoom(rooms, users, "company1@civil", 4, 4, 5, "08-09", 6);
+	addRoom(rooms, users, "company5@civil", 7, 8, 7, "02-11", 1);
+	addRoom(rooms, users, "company2@civil", 8, 12, 6, "09-11", 10);
+	addRoom(rooms, users, "company2@civil", 10, 40, 5, "08-19", 7);
+	addRoom(rooms, users, "company1@mechanical", 3, 100, 6, "08-17", 8);
+	addRoom(rooms, users, "company4@mechanical", 5, 20, 4, "09-16", 9);
+	addRoom(rooms, users, "company3@mechanical", 7, 40, 9, "05-15", 5);
+	addRoom(rooms, users, "company3@mechanical", 8, 60, 5, "12-16", 2);
+	addRoom(rooms, users, "company2@mechanical", 10, 28, 11, "04-7", 7);
+	addRoom(rooms, users, "company6@mechanical", 14, 80, 7, "04-15", 3);
+	addRoom(rooms, users, "company5@electrical", 2, 400, 6, "03-11", 1);
+	addRoom(rooms, users, "company1@electrical", 3, 360, 7, "11-14", 1);
+	addRoom(rooms, users, "company7@electrical", 4, 320, 6, "07-11", 10);
+	addRoom(rooms, users, "company6@electrical", 5, 144, 5, "01-04", 7);
+	addRoom(rooms, users, "company3@electrical", 6, 12, 6, "12-22", 2);
+	addRoom(rooms, users, "company2@electrical", 8, 68, 8, "07-16", 9);
+	addRoom(rooms, users, "company5@electrical", 9, 72, 3, "11-23", 2);
+	addRoom(rooms, users, "company1@chemical", 1, 4, 6, "04-11", 4);
+	addRoom(rooms, users, "company1@biotechnology", 2, 8, 2, "04-06", 5);
+	addRoom(rooms, users, "company1@aerospace", 3, 8, 5, "03-13", 2);
+	addRoom(rooms, users, "company1@industrial", 1, 4, 2, "08-10", 3);
+	addRoom(rooms, users, "company1@mathematics", 2, 4, 4, "09-17", 5);
+	addRoom(rooms, users, "company1@physics", 3, 8, 10, "04-13", 2);
+	addRoom(rooms, users, "company1@chemistry", 1, 8, 4, "09-16", 5);
+	addRoom(rooms, users, "company1@biology", 2, 8, 3, "04-09", 8);
+	addRoom(rooms, users, "company1@architecture", 3, 4, 8, "04-07", 5);
+	addRoom(rooms, users, "company1@education", 2, 4, 3, "10-12", 1);
+	addRoom(rooms, users, "company1@computer", 3, 4, 8, "06-13", 3);
+	addRoom(rooms, users, "company1@medicine", 1, 8, 4, "09-16", 9);
+	addRoom(rooms, users, "company1@materials", 2, 4, 6, "09-12", 3);
+	addRoom(rooms, users, "company1@humanites", 1, 48, 8, "05-16", 7);
+
+
+	addRoom(rooms, users, "company1@biomedical", 2, 8, 6, "05-12", 7);
+
+/*
 	addRoom(rooms, users, "company1@civil", 1, 4, 3, "05-07", 10);
 	addRoom(rooms, users, "company1@civil", 2, 8, 3, "05-07", 10);
 	addRoom(rooms, users, "company1@mechanical", 1, 12, 3, "05-09", 10);
@@ -236,8 +274,8 @@ Set testHelperAddRooms(Set users) {
 	addRoom(rooms, users, "company1@aerospace", 1, 28, 3, "05-07", 10);
 	addRoom(rooms, users, "company1@industrial", 1, 36, 3, "05-07", 10);
 	addRoom(rooms, users, "company1@mathematics", 1, 40, 3, "05-07", 10);
-
-	ASSERT_TEST( setGetSize(rooms) == 10 );
+*/
+	ASSERT_TEST( setGetSize(rooms) == 34 );
 	return rooms;
 }
 
@@ -272,7 +310,7 @@ static bool testRemoveRoom() {
 	numberOfRooms--;
 	ASSERT_TEST( setGetSize(rooms) == numberOfRooms );
 
-	ASSERT_TEST( removeRoom(rooms, CIVIL_ENGINEERING, 2) == MTM_SUCCESS);
+	ASSERT_TEST( removeRoom(rooms, CIVIL_ENGINEERING, 3) == MTM_SUCCESS);
 	numberOfRooms--;
 	ASSERT_TEST( setGetSize(rooms) == numberOfRooms );
 

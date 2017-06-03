@@ -94,10 +94,11 @@ static bool testAddOrder() {
 	ASSERT_TEST( addOrder(days, users, rooms, "company1@civil", faculty, id, "1-6", 3) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	//fail - faculty&id doesn't exist
-	id = 7;
+	id = 9;
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "1-6", 3) == MTM_ID_DOES_NOT_EXIST );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	id = 1;
+	faculty = CIVIL_ENGINEERING;
 	//fail - working hours
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "1-3", 3) == MTM_ROOM_NOT_AVAILABLE );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
@@ -111,22 +112,23 @@ static bool testAddOrder() {
 	//success - add to first day
 	//printf("case1\n");
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
-	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "0-6", 3) == MTM_SUCCESS );
+	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "0-12", 3) == MTM_SUCCESS );
 	numberOfOrders++;
 	numberOfDays++;
 	ASSERT_TEST( listGetSize(days) == numberOfDays );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	Order order = listGetFirst(firstDay->dayOrders);
-	ASSERT_TEST( order->price == getRoomPrice(rooms, faculty, id) );
+	ASSERT_TEST( order->price == getRoomPrice(rooms, faculty, id) * 0.75 );
 
 
 	//fail - escaper have other order same time
 	//printf("case2\n");
 	faculty = CIVIL_ENGINEERING;
+	id = 10;
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	//printf("case2 %d\n", addOrder(days, users, rooms, "escaper1@civil", faculty, id, "0-6", 3));
 
-	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "0-6", 3) == MTM_CLIENT_IN_ROOM );
+	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "0-12", 3) == MTM_CLIENT_IN_ROOM );
 	//numberOfOrders++;
 	//numberOfDays++;
 	ASSERT_TEST( listGetSize(days) == numberOfDays );
@@ -143,8 +145,8 @@ static bool testAddOrder() {
 	numberOfDays++;
 	ASSERT_TEST( listGetSize(days) == numberOfDays );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
-	order = listGetFirst(firstDay->dayOrders);
-	ASSERT_TEST( order->price == getRoomPrice(rooms, faculty, id) );
+	//order = listGetFirst(firstDay->dayOrders);
+	//ASSERT_TEST( order->price == getRoomPrice(rooms, faculty, id) );
 
 	//success - add to first day again
 	//printf("case3\n");
@@ -160,6 +162,7 @@ static bool testAddOrder() {
 	//success - add to not exist day in the middle
 	//printf("case4\n");
 	faculty = ELECTRICAL_ENGINEERING;
+	id = 2;
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "3-6", 3) == MTM_SUCCESS );
 	//numberOfOrders++;
@@ -175,7 +178,7 @@ static bool testAddOrder() {
 	//printf("case5\n");
 	id = 2;
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
-	ASSERT_TEST( addOrder(days, users, rooms, "escaper2@civil", faculty, id, "3-6", 3) == MTM_SUCCESS );
+	ASSERT_TEST( addOrder(days, users, rooms, "escaper2@civil", faculty, id, "3-7", 3) == MTM_SUCCESS );
 	//numberOfOrders++;
 	//numberOfDays++;
 	ASSERT_TEST( listGetSize(days) == numberOfDays );
@@ -264,18 +267,18 @@ static bool testAddOrderToADay() {
 
 	//MtmErrorCode result = addOrderToADay( orders, users, rooms, "escaper2@civil", CIVIL_ENGINEERING, 1, 5, 6);
 	//printf("result %d", result);
-	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper2@civil", CIVIL_ENGINEERING, 1, 5, 6) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper2@civil", CIVIL_ENGINEERING, 7, 5, 6) == MTM_SUCCESS );
 	ASSERT_TEST( listGetSize(orders) == 1 );
 	//MtmErrorCode result = addOrderToADay( orders, users, rooms, "escaper2@civil", ELECTRICAL_ENGINEERING, 1, 5, 6);
 	//printf("result %d", result);
-	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper3@mechanical", ELECTRICAL_ENGINEERING, 1, 5, 6) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper3@mechanical", ELECTRICAL_ENGINEERING, 2, 5, 6) == MTM_SUCCESS );
 
-	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@mechanical", ELECTRICAL_ENGINEERING, 1, 5, 6) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper2@civil", ELECTRICAL_ENGINEERING, 1, 6, 10) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@civil", ELECTRICAL_ENGINEERING, 1, 8, 12) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 5, 12) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 5, 8) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 5, 3) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@mechanical", ELECTRICAL_ENGINEERING, 2, 3, 6) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper2@civil", ELECTRICAL_ENGINEERING, 2, 7, 10) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@civil", ELECTRICAL_ENGINEERING, 2, 8, 12) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@mechanical", MECHANICAL_ENGINEERING, 3, 9, 12) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@mechanical", MECHANICAL_ENGINEERING, 3, 11, 8) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@mechanical", MECHANICAL_ENGINEERING, 3, 13, 3) == MTM_SUCCESS );
 
 	setDestroy(rooms);
 	setDestroy(users);

@@ -146,13 +146,34 @@ Set testHelperAddUsers() {
 
 	addUser( users, "company1@civil", CIVIL_ENGINEERING, COMPANY );
 	addUser( users, "company2@civil", CIVIL_ENGINEERING, COMPANY );
+	addUser( users, "company3@civil", CIVIL_ENGINEERING, COMPANY );
+	addUser( users, "company5@civil", CIVIL_ENGINEERING, COMPANY );
 	addUser( users, "company1@mechanical", MECHANICAL_ENGINEERING, COMPANY );
+	addUser( users, "company2@mechanical", MECHANICAL_ENGINEERING, COMPANY );
+	addUser( users, "company3@mechanical", MECHANICAL_ENGINEERING, COMPANY );
+	addUser( users, "company4@mechanical", MECHANICAL_ENGINEERING, COMPANY );
+	addUser( users, "company6@mechanical", MECHANICAL_ENGINEERING, COMPANY );
 	addUser( users, "company1@electrical", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( users, "company2@electrical", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( users, "company3@electrical", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( users, "company5@electrical", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( users, "company6@electrical", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( users, "company7@electrical", ELECTRICAL_ENGINEERING, COMPANY );
 	addUser( users, "company1@chemical", CHEMICAL_ENGINEERING, COMPANY );
 	addUser( users, "company1@biotechnology", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, COMPANY );
 	addUser( users, "company1@aerospace", AEROSPACE_ENGINEERING, COMPANY );
 	addUser( users, "company1@industrial", INDUSTRIAL_ENGINEERING_AND_MANAGEMENT, COMPANY );
 	addUser( users, "company1@mathematics", MATHEMATICS, COMPANY );
+	addUser( users, "company1@physics", PHYSICS, COMPANY );
+	addUser( users, "company1@chemistry", CHEMISTRY, COMPANY );
+	addUser( users, "company1@biology", BIOLOGY, COMPANY );
+	addUser( users, "company1@architecture", ARCHITECTURE, COMPANY );
+	addUser( users, "company1@education", EDUCATION_IN_TECH_AND_SCIENCE, COMPANY );
+	addUser( users, "company1@computer", COMPUTER_SCIENCE, COMPANY );
+	addUser( users, "company1@medicine", MEDICINE, COMPANY );
+	addUser( users, "company1@materials", MATERIALS_ENGINEERING, COMPANY );
+	addUser( users, "company1@humanites", HUMANITIES_AND_ARTS, COMPANY );
+	addUser( users, "company1@biomedical", BIOMEDICAL_ENGINEERING, COMPANY );
 	addUser( users, "escaper1@civil", CIVIL_ENGINEERING, ESCAPER_1 );
 	addUser( users, "escaper2@civil", CIVIL_ENGINEERING, ESCAPER_5 );
 	addUser( users, "escaper3@mechanical", MECHANICAL_ENGINEERING, ESCAPER_2 );
@@ -161,7 +182,7 @@ Set testHelperAddUsers() {
 	addUser( users, "escaper1@biotechnology", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, ESCAPER_1 );
 	addUser( users, "escaper1@aerospace", AEROSPACE_ENGINEERING, ESCAPER_7 );
 
-	ASSERT_TEST( setGetSize(users) == 16 );
+	ASSERT_TEST( setGetSize(users) == 37 );
 	return users;
 }
 
@@ -176,7 +197,7 @@ static bool testRemoveCompany() {
 	ASSERT_TEST( removeCompany( users, "company2#civil" ) ==  MTM_INVALID_PARAMETER );
 	ASSERT_TEST( setGetSize(users) == numberOfUsers );
 	//company email does not exist
-	ASSERT_TEST( removeCompany( users, "company3@civil" ) ==  MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
+	ASSERT_TEST( removeCompany( users, "company9@civil" ) ==  MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
 	ASSERT_TEST( setGetSize(users) == numberOfUsers );
 	//escaper email
 	ASSERT_TEST( removeCompany( users, "escaper1@civil" ) ==  MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
