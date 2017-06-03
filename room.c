@@ -142,7 +142,24 @@ MtmErrorCode removeRoom(Set setRoom, TechnionFaculty faculty, int id) {
 }
 
 
-
+Set filterRoomSet(Set rooms, RecommendSetElement recommendSetElement, SetKey num_ppl, SetKey skill_level ) {
+	Room room = setGetFirst(rooms);
+	//User user = findUserFromEmail( users, email );
+	long int minValue = -1, tempValue;
+	Set recommendedRooms = setCreate(copyRoom, freeRoom, compareRooms);
+	while ( room != NULL ) {
+		tempValue = recommendSetElement( room, num_ppl, skill_level);
+		//tempValue = ( (pow(room->num_ppl-num_ppl,2) + (pow(room->difficulty - user->typeSkill,2 )) );
+		if ( tempValue < minValue || minValue == -1) {
+			minValue = tempValue;
+			setClear(recommendedRooms);
+			setAdd(recommendedRooms, room);
+		} else if ( tempValue == minValue ) {
+			setAdd(recommendedRooms, room);
+		}
+	}
+	return recommendedRooms;
+}
 
 
 int getRoomPrice(const Set rooms, TechnionFaculty faculty, int id) {
@@ -171,4 +188,8 @@ int toHour(const char* working_hrs) {
 
 int charToInt(char c) {
 	return (c - (int)'0');
+}
+
+long int recommendByNumOfPplandDifficulty(const SetElement setElement, SetKey num_ppl, SetKey skill_level ) {
+	return (pow(((Room)setElement)->num_ppl-num_ppl,2) + (pow(((Room)setElement)->difficulty - skill_level,2 )) );
 }

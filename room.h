@@ -12,6 +12,8 @@
 
 #include <assert.h>
 #include <string.h>
+#include <assert.h>
+#include <math.h>
 #include "set.h"
 #include "order.h"
 #include "mtm_escape.h"
@@ -31,6 +33,11 @@ typedef struct room_t{
 	int difficulty;
 } *Room;
 
+typedef int SetKey;
+
+
+typedef long int(*RecommendSetElement)(SetElement, SetKey, SetKey);
+
 
 
 MtmErrorCode addRoom(Set rooms, Set companies, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty);
@@ -48,5 +55,9 @@ int getRoomPrice(const Set rooms, TechnionFaculty faculty, int id);
 SetElement findRoom(const Set rooms, TechnionFaculty faculty, int id);
 
 int getRoomPrice(const Set rooms, TechnionFaculty faculty, int id);
+
+Set filterRoomSet(Set rooms, RecommendSetElement recommendSetElement, SetKey num_ppl, SetKey skill_level );
+
+long int recommendByNumOfPplandDifficulty(const SetElement setElement, SetKey num_ppl, SetKey skill_level );
 
 #endif /* ROOM_H_ */

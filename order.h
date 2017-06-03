@@ -10,7 +10,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 #include "mtm_ex3.h"
 #include "list.h"
 #include "user.h"
@@ -29,6 +28,7 @@ typedef struct day_t{
 	List dayOrders;
 	int dayNumber;
 } *Day;
+
 
 
 
@@ -55,9 +55,13 @@ bool filterOrderByEscaper(const ListElement listElement, ListFilterKey email);
 
 bool filterOrderByFaculty(const ListElement listElement, const ListFilterKey faculty);
 
+MtmErrorCode checkAvailability(List orders, int hour, char* email, TechnionFaculty faculty, int id);
+
 bool filterOrderById(const ListElement listElement, const ListFilterKey id);
 
 int calculatePriceOfOrder( Set users, Set rooms, const char* email, const SetElement room);
+
+MtmErrorCode addOrderToFirstAvailable(List days, Order order, SetElement room, SetElement user, int num_ppl );
 
 int getDay( const char* time );
 

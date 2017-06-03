@@ -54,11 +54,7 @@ MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email
 		free(newOrder);
 		return MTM_INVALID_PARAMETER;
 	}
-/*
-	if ( email == NULL || !emailValidity(email)) {
-		free( newOrder->email);
-	}
-*/
+
 	if( users==NULL || rooms==NULL || orders == NULL ) {
 		free(newOrder->email);
 		free(newOrder);
@@ -99,7 +95,6 @@ MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email
 }
 
 
-
 MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
 	assert( days != NULL );
 
@@ -126,32 +121,10 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFacu
 	} else if ( day->dayNumber ==  dayNumber + daysFromToday ) {
 			List orders = day->dayOrders;
 
-				List filteredOrders = listFilter(orders, filterOrderByHour, &hour);
-				if ( listGetSize(filteredOrders) > 0 ) {
-					List filteredOrdersEscaper = listFilter(filteredOrders, filterOrderByEscaper, email);
-					if ( listGetSize(filteredOrdersEscaper) > 0 ) {
-
-						listDestroy(filteredOrders);
-						listDestroy(filteredOrdersEscaper);
-						return MTM_CLIENT_IN_ROOM;
-					}
-					listDestroy(filteredOrdersEscaper);
-					List filteredOrdersFaculty = listFilter(filteredOrders, filterOrderByFaculty, &faculty);
-					if ( listGetSize(filteredOrdersFaculty) > 0 ) {
-						List filteredOrdersId = listFilter(filteredOrders, filterOrderById, &id);
-						if ( listGetSize(filteredOrdersId) > 0 ) {
-							listDestroy(filteredOrdersId);
-							listDestroy(filteredOrdersFaculty);
-							listDestroy(filteredOrders);
-							return MTM_ROOM_NOT_AVAILABLE;
-						}
-						listDestroy(filteredOrdersId);
-					}
-					listDestroy(filteredOrdersFaculty);
-				}
-				listDestroy(filteredOrders);
-				MtmErrorCode result = addOrderToADay(orders, users, rooms, email, faculty, id,  hour, num_ppl);
-				if ( result != MTM_SUCCESS) return result;
+			MtmErrorCode result = checkAvailability(orders, hour, email, faculty, id);
+			if ( result != MTM_SUCCESS) return result;
+			result = addOrderToADay(orders, users, rooms, email, faculty, id,  hour, num_ppl);
+			if ( result != MTM_SUCCESS) return result;
 	} else {
 		Day newDay = createDay(dayNumber + daysFromToday);
 		List orders = newDay->dayOrders;
@@ -166,6 +139,126 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFacu
 	return MTM_SUCCESS;
 }
 
+MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, int num_ppl ) {
+	Order newOrder = malloc(sizeof(struct order_t));
+	if ( newOrder == NULL) return MTM_OUT_OF_MEMORY;
+	if ( email != NULL && emailValidity(email)) {
+		newOrder->email = malloc(sizeof(char) * (strlen(email) + 1));
+		if ( newOrder->email == NULL) {
+			free(newOrder);
+			return MTM_OUT_OF_MEMORY;
+		}
+		strcpy(newOrder->email, email);
+	} else {
+		free(newOrder);
+		return MTM_INVALID_PARAMETER;
+	}
+
+	if ( findEscaperFacultyFromEmail(users, email) == UNKNOWN ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+	}
+	User user = findUserFromEmail( users, email );
+	Set recommendedRooms = filterRoomSet( rooms, recommendByNumOfPplandDifficulty, num_ppl, user->typeSkill );
+
+
+	setDestroy(recommendedRooms);
+	/*
+	Room room = setGetFirst(rooms);
+
+	long int minValue = -1, tempValue;
+	Set recommendedRooms = setCreate(copyRoom, freeRoom, compareRooms);
+	while ( room != NULL ) {
+		tempValue = (pow(room->num_ppl-num_ppl,2) + (pow(room->difficulty - user->typeSkill,2 )) );
+		if ( tempValue < minValue || minValue == -1) {
+			minValue = tempValue;
+			setClear(recommendedRooms);
+			setAdd(recommendedRooms, room);
+		} else if ( tempValue == minValue ) {
+			setAdd(recommendedRooms, room);
+		}
+	}
+
+	if ( setGetSize(recommendedRooms) > 1 ) {
+		minValue = -1;
+		Set recommendedRoomsStep2 = setCreate(copyRoom, freeRoom, compareRooms);
+		room = setGetFirst(recommendedRooms);
+		while ( room != NULL ) {
+			tempValue = abs(room->faculty-user->faculty);
+			if ( tempValue < minValue || minValue == -1 ) {
+				minValue = tempValue;
+				setClear(recommendedRoomsStep2);
+				setAdd(recommendedRoomsStep2, room);
+			} else if ( tempValue == minValue ) {
+				setAdd(recommendedRoomsStep2, room);
+			}
+		}
+		if ( setGetSize(recommendedRoomsStep2) > 1 ) {
+			int minValue = -1;
+			Set recommendedRoomsStep2 = setCreate(copyRoom, freeRoom, compareRooms);
+			room = setGetFirst(recommendedRooms);
+			while ( room != NULL ) {
+				tempValue = abs(room->faculty-user->faculty);
+				if ( tempValue < minValue ) {
+					minValue = tempValue;
+					setClear(recommendedRoomsStep2);
+					setAdd(recommendedRoomsStep2, room);
+				} else if ( tempValue == minValue ) {
+					setAdd(recommendedRoomsStep2, room);
+				}
+			}
+		} else {
+			addOrderToFirstAvailable(days, newOrder, room, user, num_ppl );
+			//TODO check return value;
+		}
+	} else {
+		addOrderToFirstAvailable(days, newOrder, room, user, num_ppl );
+		//TODO check return value;
+	}
+
+*/
+	return MTM_SUCCESS;
+}
+
+
+
+
+
+
+
+MtmErrorCode addOrderToFirstAvailable(List days, Order order, SetElement room, SetElement user, int num_ppl ) {
+
+	return MTM_SUCCESS;
+}
+
+MtmErrorCode checkAvailability(List orders, int hour, char* email, TechnionFaculty faculty, int id) {
+	List filteredOrders = listFilter(orders, filterOrderByHour, &hour);
+	if ( listGetSize(filteredOrders) > 0 ) {
+		List filteredOrdersEscaper = listFilter(filteredOrders, filterOrderByEscaper, email);
+		if ( listGetSize(filteredOrdersEscaper) > 0 ) {
+
+			listDestroy(filteredOrders);
+			listDestroy(filteredOrdersEscaper);
+			return MTM_CLIENT_IN_ROOM;
+		}
+		listDestroy(filteredOrdersEscaper);
+		List filteredOrdersFaculty = listFilter(filteredOrders, filterOrderByFaculty, &faculty);
+		if ( listGetSize(filteredOrdersFaculty) > 0 ) {
+			List filteredOrdersId = listFilter(filteredOrders, filterOrderById, &id);
+			if ( listGetSize(filteredOrdersId) > 0 ) {
+				listDestroy(filteredOrdersId);
+				listDestroy(filteredOrdersFaculty);
+				listDestroy(filteredOrders);
+				return MTM_ROOM_NOT_AVAILABLE;
+			}
+			listDestroy(filteredOrdersId);
+		}
+		listDestroy(filteredOrdersFaculty);
+	}
+	listDestroy(filteredOrders);
+	return MTM_SUCCESS;
+}
 
 int calculatePriceOfOrder( Set users, Set rooms, const char* email, const SetElement room) {
 	TechnionFaculty escaperFaculty = findEscaperFacultyFromEmail( users, email );
@@ -301,6 +394,8 @@ bool filterOrderByFaculty(const ListElement listElement, const ListFilterKey fac
 bool filterOrderById(const ListElement listElement, const ListFilterKey id) {
 	return ((((Order)listElement)->id) == *(int*)id);
 }
+
+
 
 
 
