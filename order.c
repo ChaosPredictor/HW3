@@ -123,16 +123,37 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFacu
 			orders = day->dayOrders;
 				//printf("\ntoday list size1 %d\n", listGetSize(orders));
 				List filteredOrders = listFilter(orders, filterOrderByHour, &hour);
-			//printf("\ntoday list size2 %d\n", listGetSize(filteredOrders));
+				//printf("\ntoday list size2 %d\n", listGetSize(filteredOrders));
 				if ( listGetSize(filteredOrders) > 0 ) {
-				List filteredOrdersEscaper = listFilter(filteredOrders, filterOrderByEscaper, email);
-				//printf("\ntoday list size3 %d\n", listGetSize(filteredOrdersEscaper));
+					List filteredOrdersEscaper = listFilter(filteredOrders, filterOrderByEscaper, email);
+					//printf("\ntoday list size3 %d\n", listGetSize(filteredOrdersEscaper));
 					if ( listGetSize(filteredOrdersEscaper) > 0 ) {
 						listDestroy(filteredOrders);
 						listDestroy(filteredOrdersEscaper);
 						return MTM_CLIENT_IN_ROOM;
 					}
 					listDestroy(filteredOrdersEscaper);
+
+					List filteredOrdersFaculty = listFilter(filteredOrders, filterOrderByFaculty, &faculty);
+					//printf("\ntoday list size3 %d\n", listGetSize(filteredOrdersFaculty));
+
+					if ( listGetSize(filteredOrdersFaculty) > 0 ) {
+
+						List filteredOrdersId = listFilter(filteredOrders, filterOrderById, &id);
+						//printf("\ntoday list size4 %d\n", listGetSize(filteredOrdersId));
+
+						if ( listGetSize(filteredOrdersId) > 0 ) {
+
+							listDestroy(filteredOrdersId);
+							listDestroy(filteredOrdersFaculty);
+							listDestroy(filteredOrders);
+							return MTM_ROOM_NOT_AVAILABLE;
+						}
+
+						listDestroy(filteredOrdersId);
+					}
+
+					listDestroy(filteredOrdersFaculty);
 
 				}
 				listDestroy(filteredOrders);
@@ -254,3 +275,14 @@ bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour) 
 bool filterOrderByEscaper(const ListElement listElement, ListFilterKey email) {
 	return (strcmp((((Order)listElement)->email), (char*)email) == 0);
 }
+
+bool filterOrderByFaculty(const ListElement listElement, const ListFilterKey faculty) {
+	return ((((Order)listElement)->faculty) == *(int*)faculty);
+}
+
+bool filterOrderById(const ListElement listElement, const ListFilterKey id) {
+	return ((((Order)listElement)->id) == *(int*)id);
+}
+
+
+

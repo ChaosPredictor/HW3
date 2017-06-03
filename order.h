@@ -52,6 +52,10 @@ bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour);
 
 bool filterOrderByEscaper(const ListElement listElement, ListFilterKey email);
 
+bool filterOrderByFaculty(const ListElement listElement, const ListFilterKey faculty);
+
+bool filterOrderById(const ListElement listElement, const ListFilterKey id);
+
 
 
 ListElement copyDay(ListElement day);

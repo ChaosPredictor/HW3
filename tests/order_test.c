@@ -101,7 +101,7 @@ static bool testAddOrder() {
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "1-20", 3) == MTM_ROOM_NOT_AVAILABLE );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	//TODO to ask if it's should work
-	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "1-7", 3) == MTM_ROOM_NOT_AVAILABLE );
+	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "1-10", 3) == MTM_ROOM_NOT_AVAILABLE );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 
 
@@ -146,7 +146,7 @@ static bool testAddOrder() {
 	//success - add to first day again
 	//printf("case3\n");
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
-	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@mechanical", faculty, id, "0-6", 3) == MTM_SUCCESS );
+	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@mechanical", faculty, id, "0-7", 3) == MTM_SUCCESS );
 	numberOfOrders++;
 	ASSERT_TEST( listGetSize(days) == numberOfDays );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
@@ -183,7 +183,6 @@ static bool testAddOrder() {
 	ASSERT_TEST( order->price == getRoomPrice(rooms, faculty, id) );
 
 
-	id = 2;
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper2@civil", faculty, id, "7-6", 3) == MTM_SUCCESS );
 	//numberOfOrders++;
@@ -196,7 +195,6 @@ static bool testAddOrder() {
 	ASSERT_TEST( order->price == getRoomPrice(rooms, faculty, id) );
 
 
-	id = 2;
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper2@civil", faculty, id, "2-6", 3) == MTM_SUCCESS );
 	//numberOfOrders++;
@@ -208,7 +206,18 @@ static bool testAddOrder() {
 	order = listGetFirst(day->dayOrders);
 	ASSERT_TEST( order->price == getRoomPrice(rooms, faculty, id) );
 
-	id = 2;
+
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
+	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@civil", faculty, id, "2-6", 3) == MTM_ROOM_NOT_AVAILABLE );
+	//numberOfOrders++;
+	//numberOfDays++;
+	ASSERT_TEST( listGetSize(days) == numberOfDays );
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
+	listGetFirst(days);
+	day = listGetNext(days);
+	order = listGetFirst(day->dayOrders);
+	ASSERT_TEST( order->price == getRoomPrice(rooms, faculty, id) );
+
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper2@civil", faculty, id, "6-6", 3) == MTM_SUCCESS );
 	//numberOfOrders++;
