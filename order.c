@@ -37,25 +37,55 @@ void freeOrder(ListElement order) {
 }
 
 
-MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty faculty, int id, int price, int hour, int num_ppl) {
+MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, int hour, int num_ppl) {
 	//TODO escaper email should be checked before this function
-
-	if ( orders == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
-
+	assert ( email != NULL );
 
 	Order newOrder = malloc(sizeof(struct order_t));
-	if ( newOrder == NULL) {
-		return MTM_OUT_OF_MEMORY;
-	}
-	newOrder->email = malloc(sizeof(char) * (strlen(email) + 1));
-	if ( newOrder->email == NULL) {
+	if ( newOrder == NULL) return MTM_OUT_OF_MEMORY;
+	if ( email != NULL && emailValidity(email)) {
+		newOrder->email = malloc(sizeof(char) * (strlen(email) + 1));
+		if ( newOrder->email == NULL) {
+			free(newOrder);
+			return MTM_OUT_OF_MEMORY;
+		}
+		strcpy(newOrder->email, email);
+	} else {
 		free(newOrder);
-		return MTM_OUT_OF_MEMORY;
+		return MTM_INVALID_PARAMETER;
 	}
-	strcpy(newOrder->email, email);
+/*
+	if ( email == NULL || !emailValidity(email)) {
+		free( newOrder->email);
+	}
+*/
+	if( users==NULL || rooms==NULL || orders == NULL ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_INVALID_PARAMETER;
+	}
+
+	if ( findEscaperFacultyFromEmail(users, email) == UNKNOWN ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+	}
+
+	Room room = findRoom(rooms, faculty, id);
+	if ( room == NULL ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_ID_DOES_NOT_EXIST;
+	}
+	if( hour < room->from_hrs || hour >= room->to_hrs ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_ROOM_NOT_AVAILABLE;
+	}
+
 	newOrder->faculty = faculty;
 	newOrder->id = id;
-	newOrder->price = price;
+	newOrder->price = calculatePriceOfOrder( users, rooms, email, room);
 	newOrder->hour = hour;
 	newOrder->num_ppl = num_ppl;
 
@@ -71,114 +101,102 @@ MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty facu
 
 
 MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
-	if(days==NULL || users==NULL || rooms==NULL) return MTM_INVALID_PARAMETER;
-	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
-	TechnionFaculty escaperFaculty = findEscaperFacultyFromEmail( users, email );
-	if( escaperFaculty == UNKNOWN ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+	assert( days != NULL );
 
-
-
-
-	Room room = findRoom(rooms, faculty, id);
-	if ( room == NULL ) return MTM_ID_DOES_NOT_EXIST;
-
-	int price = room->price;
-	//printf("\nroom price: %d\n", price);
-
-	if ( escaperFaculty == faculty ) {
-		price *= (100 - DISCONT);
-		price /= 100;
-	}
-	char *temp = malloc(sizeof(char) * (strlen(time) + 1));
-	strcpy(temp,time);
-	int daysFromToday = atoi( strtok(temp, "-") );
-	int hour = atoi( strtok(NULL, "-") );
-	free( temp );
-
-	if( hour < room->from_hrs || hour >= room->to_hrs ) return MTM_ROOM_NOT_AVAILABLE;
+	int hour = getHour( time );
+	int daysFromToday = getDay( time );
 
 	Day day = listGetFirst(days);
-	List orders = NULL;
-
 
 	int dayNumber = day->dayNumber;
-	//printf("\nday today: %d \n", day->day);
-	//printf("\nday today: %d || day Number: %d || days from today: %d\n", day->day, dayNumber, daysFromToday);
 	while ( day != NULL && day->dayNumber < dayNumber + daysFromToday ) {
 		day = listGetNext(days);
-		//printf("\nrun\n");
 	}
 	if ( day == NULL ) {
 		Day newDay = createDay(dayNumber + daysFromToday);
-		orders = newDay->dayOrders;
-
-
-		addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
+		List orders = newDay->dayOrders;
+		MtmErrorCode result = addOrderToADay(orders, users, rooms, email, faculty, id,  hour, num_ppl);
+		if ( result != MTM_SUCCESS) {
+			freeDay(newDay);
+			return result;
+		}
+		//TODO check return;
 		listInsertLast(days, newDay);
 		freeDay(newDay);
-		//TODO check return;
-		//printf("\nend of list\n");
-	} else {
-		if ( day->dayNumber ==  dayNumber + daysFromToday ) {
-			orders = day->dayOrders;
-				//printf("\ntoday list size1 %d\n", listGetSize(orders));
+	} else if ( day->dayNumber ==  dayNumber + daysFromToday ) {
+			List orders = day->dayOrders;
+
 				List filteredOrders = listFilter(orders, filterOrderByHour, &hour);
-				//printf("\ntoday list size2 %d\n", listGetSize(filteredOrders));
 				if ( listGetSize(filteredOrders) > 0 ) {
 					List filteredOrdersEscaper = listFilter(filteredOrders, filterOrderByEscaper, email);
-					//printf("\ntoday list size3 %d\n", listGetSize(filteredOrdersEscaper));
 					if ( listGetSize(filteredOrdersEscaper) > 0 ) {
+
 						listDestroy(filteredOrders);
 						listDestroy(filteredOrdersEscaper);
 						return MTM_CLIENT_IN_ROOM;
 					}
 					listDestroy(filteredOrdersEscaper);
-
 					List filteredOrdersFaculty = listFilter(filteredOrders, filterOrderByFaculty, &faculty);
-					//printf("\ntoday list size3 %d\n", listGetSize(filteredOrdersFaculty));
-
 					if ( listGetSize(filteredOrdersFaculty) > 0 ) {
-
 						List filteredOrdersId = listFilter(filteredOrders, filterOrderById, &id);
-						//printf("\ntoday list size4 %d\n", listGetSize(filteredOrdersId));
-
 						if ( listGetSize(filteredOrdersId) > 0 ) {
-
 							listDestroy(filteredOrdersId);
 							listDestroy(filteredOrdersFaculty);
 							listDestroy(filteredOrders);
 							return MTM_ROOM_NOT_AVAILABLE;
 						}
-
 						listDestroy(filteredOrdersId);
 					}
-
 					listDestroy(filteredOrdersFaculty);
-
 				}
 				listDestroy(filteredOrders);
-
-
-			addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
-				//printf("\nday found\n");
-
-		} else {
-			//printf("\nday does not found\n");
-			Day newDay = createDay(dayNumber + daysFromToday);
-			orders = newDay->dayOrders;
-			addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
-			listInsertBeforeCurrent(days, newDay);
+				MtmErrorCode result = addOrderToADay(orders, users, rooms, email, faculty, id,  hour, num_ppl);
+				if ( result != MTM_SUCCESS) return result;
+	} else {
+		Day newDay = createDay(dayNumber + daysFromToday);
+		List orders = newDay->dayOrders;
+		MtmErrorCode result = addOrderToADay(orders, users, rooms, email, faculty, id,  hour, num_ppl);
+		if ( result != MTM_SUCCESS) {
 			freeDay(newDay);
+			return result;
 		}
+		listInsertBeforeCurrent(days, newDay);
+		freeDay(newDay);
 	}
-
-
-
-	//TODO escaper email should be checked before this function
-
-	//TODO check that the room (facultyid) available in the hour;
 	return MTM_SUCCESS;
 }
+
+
+int calculatePriceOfOrder( Set users, Set rooms, const char* email, const SetElement room) {
+	TechnionFaculty escaperFaculty = findEscaperFacultyFromEmail( users, email );
+	if( escaperFaculty == UNKNOWN ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+
+	if ( room == NULL ) return MTM_ID_DOES_NOT_EXIST;
+	int price = ((Room)room)->price;
+	if ( escaperFaculty == ((Room)room)->faculty ) {
+		price *= (100 - DISCONT);
+		price /= 100;
+	}
+	return price;
+}
+
+int getHour( const char* time ) {
+	char *temp = malloc(sizeof(char) * (strlen(time) + 1));
+	strcpy(temp,time);
+	atoi( strtok(temp, "-") );
+	int hour = atoi( strtok(NULL, "-") );
+	free( temp );
+	return hour;
+}
+
+int getDay( const char* time ) {
+	char *temp = malloc(sizeof(char) * (strlen(time) + 1));
+	strcpy(temp,time);
+	int daysFromToday = atoi( strtok(temp, "-") );
+	free( temp );
+	return daysFromToday;
+}
+
 
 //TODO maybe should be deleted
 int orderForToday (List days) {

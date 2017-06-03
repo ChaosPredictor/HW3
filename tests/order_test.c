@@ -88,7 +88,10 @@ static bool testAddOrder() {
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper1#civil", faculty, id, "1-6", 3) == MTM_INVALID_PARAMETER );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
+
 	ASSERT_TEST( addOrder(days, users, rooms, "escaper7@civil", faculty, id, "1-6", 3) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST );
+	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
+	ASSERT_TEST( addOrder(days, users, rooms, "company1@civil", faculty, id, "1-6", 3) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST );
 	ASSERT_TEST( listGetSize(firstDay->dayOrders) == numberOfOrders );
 	//fail - faculty&id doesn't exist
 	id = 7;
@@ -248,25 +251,34 @@ static bool testAddOrderToADay() {
 
 	Day day = listGetFirst(days);
 	List orders = day->dayOrders;
+	Set users = testHelperAddUsers();
+	Set rooms = testHelperAddRooms(users);
+
 
 	//rooms set, users set or email is NULL
-	ASSERT_TEST( addOrderToADay(NULL, "escaper1@civil", MECHANICAL_ENGINEERING, 1, 5, 6, 3) == MTM_INVALID_PARAMETER );
+
+	ASSERT_TEST( addOrderToADay( NULL, users, rooms, "escaper1@civil", MECHANICAL_ENGINEERING, 1, 5, 6) == MTM_INVALID_PARAMETER );
 	ASSERT_TEST( listGetSize(orders) == 0 );
-	ASSERT_TEST( addOrderToADay(orders, NULL, MECHANICAL_ENGINEERING, 1, 5, 6, 3) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addOrderToADay( NULL, users, rooms, NULL, MECHANICAL_ENGINEERING, 1, 5, 6) == MTM_INVALID_PARAMETER );
 	ASSERT_TEST( listGetSize(orders) == 0 );
 
-
-	ASSERT_TEST( addOrderToADay(orders, "escaper1@civil", MECHANICAL_ENGINEERING, 1, 5, 6, 3) == MTM_SUCCESS );
+	//MtmErrorCode result = addOrderToADay( orders, users, rooms, "escaper2@civil", CIVIL_ENGINEERING, 1, 5, 6);
+	//printf("result %d", result);
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper2@civil", CIVIL_ENGINEERING, 1, 5, 6) == MTM_SUCCESS );
 	ASSERT_TEST( listGetSize(orders) == 1 );
-	ASSERT_TEST( addOrderToADay(orders, "escaper1@civil", MECHANICAL_ENGINEERING, 1, 5, 6, 3) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay(orders, "escaper2@civil", MECHANICAL_ENGINEERING, 4, 5, 8, 6) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay(orders, "escaper3@civil", MECHANICAL_ENGINEERING, 6, 5, 5, 8) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay(orders, "escaper4@civil", MECHANICAL_ENGINEERING, 2, 5, 10, 3) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay(orders, "escaper5@civil", MECHANICAL_ENGINEERING, 1, 5, 12, 3) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay(orders, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 5, 6, 8) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay(orders, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 5, 6, 3) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay(orders, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 5, 6, 3) == MTM_SUCCESS );
+	//MtmErrorCode result = addOrderToADay( orders, users, rooms, "escaper2@civil", ELECTRICAL_ENGINEERING, 1, 5, 6);
+	//printf("result %d", result);
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper3@mechanical", ELECTRICAL_ENGINEERING, 1, 5, 6) == MTM_SUCCESS );
 
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@mechanical", ELECTRICAL_ENGINEERING, 1, 5, 6) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper2@civil", ELECTRICAL_ENGINEERING, 1, 6, 10) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@civil", ELECTRICAL_ENGINEERING, 1, 8, 12) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 5, 12) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 5, 8) == MTM_SUCCESS );
+	ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 5, 3) == MTM_SUCCESS );
+
+	setDestroy(rooms);
+	setDestroy(users);
 	listDestroy(days);
 	//printf("\nnumber of days: %d\n", listGetSize(days));
 

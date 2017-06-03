@@ -10,6 +10,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include "mtm_ex3.h"
 #include "list.h"
 #include "user.h"
@@ -46,7 +47,7 @@ MtmErrorCode createOrder(List days, Set users, Set rooms, const char* email, Tec
 
 MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
-MtmErrorCode addOrderToADay(List orders, const char* email, TechnionFaculty faculty, int id, int price, int hour, int num_ppl);
+MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, int hour, int num_ppl);
 
 bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour);
 
@@ -56,6 +57,11 @@ bool filterOrderByFaculty(const ListElement listElement, const ListFilterKey fac
 
 bool filterOrderById(const ListElement listElement, const ListFilterKey id);
 
+int calculatePriceOfOrder( Set users, Set rooms, const char* email, const SetElement room);
+
+int getDay( const char* time );
+
+int getHour( const char* time );
 
 
 ListElement copyDay(ListElement day);
