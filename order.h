@@ -66,4 +66,8 @@ ListElement createDay(int dayNumber);
 
 List createDays();
 
+void printAllDays(List days);
+
+void printAllOrders(List orders);
+
 #endif /* ORDER_H_ */

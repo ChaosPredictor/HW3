@@ -99,7 +99,9 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFacu
 
 	Day day = listGetFirst(days);
 	List orders = NULL;
-	if ( daysFromToday != 0 ) {
+	//if ( daysFromToday != 0 ) {
+	if ( true ) {
+
 		int dayNumber = day->dayNumber;
 		//printf("\nday today: %d \n", day->day);
 		//printf("\nday today: %d || day Number: %d || days from today: %d\n", day->day, dayNumber, daysFromToday);
@@ -122,6 +124,27 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFacu
 		} else {
 			if ( day->dayNumber ==  dayNumber + daysFromToday ) {
 				orders = day->dayOrders;
+
+				//printf("\ntoday list size1 %d\n", listGetSize(orders));
+
+				List filteredOrders = listFilter(orders, filterOrderByHour, &hour);
+				//printf("\ntoday list size2 %d\n", listGetSize(filteredOrders));
+
+				if ( listGetSize(filteredOrders) > 0 ) {
+					List filteredOrdersEscaper = listFilter(filteredOrders, filterOrderByEscaper, email);
+					//printf("\ntoday list size3 %d\n", listGetSize(filteredOrdersEscaper));
+
+					if ( listGetSize(filteredOrdersEscaper) > 0 ) {
+						listDestroy(filteredOrders);
+						listDestroy(filteredOrdersEscaper);
+						return MTM_CLIENT_IN_ROOM;
+					}
+					listDestroy(filteredOrdersEscaper);
+
+				}
+				listDestroy(filteredOrders);
+
+
 				addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
 				//printf("\nday found\n");
 
@@ -177,6 +200,29 @@ int orderForToday (List days) {
 	return 0;
 }
 
+//TODO maybe should be deleted
+void printAllDays(List days) {
+	printf("\nA New Print\n");
+	Day day = listGetFirst(days);
+	while ( day != NULL ) {
+		printf(" Day Number: %d\n", day->dayNumber);
+		printAllOrders(day->dayOrders);
+		day = listGetNext(days);
+	}
+}
+
+void printAllOrders(List orders) {
+	Order order = listGetFirst(orders);
+	while ( order != NULL ) {
+		printf("  A New Order\n");
+		printf("	Order email: %s\n", order->email);
+		printf("	Order faculty: %d\n", order->faculty);
+		printf("	Order id: %d\n", order->id);
+		printf("	Order hour: %d\n", order->hour);
+		printf("	Order price: %d\n", order->price);
+		order = listGetNext(orders);
+	}
+}
 
 ListElement copyDay(ListElement day) {
 	if ( day == NULL ) return NULL;
@@ -218,7 +264,7 @@ List createDays() {
 		return NULL;
 	}
 	newDay->dayOrders = NULL;
-	newDay->dayNumber = 8;
+	newDay->dayNumber = 0;
 	listInsertFirst(days, newDay);
 	free(newDay);
 	return days;
