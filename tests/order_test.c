@@ -220,7 +220,7 @@ static bool testAddOrder() {
 	order = listGetFirst(day->dayOrders);
 	ASSERT_TEST( order->price == getRoomPrice(rooms, faculty, id) );
 
-	printAllDays(days);
+	//printAllDays(days);
 
 
 	setDestroy(rooms);

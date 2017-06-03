@@ -99,41 +99,34 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFacu
 
 	Day day = listGetFirst(days);
 	List orders = NULL;
-	//if ( daysFromToday != 0 ) {
-	if ( true ) {
-
-		int dayNumber = day->dayNumber;
-		//printf("\nday today: %d \n", day->day);
-		//printf("\nday today: %d || day Number: %d || days from today: %d\n", day->day, dayNumber, daysFromToday);
-		while ( day != NULL && day->dayNumber < dayNumber + daysFromToday ) {
-			day = listGetNext(days);
-			//printf("\nrun\n");
-		}
-		if ( day == NULL ) {
-			Day newDay = createDay(dayNumber + daysFromToday);
-			orders = newDay->dayOrders;
 
 
+	int dayNumber = day->dayNumber;
+	//printf("\nday today: %d \n", day->day);
+	//printf("\nday today: %d || day Number: %d || days from today: %d\n", day->day, dayNumber, daysFromToday);
+	while ( day != NULL && day->dayNumber < dayNumber + daysFromToday ) {
+		day = listGetNext(days);
+		//printf("\nrun\n");
+	}
+	if ( day == NULL ) {
+		Day newDay = createDay(dayNumber + daysFromToday);
+		orders = newDay->dayOrders;
 
 
-			addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
-			listInsertLast(days, newDay);
-			freeDay(newDay);
-			//TODO check return;
-			//printf("\nend of list\n");
-		} else {
-			if ( day->dayNumber ==  dayNumber + daysFromToday ) {
-				orders = day->dayOrders;
-
+		addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
+		listInsertLast(days, newDay);
+		freeDay(newDay);
+		//TODO check return;
+		//printf("\nend of list\n");
+	} else {
+		if ( day->dayNumber ==  dayNumber + daysFromToday ) {
+			orders = day->dayOrders;
 				//printf("\ntoday list size1 %d\n", listGetSize(orders));
-
 				List filteredOrders = listFilter(orders, filterOrderByHour, &hour);
-				//printf("\ntoday list size2 %d\n", listGetSize(filteredOrders));
-
+			//printf("\ntoday list size2 %d\n", listGetSize(filteredOrders));
 				if ( listGetSize(filteredOrders) > 0 ) {
-					List filteredOrdersEscaper = listFilter(filteredOrders, filterOrderByEscaper, email);
-					//printf("\ntoday list size3 %d\n", listGetSize(filteredOrdersEscaper));
-
+				List filteredOrdersEscaper = listFilter(filteredOrders, filterOrderByEscaper, email);
+				//printf("\ntoday list size3 %d\n", listGetSize(filteredOrdersEscaper));
 					if ( listGetSize(filteredOrdersEscaper) > 0 ) {
 						listDestroy(filteredOrders);
 						listDestroy(filteredOrdersEscaper);
@@ -145,44 +138,17 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFacu
 				listDestroy(filteredOrders);
 
 
-				addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
+			addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
 				//printf("\nday found\n");
 
-			} else {
-				//printf("\nday does not found\n");
-				Day newDay = createDay(dayNumber + daysFromToday);
-				orders = newDay->dayOrders;
-				addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
-				listInsertBeforeCurrent(days, newDay);
-				freeDay(newDay);
-			}
+		} else {
+			//printf("\nday does not found\n");
+			Day newDay = createDay(dayNumber + daysFromToday);
+			orders = newDay->dayOrders;
+			addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
+			listInsertBeforeCurrent(days, newDay);
+			freeDay(newDay);
 		}
-	} else {
-		orders = day->dayOrders;
-
-		//printf("\ntoday list size1 %d\n", listGetSize(orders));
-
-		List filteredOrders = listFilter(orders, filterOrderByHour, &hour);
-		//printf("\ntoday list size2 %d\n", listGetSize(filteredOrders));
-
-		if ( listGetSize(filteredOrders) > 0 ) {
-			List filteredOrdersEscaper = listFilter(filteredOrders, filterOrderByEscaper, email);
-			//printf("\ntoday list size3 %d\n", listGetSize(filteredOrdersEscaper));
-
-			if ( listGetSize(filteredOrdersEscaper) > 0 ) {
-				listDestroy(filteredOrders);
-				listDestroy(filteredOrdersEscaper);
-				return MTM_CLIENT_IN_ROOM;
-			}
-			listDestroy(filteredOrdersEscaper);
-
-		}
-		listDestroy(filteredOrders);
-
-		addOrderToADay(orders, email, faculty, id, price, hour, num_ppl);
-
-
-		//printf("\ntoday\n");
 	}
 
 
