@@ -250,6 +250,7 @@ Set testHelperAddRooms(Set users) {
 	addRoom(rooms, users, "company1@aerospace", 3, 8, 5, "03-13", 2);
 	addRoom(rooms, users, "company1@industrial", 1, 4, 2, "08-10", 3);
 	addRoom(rooms, users, "company1@mathematics", 2, 4, 4, "09-17", 5);
+	addRoom(rooms, users, "company1@mathematics", 1, 40, 4, "09-20", 5);
 	addRoom(rooms, users, "company1@physics", 3, 8, 10, "04-13", 2);
 	addRoom(rooms, users, "company1@chemistry", 1, 8, 4, "09-16", 5);
 	addRoom(rooms, users, "company1@biology", 2, 8, 3, "04-09", 8);
@@ -275,7 +276,7 @@ Set testHelperAddRooms(Set users) {
 	addRoom(rooms, users, "company1@industrial", 1, 36, 3, "05-07", 10);
 	addRoom(rooms, users, "company1@mathematics", 1, 40, 3, "05-07", 10);
 */
-	ASSERT_TEST( setGetSize(rooms) == 34 );
+	ASSERT_TEST( setGetSize(rooms) == 35 );
 	return rooms;
 }
 

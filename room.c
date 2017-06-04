@@ -157,6 +157,7 @@ Set filterRoomSet(Set rooms, RecommendSetElement recommendSetElement, SetKey num
 		} else if ( tempValue == minValue ) {
 			setAdd(recommendedRooms, room);
 		}
+		room = setGetNext(rooms);
 	}
 	return recommendedRooms;
 }
@@ -190,6 +191,14 @@ int charToInt(char c) {
 	return (c - (int)'0');
 }
 
-long int recommendByNumOfPplandDifficulty(const SetElement setElement, SetKey num_ppl, SetKey skill_level ) {
+int recommendByNumOfPplandDifficulty(const SetElement setElement, SetKey num_ppl, SetKey skill_level ) {
 	return (pow(((Room)setElement)->num_ppl-num_ppl,2) + (pow(((Room)setElement)->difficulty - skill_level,2 )) );
+}
+
+int recommendByNearFaculty(const SetElement setElement, SetKey faculty, SetKey junk ) {
+	return abs(((Room)setElement)->faculty - faculty);
+}
+
+int recommendByNearId(const SetElement setElement, SetKey id, SetKey junk ) {
+	return abs(((Room)setElement)->id - id);
 }

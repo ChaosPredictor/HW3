@@ -36,7 +36,7 @@ typedef struct room_t{
 typedef int SetKey;
 
 
-typedef long int(*RecommendSetElement)(SetElement, SetKey, SetKey);
+typedef int(*RecommendSetElement)(SetElement, SetKey, SetKey);
 
 
 
@@ -58,6 +58,10 @@ int getRoomPrice(const Set rooms, TechnionFaculty faculty, int id);
 
 Set filterRoomSet(Set rooms, RecommendSetElement recommendSetElement, SetKey num_ppl, SetKey skill_level );
 
-long int recommendByNumOfPplandDifficulty(const SetElement setElement, SetKey num_ppl, SetKey skill_level );
+int recommendByNumOfPplandDifficulty(const SetElement setElement, SetKey num_ppl, SetKey skill_level );
+
+int recommendByNearFaculty(const SetElement setElement, SetKey faculty, SetKey junk );
+
+int recommendByNearId(const SetElement setElement, SetKey id, SetKey junk );
 
 #endif /* ROOM_H_ */

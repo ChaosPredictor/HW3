@@ -65,6 +65,26 @@ static bool testFreeOrder() {
 }
 
 
+static bool testaddRecommendedOrder() {
+
+	//TODO create list of days;
+	//List days = listCreate(copyDay, freeDay);
+	List days = createDays();
+	Set users = testHelperAddUsers();
+	Set rooms = testHelperAddRooms(users);
+
+	addRecommendedOrder(days, users, rooms, "escaper1@physics", 4 );
+	addRecommendedOrder(days, users, rooms, "escaper1@education", 3 );
+	addRecommendedOrder(days, users, rooms, "escaper1@aerospace", 5 );
+	addRecommendedOrder(days, users, rooms, "escaper1@mathematics", 1 );
+
+
+	setDestroy(rooms);
+	setDestroy(users);
+	listDestroy(days);
+	return true;
+}
+
 static bool testAddOrder() {
 
 	//TODO create list of days;
@@ -319,6 +339,7 @@ int orderTests (int argv, char** arc) {
 	RUN_TEST(testFreeOrder);
 	RUN_TEST(testAddOrder);
 	RUN_TEST(testAddOrderToADay);
+	RUN_TEST(testaddRecommendedOrder);
 
 	RUN_TEST(testCopyDay);
 

@@ -160,64 +160,34 @@ MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, i
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 	}
 	User user = findUserFromEmail( users, email );
+
+	printf("\n number1: %d\n", setGetSize(rooms));
+
 	Set recommendedRooms = filterRoomSet( rooms, recommendByNumOfPplandDifficulty, num_ppl, user->typeSkill );
 
+	printf(" number2: %d\n", setGetSize(recommendedRooms));
 
+	Set recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNearFaculty, user->faculty, 0 );
+
+	printf(" number3: %d\n", setGetSize(recommendedRooms2));
+
+
+	Set recommendedRooms3 = filterRoomSet( recommendedRooms2, recommendByNearFaculty, 0, 0 );
+
+	printf(" number3: %d\n", setGetSize(recommendedRooms3));
+
+	Set recommendedRooms4 = filterRoomSet( recommendedRooms3, recommendByNearId, 0, 0 );
+
+	printf(" number3: %d\n", setGetSize(recommendedRooms4));
+
+
+	setDestroy(recommendedRooms4);
+	setDestroy(recommendedRooms3);
+	setDestroy(recommendedRooms2);
 	setDestroy(recommendedRooms);
-	/*
-	Room room = setGetFirst(rooms);
+	free(newOrder->email);
+	free(newOrder);
 
-	long int minValue = -1, tempValue;
-	Set recommendedRooms = setCreate(copyRoom, freeRoom, compareRooms);
-	while ( room != NULL ) {
-		tempValue = (pow(room->num_ppl-num_ppl,2) + (pow(room->difficulty - user->typeSkill,2 )) );
-		if ( tempValue < minValue || minValue == -1) {
-			minValue = tempValue;
-			setClear(recommendedRooms);
-			setAdd(recommendedRooms, room);
-		} else if ( tempValue == minValue ) {
-			setAdd(recommendedRooms, room);
-		}
-	}
-
-	if ( setGetSize(recommendedRooms) > 1 ) {
-		minValue = -1;
-		Set recommendedRoomsStep2 = setCreate(copyRoom, freeRoom, compareRooms);
-		room = setGetFirst(recommendedRooms);
-		while ( room != NULL ) {
-			tempValue = abs(room->faculty-user->faculty);
-			if ( tempValue < minValue || minValue == -1 ) {
-				minValue = tempValue;
-				setClear(recommendedRoomsStep2);
-				setAdd(recommendedRoomsStep2, room);
-			} else if ( tempValue == minValue ) {
-				setAdd(recommendedRoomsStep2, room);
-			}
-		}
-		if ( setGetSize(recommendedRoomsStep2) > 1 ) {
-			int minValue = -1;
-			Set recommendedRoomsStep2 = setCreate(copyRoom, freeRoom, compareRooms);
-			room = setGetFirst(recommendedRooms);
-			while ( room != NULL ) {
-				tempValue = abs(room->faculty-user->faculty);
-				if ( tempValue < minValue ) {
-					minValue = tempValue;
-					setClear(recommendedRoomsStep2);
-					setAdd(recommendedRoomsStep2, room);
-				} else if ( tempValue == minValue ) {
-					setAdd(recommendedRoomsStep2, room);
-				}
-			}
-		} else {
-			addOrderToFirstAvailable(days, newOrder, room, user, num_ppl );
-			//TODO check return value;
-		}
-	} else {
-		addOrderToFirstAvailable(days, newOrder, room, user, num_ppl );
-		//TODO check return value;
-	}
-
-*/
 	return MTM_SUCCESS;
 }
 

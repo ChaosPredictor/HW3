@@ -179,10 +179,15 @@ Set testHelperAddUsers() {
 	addUser( users, "escaper3@mechanical", MECHANICAL_ENGINEERING, ESCAPER_2 );
 	addUser( users, "escaper1@mechanical", MECHANICAL_ENGINEERING, ESCAPER_8 );
 	addUser( users, "escaper1@electrical", ELECTRICAL_ENGINEERING, ESCAPER_10 );
+	addUser( users, "escaper2@electrical", ELECTRICAL_ENGINEERING, ESCAPER_6 );
+	addUser( users, "escaper1@physics", PHYSICS, ESCAPER_6 );
 	addUser( users, "escaper1@biotechnology", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, ESCAPER_1 );
 	addUser( users, "escaper1@aerospace", AEROSPACE_ENGINEERING, ESCAPER_7 );
+	addUser( users, "escaper1@education", EDUCATION_IN_TECH_AND_SCIENCE, ESCAPER_9 );
+	addUser( users, "escaper1@mathematics", MATHEMATICS, ESCAPER_7 );
 
-	ASSERT_TEST( setGetSize(users) == 37 );
+
+	ASSERT_TEST( setGetSize(users) == 41 );
 	return users;
 }
 

@@ -49,6 +49,8 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFacu
 
 MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, int hour, int num_ppl);
 
+MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, int num_ppl );
+
 bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour);
 
 bool filterOrderByEscaper(const ListElement listElement, ListFilterKey email);
