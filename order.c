@@ -201,7 +201,8 @@ MtmErrorCode addFirstAvailableOrder(List days, Order order, SetElement room, Set
 	while ( !done ) {
 		for( int hour = 0; hour < 24; hour++) {
 			if ( checkIfRoomAvailable(days, daysFromToday, hour, room) && checkIfEscaperAvailable(days, daysFromToday, hour, user) ) {
-				MtmErrorCode result = addOrder2(days, order, daysFromToday, hour);
+				order->hour = hour;
+				MtmErrorCode result = addOrder2(days, order, daysFromToday);
 				//TODO maybe should be checked
 				return result;
 			}
@@ -213,11 +214,13 @@ MtmErrorCode addFirstAvailableOrder(List days, Order order, SetElement room, Set
 }
 
 
-MtmErrorCode addOrder2(days, order, daysFromToday, hour) {
+MtmErrorCode addOrder2(List days, Order order, int daysFromToday) {
 	Day day = listGetFirst(days);
 	for(int i = 0; i < daysFromToday; daysFromToday++) {
-		day = listGetNext(days)
+		day = listGetNext(days);
 	}
+	List orders = day->dayOrders;
+	listInsertFirst(orders, order);
 }
 
 bool checkIfEscaperAvailable(List days, int daysFromToday, int hour, SetElement user) {
