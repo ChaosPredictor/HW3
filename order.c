@@ -96,6 +96,83 @@ MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email
 
 
 MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
+	assert ( email != NULL );
+
+	Order newOrder = malloc(sizeof(struct order_t));
+	if ( newOrder == NULL) return MTM_OUT_OF_MEMORY;
+	if ( email != NULL && emailValidity(email)) {
+		newOrder->email = malloc(sizeof(char) * (strlen(email) + 1));
+		if ( newOrder->email == NULL) {
+			free(newOrder);
+			return MTM_OUT_OF_MEMORY;
+		}
+		strcpy(newOrder->email, email);
+	} else {
+		free(newOrder);
+		return MTM_INVALID_PARAMETER;
+	}
+
+	if ( time == NULL ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_INVALID_PARAMETER;
+	} else if ( false ) { //TODO check time validity
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_INVALID_PARAMETER;
+	}
+
+	if ( findEscaperFacultyFromEmail(users, email) == UNKNOWN ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+	}
+	User escaper = findUserFromEmail( users, email );
+
+	int hour = getHour( time );
+	int daysFromToday = getDay( time );
+
+	Room room = findRoom(rooms, faculty, id);
+	if ( room == NULL ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_ID_DOES_NOT_EXIST;
+	}
+
+	newOrder->faculty = faculty;
+	newOrder->id = id;
+	newOrder->price = calculatePriceOfOrder( users, rooms, email, room);
+	newOrder->hour = hour;
+	newOrder->num_ppl = num_ppl;
+
+
+	//
+	if ( !checkIfRoomAvailable(days, daysFromToday, hour, room) ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_ROOM_NOT_AVAILABLE;
+	}
+
+	if ( !checkIfEscaperAvailable(days, daysFromToday, hour, escaper) ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_CLIENT_IN_ROOM;
+	}
+	/*
+	if ( checkIfRoomAvailable(days, daysFromToday, hour, room) && checkIfEscaperAvailable(days, daysFromToday, hour, escaper) ) {
+
+	} */
+
+	addOrder2(days, newOrder, daysFromToday);
+	free(newOrder->email);
+	free(newOrder);
+	return MTM_SUCCESS;
+
+	//TODO check faculty validity
+
+
+
+	/*
 	assert( days != NULL );
 
 	int hour = getHour( time );
@@ -136,7 +213,7 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFacu
 		listInsertBeforeCurrent(days, newDay);
 		freeDay(newDay);
 	}
-	return MTM_SUCCESS;
+	return MTM_SUCCESS;*/
 }
 
 MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, int num_ppl ) {
@@ -159,19 +236,19 @@ MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, i
 		free(newOrder);
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 	}
-	User user = findUserFromEmail( users, email );
-	newOrder->num_ppl=num_ppl;
+	User escaper = findUserFromEmail( users, email );
+	newOrder->num_ppl = num_ppl;
 
 	//printf("\n number1: %d\n", setGetSize(rooms));
 	MtmErrorCode result = MTM_SUCCESS;
 	Set recommendedRooms = setCopy(rooms);
 
-	Set recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNumOfPplandDifficulty, num_ppl, user->typeSkill );
+	Set recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNumOfPplandDifficulty, num_ppl, escaper->typeSkill );
 	if ( setGetSize(recommendedRooms2) != 1 ) {
 		setDestroy(recommendedRooms);
 		recommendedRooms = setCopy( recommendedRooms2 );
 		setDestroy(recommendedRooms2);
-		recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNearFaculty, user->faculty, 0 );
+		recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNearFaculty, escaper->faculty, 0 );
 		if ( setGetSize(recommendedRooms2) != 1 ) {
 			setDestroy(recommendedRooms);
 			recommendedRooms = setCopy( recommendedRooms2 );
@@ -193,7 +270,10 @@ MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, i
 
 	if ( setGetSize(recommendedRooms2) == 1) {
 		Room room = setGetFirst(recommendedRooms2);
-		result = addFirstAvailableOrder(days, newOrder, room, user);
+		newOrder->faculty=room->faculty;
+		newOrder->id=room->id;
+		result = addFirstAvailableOrder(days, newOrder, room, escaper);
+		//TODO check return;
 		setDestroy(recommendedRooms2);
 		free(newOrder->email);
 		free(newOrder);
@@ -211,15 +291,15 @@ MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, i
 
 
 
-MtmErrorCode addFirstAvailableOrder(List days, Order order, SetElement room, SetElement user ) {
-	printRoom(room);
-	return MTM_SUCCESS;
+MtmErrorCode addFirstAvailableOrder(List days, Order order, SetElement room, SetElement escaper ) {
+	//printRoom(room);
+	//return MTM_SUCCESS;
 
 	bool done = false;
 	int daysFromToday = 0;
 	while ( !done ) {
 		for( int hour = 0; hour < 24; hour++) {
-			if ( checkIfRoomAvailable(days, daysFromToday, hour, room) && checkIfEscaperAvailable(days, daysFromToday, hour, user) ) {
+			if ( checkIfRoomAvailable(days, daysFromToday, hour, room) && checkIfEscaperAvailable(days, daysFromToday, hour, escaper) ) {
 				order->hour = hour;
 				MtmErrorCode result = addOrder2(days, order, daysFromToday);
 				//TODO maybe should be checked
@@ -234,8 +314,31 @@ MtmErrorCode addFirstAvailableOrder(List days, Order order, SetElement room, Set
 
 MtmErrorCode addOrder2(List days, Order order, int daysFromToday) {
 	Day day = listGetFirst(days);
-	for(int i = 0; i < daysFromToday; daysFromToday++) {
+	bool endOfList = false;
+	int i = 0;
+	while ( !endOfList && i < daysFromToday ) {
 		day = listGetNext(days);
+		if ( day == NULL ) {
+			endOfList = true;
+			break;
+		}
+		i++;
+	}
+	while ( i < daysFromToday ) {
+		Day newDay = createDay(i+1);
+		if ( newDay == NULL ) {
+			freeDay(newDay);
+			return MTM_OUT_OF_MEMORY;
+		}
+		listInsertLast(days, newDay);
+		freeDay(newDay);
+		i++;
+	}
+	if ( endOfList ) {
+		day = listGetFirst(days);
+		for (int i = 0; i < daysFromToday; i++ ) {
+			day = listGetNext(days);
+		}
 	}
 	List orders = day->dayOrders;
 	listInsertFirst(orders, order);
@@ -246,6 +349,7 @@ bool checkIfEscaperAvailable(List days, int daysFromToday, int hour, SetElement 
 	Day day = listGetFirst(days);
 	for(int i = 0; i < daysFromToday; i++ ) {
 		day = listGetNext(days);
+		if ( day == NULL ) return true;
 	}
 	List orders = day->dayOrders;
 	List ordersOfEscaper = listFilter(orders, filterOrderByEscaper, ((User)user)->email);
@@ -268,8 +372,11 @@ bool checkIfRoomAvailable(List days, int daysFromToday, int hour, ListElement ro
 
 	for(int i = 0; i < daysFromToday; i++ ) {
 		day = listGetNext(days);
+		if ( day == NULL ) return true;
 	}
 	List orders = day->dayOrders;
+	//printRoom(((Room)room));
+	//printAllOrders(orders);
 	List ordersOfFaculty = listFilter(orders, filterOrderByFaculty, &(((Room)room)->faculty));
 	List ordersOfRoom = listFilter(ordersOfFaculty, filterOrderById, &(((Room)room)->id));
 	listDestroy(ordersOfFaculty);
