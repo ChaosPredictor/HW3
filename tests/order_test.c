@@ -271,7 +271,6 @@ static bool testAddOrderToADay() {
 	addToday(days);
 	*/
 	List days = createDays();
-
 	Day day = listGetFirst(days);
 	List orders = day->dayOrders;
 	Set users = testHelperAddUsers();

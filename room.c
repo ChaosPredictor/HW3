@@ -178,6 +178,17 @@ SetElement findRoom(const Set rooms, TechnionFaculty faculty, int id) {
 	return NULL;
 }
 
+void printRoom(const SetElement setElement) {
+	printf("\nRoom print\n");
+	printf("  Room email: %s\n", ((Room)setElement)->email );
+	printf("  Room faculty: %d / id: %d\n", ((Room)setElement)->faculty, ((Room)setElement)->id);
+	printf("  Room open hours: %d - id: %d\n", ((Room)setElement)->from_hrs, ((Room)setElement)->to_hrs);
+	printf("  Room num_ppl: %d\n", ((Room)setElement)->num_ppl);
+	printf("  Room difficulty: %d\n", ((Room)setElement)->difficulty);
+	printf("  Room price: %d\n", ((Room)setElement)->price);
+	return;
+}
+
 
 int fromHour(const char* working_hrs) {
 	return ( charToInt(working_hrs[1]) + ( charToInt(working_hrs[0]) * 10 ));

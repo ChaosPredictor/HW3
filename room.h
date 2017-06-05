@@ -63,5 +63,7 @@ int recommendByNumOfPplandDifficulty(const SetElement setElement, SetKey num_ppl
 int recommendByNearFaculty(const SetElement setElement, SetKey faculty, SetKey junk );
 
 int recommendByNearId(const SetElement setElement, SetKey id, SetKey junk );
+//TODO should be removed;
+void printRoom(const SetElement setElement);
 
 #endif /* ROOM_H_ */

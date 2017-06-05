@@ -47,6 +47,8 @@ MtmErrorCode createOrder(List days, Set users, Set rooms, const char* email, Tec
 
 MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
+MtmErrorCode addOrder2(List days, Order order, int daysFromToday);
+
 MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, int hour, int num_ppl);
 
 MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, int num_ppl );

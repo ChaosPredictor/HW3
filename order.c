@@ -162,30 +162,46 @@ MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, i
 	User user = findUserFromEmail( users, email );
 	newOrder->num_ppl=num_ppl;
 
-	printf("\n number1: %d\n", setGetSize(rooms));
+	//printf("\n number1: %d\n", setGetSize(rooms));
+	MtmErrorCode result = MTM_SUCCESS;
+	Set recommendedRooms = setCopy(rooms);
 
-	Set recommendedRooms = filterRoomSet( rooms, recommendByNumOfPplandDifficulty, num_ppl, user->typeSkill );
+	Set recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNumOfPplandDifficulty, num_ppl, user->typeSkill );
+	if ( setGetSize(recommendedRooms2) != 1 ) {
+		setDestroy(recommendedRooms);
+		recommendedRooms = setCopy( recommendedRooms2 );
+		setDestroy(recommendedRooms2);
+		recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNearFaculty, user->faculty, 0 );
+		if ( setGetSize(recommendedRooms2) != 1 ) {
+			setDestroy(recommendedRooms);
+			recommendedRooms = setCopy( recommendedRooms2 );
+			setDestroy(recommendedRooms2);
+			recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNearFaculty, 0, 0 );
+			if ( setGetSize(recommendedRooms2) != 1 ) {
+				setDestroy(recommendedRooms);
+				recommendedRooms = setCopy( recommendedRooms2 );
+				setDestroy(recommendedRooms2);
+				recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNearId, 0, 0 );
 
-	printf(" number2: %d\n", setGetSize(recommendedRooms));
+			}
+		}
+	}
 
-	Set recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNearFaculty, user->faculty, 0 );
+	//printf("\n number last: %d\n", setGetSize(recommendedRooms2));
 
-	printf(" number3: %d\n", setGetSize(recommendedRooms2));
-
-
-	Set recommendedRooms3 = filterRoomSet( recommendedRooms2, recommendByNearFaculty, 0, 0 );
-
-	printf(" number3: %d\n", setGetSize(recommendedRooms3));
-
-	Set recommendedRooms4 = filterRoomSet( recommendedRooms3, recommendByNearId, 0, 0 );
-
-	printf(" number3: %d\n", setGetSize(recommendedRooms4));
-
-
-	setDestroy(recommendedRooms4);
-	setDestroy(recommendedRooms3);
-	setDestroy(recommendedRooms2);
 	setDestroy(recommendedRooms);
+
+	if ( setGetSize(recommendedRooms2) == 1) {
+		Room room = setGetFirst(recommendedRooms2);
+		result = addFirstAvailableOrder(days, newOrder, room, user);
+		setDestroy(recommendedRooms2);
+		free(newOrder->email);
+		free(newOrder);
+		return result;
+	} else {
+		printf("why?!?");
+	}
+
 	free(newOrder->email);
 	free(newOrder);
 
@@ -196,6 +212,9 @@ MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, i
 
 
 MtmErrorCode addFirstAvailableOrder(List days, Order order, SetElement room, SetElement user ) {
+	printRoom(room);
+	return MTM_SUCCESS;
+
 	bool done = false;
 	int daysFromToday = 0;
 	while ( !done ) {
@@ -209,7 +228,6 @@ MtmErrorCode addFirstAvailableOrder(List days, Order order, SetElement room, Set
 		}
 		daysFromToday++;
 	}
-
 	return MTM_SUCCESS;
 }
 
@@ -221,6 +239,7 @@ MtmErrorCode addOrder2(List days, Order order, int daysFromToday) {
 	}
 	List orders = day->dayOrders;
 	listInsertFirst(orders, order);
+	return MTM_SUCCESS;
 }
 
 bool checkIfEscaperAvailable(List days, int daysFromToday, int hour, SetElement user) {
@@ -251,8 +270,8 @@ bool checkIfRoomAvailable(List days, int daysFromToday, int hour, ListElement ro
 		day = listGetNext(days);
 	}
 	List orders = day->dayOrders;
-	List ordersOfFaculty = listFilter(orders, filterOrderByFaculty, ((Room)room)->faculty);
-	List ordersOfRoom = listFilter(ordersOfFaculty, filterOrderById, ((Room)room)->id);
+	List ordersOfFaculty = listFilter(orders, filterOrderByFaculty, &(((Room)room)->faculty));
+	List ordersOfRoom = listFilter(ordersOfFaculty, filterOrderById, &(((Room)room)->id));
 	listDestroy(ordersOfFaculty);
 	Order order = listGetFirst(ordersOfRoom);
 	//TODO check working hours
