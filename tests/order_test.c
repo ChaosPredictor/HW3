@@ -68,7 +68,9 @@ static bool testaddRecommendedOrder() {
 
 	//TODO create list of days;
 	//List days = listCreate(copyDay, freeDay);
+
 	List days = createDays();
+
 	Set users = testHelperAddUsers();
 	Set rooms = testHelperAddRooms(users);
 

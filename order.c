@@ -94,7 +94,7 @@ MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email
 	return MTM_SUCCESS;
 }
 
-
+//TODO should move to system
 MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
 	assert ( email != NULL );
 
@@ -516,6 +516,11 @@ ListElement createDay(int dayNumber) {
 
 List createDays() {
 	List days = listCreate(copyDay, freeDay);
+	//List templist = listCreate(copyDay, freeDay);
+	//printf("address1 %p\n", (void*)templist);
+	//days = &templist;
+	printf("address2 %p\n", (void*)days);
+
 	if ( days == NULL ) return NULL;
 	Day newDay = malloc(sizeof(struct day_t));
 	if ( newDay == NULL ) {

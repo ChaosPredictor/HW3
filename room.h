@@ -39,7 +39,8 @@ typedef int SetKey;
 typedef int(*RecommendSetElement)(SetElement, SetKey, SetKey);
 
 
-
+//TODO should move to system;
+//TODO working hours should be const
 MtmErrorCode addRoom(Set rooms, Set companies, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty);
 
 MtmErrorCode removeRoom(Set setRoom, TechnionFaculty faculty, int id);

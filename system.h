@@ -9,8 +9,7 @@
 //typedef struct EscapeSystem_t EscapeSystem;
 
 
-typedef struct EscapeSystem_t
-{
+typedef struct EscapeSystem_t {
 	Set users;
 	Set rooms;
 	List days;
