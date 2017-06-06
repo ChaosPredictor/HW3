@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "user.h"
+#include "faculty.h"
 
 //typedef struct EscapeSystem_t EscapeSystem;
 
@@ -25,6 +26,7 @@ MtmErrorCode createCompanySet(EscapeSystem* sys);
 
 MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system);
 
+MtmErrorCode reportBest(FILE* outputChannel, EscapeSystem system);
 
 #endif /* SYSTEM_H_ */
 

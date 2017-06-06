@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "list.h"
+#include "mtm_ex3.h"
 
 typedef struct faculty_t{
 	TechnionFaculty id;
@@ -23,12 +24,14 @@ ListElement copyDay(ListElement faculty);
 void freeDay(ListElement faculty);
 
 
-List createFaculties();
+List createFaculties(int numberOfFaculties);
 
 MtmErrorCode addIncomeToFaculty(List Faculties, TechnionFaculty facultyNumber, int income);
 
-int compareFAcultyByIncomeAndId(ListElement listElement1, ListElement listElement2);
+int compareFacultyByIncomeAndId(ListElement listElement1, ListElement listElement2);
 
 List returnBestNFaculties(List faculties, int number);
+
+int returnTotalRevenue(List faculties);
 
 #endif /* FACULTY_H_ */

@@ -13,6 +13,10 @@
 
 #define MAX_NAME_LENG 200
 #define MAX_COMMAND_LENG 7
+#define NUMBER_OF_BEST 3
+
+const int NUMBER_OF_FACULTIES = UNKNOWN;
+
 
 
 
@@ -61,7 +65,7 @@ int main(int argc, char *argv[]) {
 	//system->days = createDays();
 	system->days = createDays();
 
-	system->faculties = createFaculties();
+	system->faculties = createFaculties(NUMBER_OF_FACULTIES);
 	//printf("address %p", (void*)days);
 
 	while ( fgets(line, MAX_NAME_LENG, filein) != NULL) {
@@ -190,9 +194,10 @@ int main(int argc, char *argv[]) {
 
 	//destroySystem(sys);
 	listDestroy(system->days);
+	listDestroy(system->faculties);
 	setDestroy(system->rooms);
 	setDestroy(system->users);
-	setDestroy(system->faculties);
+
 	free(system);
 
 	fclose(fileout);
@@ -263,7 +268,7 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system) {
 		//printRoom(room);
 		//printOrder(order);
 		mtmPrintOrder(outputChannel, user->email, user->typeSkill, user->faculty, room->email, room->faculty, room->id, order->hour, room->difficulty, order->num_ppl, order->price);
-		addIncomeToFaculty(system->faculties, faculty, price);
+		addIncomeToFaculty(system->faculties, room->faculty, order->price);
 		order = listGetNext(orders);
 	}
 	mtmPrintDayFooter(outputChannel, today->dayNumber);
@@ -280,8 +285,21 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system) {
 
 
 
-reportBest(fileout, system) {
+MtmErrorCode reportBest(FILE* outputChannel, EscapeSystem system) {
+	Day today = listGetFirst(system->days);
 
+	mtmPrintFacultiesHeader(outputChannel, NUMBER_OF_FACULTIES, today->dayNumber, returnTotalRevenue(system->faculties));
+
+	List bestList = returnBestNFaculties(system->faculties, NUMBER_OF_BEST);
+	Faculty faculty = listGetFirst(bestList);
+	while ( faculty != NULL ) {
+		mtmPrintFaculty(outputChannel, faculty->id, faculty->income);
+		faculty = listGetNext(bestList);
+	}
+	mtmPrintFacultiesFooter(outputChannel);
+
+
+	return MTM_SUCCESS;
 }
 
 
