@@ -169,6 +169,12 @@ int getRoomPrice(const Set rooms, TechnionFaculty faculty, int id) {
 	return -1;
 }
 
+
+int getTotalRoomPrice(const SetElement room, TechnionFaculty faculty) {
+	if ( ((Room)room)->faculty == faculty ) return ((((Room)room)->price * 75) / 100) ;
+	return ((Room)room)->price;
+}
+
 SetElement findRoom(const Set rooms, TechnionFaculty faculty, int id) {
 	SET_FOREACH(Room, val, rooms) {
 		if ( val->faculty == faculty && val->id == id ) {

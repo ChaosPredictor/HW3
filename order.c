@@ -272,6 +272,8 @@ MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, i
 		Room room = setGetFirst(recommendedRooms2);
 		newOrder->faculty=room->faculty;
 		newOrder->id=room->id;
+		newOrder->price = getTotalRoomPrice(room, escaper->faculty);
+
 		result = addFirstAvailableOrder(days, newOrder, room, escaper);
 		//TODO check return;
 		setDestroy(recommendedRooms2);
@@ -297,6 +299,7 @@ MtmErrorCode addFirstAvailableOrder(List days, Order order, SetElement room, Set
 
 	bool done = false;
 	int daysFromToday = 0;
+
 	while ( !done ) {
 		for( int hour = 0; hour < 24; hour++) {
 			if ( checkIfRoomAvailable(days, daysFromToday, hour, room) && checkIfEscaperAvailable(days, daysFromToday, hour, escaper) ) {
@@ -483,6 +486,16 @@ void printAllOrders(List orders) {
 	}
 }
 
+
+void printOrder(ListElement order) {
+	printf("  A New Order\n");
+	printf("	Order email: %s\n", ((Order)order)->email);
+	printf("	Order faculty: %d\n", ((Order)order)->faculty);
+	printf("	Order id: %d\n", ((Order)order)->id);
+	printf("	Order hour: %d\n", ((Order)order)->hour);
+	printf("	Order price: %d\n", ((Order)order)->price);
+}
+
 ListElement copyDay(ListElement day) {
 	if ( day == NULL ) return NULL;
 	//TODO maybe assert
@@ -519,7 +532,7 @@ List createDays() {
 	//List templist = listCreate(copyDay, freeDay);
 	//printf("address1 %p\n", (void*)templist);
 	//days = &templist;
-	printf("address2 %p\n", (void*)days);
+	//printf("address2 %p\n", (void*)days);
 
 	if ( days == NULL ) return NULL;
 	Day newDay = malloc(sizeof(struct day_t));

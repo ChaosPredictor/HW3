@@ -135,5 +135,10 @@ TechnionFaculty findEscaperFacultyFromEmail( Set setUser, const char* email ) {
 }
 
 
-
+void printUser(SetElement user) {
+	printf("\nPrint User\n");
+	printf("\n User email: %s\n", ((User)user)->email);
+	printf("\n User faculty: %d\n", ((User)user)->faculty);
+	printf("\n User skill: %d\n", ((User)user)->typeSkill);
+}
 

@@ -103,4 +103,7 @@ void printAllDays(List days);
 //TODO remove to other place
 void printAllOrders(List orders);
 
+void printOrder(ListElement order);
+
+
 #endif /* ORDER_H_ */

@@ -50,6 +50,8 @@ SetElement findUserFromEmail( Set setUser, const char* email );
 
 bool emailValidity(const char* email);
 
+void printUser(SetElement user);
+
 
 MtmErrorCode removeCompany(Set setCompany, const char* email);
 

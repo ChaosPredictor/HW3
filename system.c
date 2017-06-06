@@ -127,6 +127,12 @@ int main(int argc, char *argv[]) {
 					char* time = strtok(NULL, " ");
 					int num_ppl = atoi( strtok(NULL, " ") );
 					addOrder(system->days, system->users, system->rooms, email, faculty, id, time, num_ppl);
+				}  else if ( strcmp(subCommand, "recommend" ) == 0 ) {
+					//printf("this is escaper order\n");
+					//printf("your input a: %s", line);
+					char* email = strtok(NULL, " ");
+					int num_ppl = atoi( strtok(NULL, " ") );
+					addRecommendedOrder(system->days, system->users, system->rooms, email, num_ppl );
 				} else {
 					printf("this is remove escaper\n");
 					printf("your input a: %s", line);
@@ -245,14 +251,19 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system) {
 	while ( order != NULL ) {
 		//TODO check that escaper;
 		user = findUserFromEmail( system->users, order->email );
+		//printUser(user);
 		room = findRoom(system->rooms, order->faculty, order->id);
+		//printRoom(room);
+		//printOrder(order);
 		mtmPrintOrder(outputChannel, user->email, user->typeSkill, user->faculty, room->email, room->faculty, room->id, order->hour, room->difficulty, order->num_ppl, order->price);
 		order = listGetNext(orders);
 	}
 	mtmPrintDayFooter(outputChannel, today->dayNumber);
 
 	if ( listGetSize(system->days) == 1 ) {
-		listInsertLast(system->days, createDay(today->dayNumber+1));
+		Day day = createDay(today->dayNumber+1);
+		listInsertLast(system->days, day);
+		freeDay(day);
 	}
 
 	listRemoveCurrent(system->days);
