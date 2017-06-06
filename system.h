@@ -13,6 +13,7 @@ typedef struct EscapeSystem_t {
 	Set users;
 	Set rooms;
 	List days;
+	List faculties;
 } *EscapeSystem;
 
 MtmErrorCode createSystem(EscapeSystem **sys);

@@ -60,6 +60,8 @@ int main(int argc, char *argv[]) {
 	system->rooms = setCreate(copyRoom, freeRoom, compareRooms);
 	//system->days = createDays();
 	system->days = createDays();
+
+	system->faculties = createFaculties();
 	//printf("address %p", (void*)days);
 
 	while ( fgets(line, MAX_NAME_LENG, filein) != NULL) {
@@ -147,7 +149,11 @@ int main(int argc, char *argv[]) {
 					//printf("this is add escaper\n");
 					//printf("your input a: %s", line);
 					reportDay(fileout, system);
-				} else {
+				} else if ( strcmp(subCommand, "best\n" ) == 0 ) {
+					//printf("this is add escaper\n");
+					//printf("your input a: %s", line);
+					reportBest(fileout, system);
+				} else  {
 					printf("this is report not day\n");
 					printf("your input a: %s", line);
 				}
@@ -186,6 +192,7 @@ int main(int argc, char *argv[]) {
 	listDestroy(system->days);
 	setDestroy(system->rooms);
 	setDestroy(system->users);
+	setDestroy(system->faculties);
 	free(system);
 
 	fclose(fileout);
@@ -256,6 +263,7 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system) {
 		//printRoom(room);
 		//printOrder(order);
 		mtmPrintOrder(outputChannel, user->email, user->typeSkill, user->faculty, room->email, room->faculty, room->id, order->hour, room->difficulty, order->num_ppl, order->price);
+		addIncomeToFaculty(system->faculties, faculty, price);
 		order = listGetNext(orders);
 	}
 	mtmPrintDayFooter(outputChannel, today->dayNumber);
@@ -270,6 +278,11 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system) {
 	return MTM_SUCCESS;
 }
 
+
+
+reportBest(fileout, system) {
+
+}
 
 
 /*

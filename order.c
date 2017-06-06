@@ -574,6 +574,7 @@ bool filterOrderById(const ListElement listElement, const ListFilterKey id) {
 	return ((((Order)listElement)->id) == *(int*)id);
 }
 
+//TODO maybe wrong
 int compareOrderByHour(ListElement listElement1, ListElement listElement2) {
 	return ((((Order)listElement2)->hour) == (((Order)listElement1)->hour));
 }
