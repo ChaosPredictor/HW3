@@ -64,7 +64,6 @@ static bool testFreeOrder() {
 	return true;
 }
 
-
 static bool testaddRecommendedOrder() {
 
 	//TODO create list of days;
@@ -269,7 +268,6 @@ static bool testAddOrder() {
 	return true;
 }
 
-
 static bool testAddOrderToADay() {
 
 /*	List days = listCreate(copyDay, freeDay);
@@ -313,55 +311,6 @@ static bool testAddOrderToADay() {
 }
 
 
-static bool testHelperAddOrderToADay() {
-
-
-	List days = createDays();
-	Day day = listGetFirst(days);
-	List orders = day->dayOrders;
-
-	Set users = testHelperAddUsers();
-	Set rooms = testHelperAddRooms(users);
-
-	//printAllDays(days);
-
-	//printf("\nwhy? %d\n", addOrderToADay( orders, users, rooms, "escaper1@electrical", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, 2, 4, 3));
-
-	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@electrical", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, 2, "0-4", 3) == MTM_SUCCESS );
-
-	//printf("\nwhy? %d\n", addOrderToADay( orders, users, rooms, "escaper1@electrical", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, 2, 4, 3));
-
-	ASSERT_TEST( addOrder(days, users, rooms, "escaper1@electrical", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, 2, "0-4", 3) == MTM_ROOM_NOT_AVAILABLE );
-
-	//ASSERT_TEST( addOrderToADay( orders, users, rooms, "escaper1@electrical", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, 2, 4, 3) == MTM_SUCCESS );
-
-	//printAllDays(days);
-
-	ASSERT_TEST( listGetSize(orders) == 1 );
-
-
-	setDestroy(rooms);
-	setDestroy(users);
-	listDestroy(days);
-
-	return true;
-
-/*
-
-	List orders = listCreate(copyOrder ,freeOrder);
-	ASSERT_TEST( orders != NULL);
-	ASSERT_TEST( addOrderToADay(orders, "escaper1@civil", MECHANICAL_ENGINEERING, 1, 6, 3) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay(orders, "escaper2@civil", MECHANICAL_ENGINEERING, 4, 8, 6) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay(orders, "escaper3@civil", MECHANICAL_ENGINEERING, 6, 5, 8) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay(orders, "escaper4@civil", MECHANICAL_ENGINEERING, 2, 10, 3) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay(orders, "escaper5@civil", MECHANICAL_ENGINEERING, 1, 12, 3) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay(orders, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 6, 8) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay(orders, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 6, 3) == MTM_SUCCESS );
-	ASSERT_TEST( addOrderToADay(orders, "escaper1@mechanical", MECHANICAL_ENGINEERING, 1, 6, 3) == MTM_SUCCESS );
-*/
-}
-
-
 
 static bool testCopyDay() {
 
@@ -377,7 +326,6 @@ int orderTests (int argv, char** arc) {
 	RUN_TEST(testAddOrder);
 	RUN_TEST(testAddOrderToADay);
 	RUN_TEST(testaddRecommendedOrder);
-	RUN_TEST(testHelperAddOrderToADay);
 
 	RUN_TEST(testCopyDay);
 

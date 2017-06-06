@@ -5,20 +5,16 @@
  *      Author: master
  */
 
-#include "mtm_escape.h"
+#include "system.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 
 #define MAX_NAME_LENG 200
+#define MAX_COMMAND_LENG 7
 
 
-struct EscapeSystem_t
-{
-	int temp;
-	Set companies;
-	Set rooms;
-};
 
 
 //static SetElement copyCompany(SetElement company);
@@ -27,7 +23,8 @@ struct EscapeSystem_t
 
 int main(int argc, char *argv[]) {
 
-	FILE *file = stdin;
+	FILE *file = NULL;
+	//FILE *file = fopen("./tests/EscapeTechnion/test1.in", "r");
 
 	if ( !(argc == 1 || argc == 3 || argc == 5) ) {
 		printf("‫‪MTM_INVALID_COMMAND_LINE_PARAMETERS.‬‬\n");
@@ -50,51 +47,89 @@ int main(int argc, char *argv[]) {
 		//TODO output
 	}
 
-	char a[MAX_NAME_LENG];
+	char line[MAX_NAME_LENG];
 
-	while ( fgets(a, MAX_NAME_LENG, file) != NULL) {
+	Set users = setCreate(copyUser, freeUser, compareUsers);
 
-		const char* firstNonSpace = a;
+	while ( fgets(line, MAX_NAME_LENG, file) != NULL) {
+
+		const char* firstNonSpace = line;
 		while(*firstNonSpace != '\0' && isspace(*firstNonSpace)) {
 			++firstNonSpace;
 		}
 		size_t len = strlen(firstNonSpace)+1;
-		memmove(a, firstNonSpace, len);
+		memmove(line, firstNonSpace, len);
 		//const char *firstChar[1] = &a[0];
-		if ( strcmp(a,"") != 0 && a[0] != '#' ) {
-			printf("your input a: %s", a);
-		}
+		if ( strcmp(line,"") != 0 && line[0] != '#' ) {
+			char *temp = malloc(sizeof(char) * (strlen(line) + 1));
+			strcpy(temp,line);
+			char* command = NULL;//= malloc(sizeof(char) * ( MAX_COMMAND_LENG + 1));
+			command = strtok(temp, " ");
+			if ( strcmp(command,"company") == 0) {
+				char* subCommand = NULL;
+				subCommand = strtok(NULL, " ");
+				if ( strcmp(subCommand,"add") == 0 ) {
+					char* email = strtok(NULL, " ");
+					int faculty = atoi( strtok(NULL, " ") );
+					addUser(users, email, faculty, COMPANY);
+				} else if ( strcmp(subCommand,"remove") == 0 ) {
+					printf("this is remove company\n");
+					printf("your input a: %s", line);
 
+				}
+			} else if ( strcmp(command,"room") == 0) {
+				printf("this is room\n");
+				printf("your input a: %s", line);
+
+
+			} else {
+				printf("this is not company\n");
+				printf("your input a: %s", line);
+
+			}
+			//free( command );
+			free( temp );
+			//free( command );
+
+
+			//int hour = atoi( strtok(NULL, "-") );
+		}
 	}
-	EscapeSystem *sys=NULL;
+	//EscapeSystem *sys=NULL;
 	//Result r=OK;
 
 	//r=create_system("test_1.txt", &sys);
 
-	createSystem(&sys);
+	//createSystem(&sys);
 
-	createCompanySet(sys);
+	//createCompanySet(sys);
 
-	addCompany(sys->companies, "sdfefdgdfh5654654fgjhfgsdf", CIVIL_ENGINEERING);
+	//addCompany(sys->companies, "sdfefdgdfh5654654fgjhfgsdf", CIVIL_ENGINEERING);
 
-	int size = setGetSize(sys->companies);
-	printf("size: %d\n", size);
+	//int size = listGetSize(sys->users);
+	//printf("size: %d\n", size);
 
 	//addCompany(Set setCompany, char* newEmail, TechnionFaculty faculty)
 
-	destroySystem(sys);
+	//destroySystem(sys);
+	setDestroy(users);
 
 	fclose(file);
+	return 0;
 }
 
 MtmErrorCode createSystem(EscapeSystem **sys) {
 	*sys = malloc(sizeof(**sys));
+
+	//sys->days = createDays();
 	return MTM_SUCCESS;
 }
 
 MtmErrorCode destroySystem(EscapeSystem *sys) {
-	setClear(sys->companies);
-	setDestroy(sys->companies);
+	//setClear(sys->users);
+	//setDestroy(sys->users);
+	//setDestroy(sys->rooms);
+	//setDestroy(sys->days);
 	free(sys);
 	return MTM_SUCCESS;
 }
@@ -108,13 +143,44 @@ MtmErrorCode createCompanySet(EscapeSystem *sys) {
 	//printf("size: %d", size);
 	//sys->company = malloc(sizeof(*Set));
 	//sys->company = malloc(sizeof(Set*));
-	sys->companies = setCreate(copyCompany, freeCompany, compareCompanies);
+	//sys->companies = setCreate(copyUser, freeUser, compareUsers);
 	//int size = setGetSize(sys->company);
 	//printf("size: %d\n", size);
 	//*sys->company = setCreate(copyCompany, freeCompany, compareCompanies);
 	//TODO check not NULL
 	return MTM_SUCCESS;
 }
+
+
+MtmErrorCode printanOrder(FILE* outputChannel, EscapeSystem system, Order order) {
+
+
+	return MTM_SUCCESS;
+
+
+	//mtmPrintOrder(outputChannel, char* email, int skill, TechnionFaculty client_faculty, char* company_email, TechnionFaculty room_faculty, int id, int hour, int difficulty, int num_ppl, int totalPrice);
+}
+
+
+
+MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system) {
+	List days = system->days;
+	Day today = listGetFirst(days);
+	List orders = today->dayOrders;
+	mtmPrintDayHeader(stdout, today->dayNumber, listGetSize(orders));
+
+	Order order = listGetFirst(orders);
+	while ( order != NULL ) {
+
+	}
+
+	if ( listGetSize(days) == 1 ) {
+		listInsertLast(days, createDay(today->dayNumber+1));
+	}
+	listRemoveCurrent(days);
+	return MTM_SUCCESS;
+}
+
 
 
 /*

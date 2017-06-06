@@ -43,14 +43,19 @@ ListElement copyOrder(ListElement order);
 
 void freeOrder(ListElement order);
 
+//TODO move to other place
 MtmErrorCode createOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
+//TODO move to other place
 MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
+
 
 MtmErrorCode addOrder2(List days, Order order, int daysFromToday);
 
+//TODO move to other place
 MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, int hour, int num_ppl);
 
+//TODO move to other place
 MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, int num_ppl );
 
 bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour);
@@ -69,8 +74,7 @@ bool checkIfEscaperAvailable(List days, int daysFromToday, int hour, SetElement 
 
 MtmErrorCode checkAvailability(List orders, int hour, char* email, TechnionFaculty faculty, int id);
 
-bool filterOrderById(const ListElement listElement, const ListFilterKey id);
-
+//TODO move to other place
 int calculatePriceOfOrder( Set users, Set rooms, const char* email, const SetElement room);
 
 MtmErrorCode addFirstAvailableOrder(List days, Order order, SetElement room, SetElement user );
@@ -92,8 +96,11 @@ ListElement createDay(int dayNumber);
 
 List createDays();
 
+
+//TODO remove to other place
 void printAllDays(List days);
 
+//TODO remove to other place
 void printAllOrders(List orders);
 
 #endif /* ORDER_H_ */
