@@ -35,7 +35,7 @@ typedef enum {
 
 MtmErrorCode createSystem(EscapeSystem sys);
 
-MtmErrorCode destroySystem(EscapeSystem *sys);
+MtmErrorCode destroySystem(EscapeSystem sys);
 
 MtmErrorCode createCompanySet(EscapeSystem* sys);
 

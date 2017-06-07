@@ -60,7 +60,6 @@ int main(int argc, char *argv[]) {
 
 
 
-	system->faculties = createFaculties(NUMBER_OF_FACULTIES);
 	//printf("address %p", (void*)days);
 
 	while ( fgets(line, MAX_NAME_LENG, filein) != NULL) {
@@ -206,14 +205,15 @@ int main(int argc, char *argv[]) {
 
 	//addCompany(Set setCompany, char* newEmail, TechnionFaculty faculty)
 
-	//destroySystem(sys);
+	destroySystem(system);
+	/*
 	listDestroy(system->days);
 	listDestroy(system->faculties);
 	setDestroy(system->rooms);
 	setDestroy(system->escapers);
 	setDestroy(system->companies);
 
-	free(system);
+	free(system);*/
 
 	fclose(fileout);
 	fclose(filein);
@@ -227,15 +227,17 @@ MtmErrorCode createSystem(EscapeSystem sys) {
 	sys->companies = setCreate(copyCompany, freeCompany, compareCompanies);
 	sys->rooms = setCreate(copyRoom, freeRoom, compareRooms);
 	sys->days = createDays();
+	sys->faculties = createFaculties(NUMBER_OF_FACULTIES);
 
 	return MTM_SUCCESS;
 }
 
-MtmErrorCode destroySystem(EscapeSystem *sys) {
-	//setClear(sys->users);
-	//setDestroy(sys->users);
-	//setDestroy(sys->rooms);
-	//setDestroy(sys->days);
+MtmErrorCode destroySystem(EscapeSystem sys) {
+	listDestroy(sys->days);
+	listDestroy(sys->faculties);
+	setDestroy(sys->rooms);
+	setDestroy(sys->escapers);
+	setDestroy(sys->companies);
 	free(sys);
 	return MTM_SUCCESS;
 }
