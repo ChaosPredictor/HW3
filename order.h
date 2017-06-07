@@ -68,16 +68,14 @@ bool filterOrderById(const ListElement listElement, const ListFilterKey id);
 
 int compareOrderByHour(ListElement listElement1, ListElement listElement2);
 
-bool checkIfRoomAvailable(List days, int daysFromToday, int hour, ListElement room);
 
-bool checkIfEscaperAvailable(List days, int daysFromToday, int hour, SetElement user);
 
 MtmErrorCode checkAvailability(List orders, int hour, char* email, TechnionFaculty faculty, int id);
 
 //TODO move to other place
 //int calculatePriceOfOrder( Set users, Set rooms, const char* email, const SetElement room);
 
-MtmErrorCode addFirstAvailableOrder(List days, Order order, SetElement room, SetElement user );
+//MtmErrorCode addFirstAvailableOrder(List days, Order order, SetElement room, SetElement user );
 
 int getDay( const char* time );
 

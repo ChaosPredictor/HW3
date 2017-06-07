@@ -294,26 +294,7 @@ MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, i
 */
 
 
-MtmErrorCode addFirstAvailableOrder(List days, Order order, SetElement room, SetElement escaper ) {
-	//printRoom(room);
-	//return MTM_SUCCESS;
 
-	bool done = false;
-	int daysFromToday = 0;
-
-	while ( !done ) {
-		for( int hour = 0; hour < 24; hour++) {
-			if ( checkIfRoomAvailable(days, daysFromToday, hour, room) && checkIfEscaperAvailable(days, daysFromToday, hour, escaper) ) {
-				order->hour = hour;
-				MtmErrorCode result = addOrder2(days, order, daysFromToday);
-				//TODO maybe should be checked
-				return result;
-			}
-		}
-		daysFromToday++;
-	}
-	return MTM_SUCCESS;
-}
 
 
 MtmErrorCode addOrder2(List days, Order order, int daysFromToday) {
@@ -350,52 +331,7 @@ MtmErrorCode addOrder2(List days, Order order, int daysFromToday) {
 }
 
 //TODO should move from here
-bool checkIfEscaperAvailable(List days, int daysFromToday, int hour, SetElement escaper) {
-	Day day = listGetFirst(days);
-	for(int i = 0; i < daysFromToday; i++ ) {
-		day = listGetNext(days);
-		if ( day == NULL ) return true;
-	}
-	List orders = day->dayOrders;
-	List ordersOfEscaper = listFilter(orders, filterOrderByEscaper, ((Escaper)escaper)->email);
-	Order order = listGetFirst(ordersOfEscaper);
-	for(int i = 0; i < listGetSize(ordersOfEscaper); i++) {
-		if ( order->hour == hour ) {
-			listDestroy(ordersOfEscaper);
-			return false;
-		}
-	}
-	listDestroy(ordersOfEscaper);
-	return true;
-}
 
-
-bool checkIfRoomAvailable(List days, int daysFromToday, int hour, ListElement room) {
-	if ( ((Room)room)->from_hrs > hour || ((Room)room)->to_hrs < hour ) return false;
-
-	Day day = listGetFirst(days);
-
-	for(int i = 0; i < daysFromToday; i++ ) {
-		day = listGetNext(days);
-		if ( day == NULL ) return true;
-	}
-	List orders = day->dayOrders;
-	//printRoom(((Room)room));
-	//printAllOrders(orders);
-	List ordersOfFaculty = listFilter(orders, filterOrderByFaculty, &(((Room)room)->faculty));
-	List ordersOfRoom = listFilter(ordersOfFaculty, filterOrderById, &(((Room)room)->id));
-	listDestroy(ordersOfFaculty);
-	Order order = listGetFirst(ordersOfRoom);
-	//TODO check working hours
-	for(int i = 0; i < listGetSize(ordersOfRoom); i++) {
-		if ( order->hour == hour ) {
-			listDestroy(ordersOfRoom);
-			return false;
-		}
-	}
-	listDestroy(ordersOfRoom);
-	return true;
-}
 
 
 MtmErrorCode checkAvailability(List orders, int hour, char* email, TechnionFaculty faculty, int id) {
@@ -425,6 +361,8 @@ MtmErrorCode checkAvailability(List orders, int hour, char* email, TechnionFacul
 	listDestroy(filteredOrders);
 	return MTM_SUCCESS;
 }
+
+
 /*
 int calculatePriceOfOrder( Set users, Set rooms, const char* email, const SetElement room) {
 	TechnionFaculty escaperFaculty = returnEscaperFaculty( findEscaperByEmail(users, email));

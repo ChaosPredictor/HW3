@@ -64,7 +64,6 @@ int compareRooms(SetElement room1, SetElement room2) {
 
 
 int calculatePriceOfOrder(const Room room, TechnionFaculty escaperFaculty, int num_ppl) {
-//int calculatePriceOfOrder(const EscapeSystem sys, const char* email, const SetElement room, int num_ppl){
 	if( escaperFaculty == UNKNOWN ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 
 	if ( room == NULL ) return MTM_ID_DOES_NOT_EXIST;

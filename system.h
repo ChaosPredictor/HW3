@@ -59,6 +59,8 @@ MtmErrorCode removeEscaper(EscapeSystem sys, const char* email);
 
 SetElement findEscaperByEmail( Set setEscaper, const char* email );
 
+bool checkIfEscaperAvailable(const EscapeSystem sys, int daysFromToday, int hour, SetElement escaper);
+
 
 
 //TODO working hours should be const
@@ -68,12 +70,16 @@ MtmErrorCode removeRoom(EscapeSystem sys, TechnionFaculty faculty, int id);
 
 SetElement findRoom(const EscapeSystem sys, TechnionFaculty faculty, int id);
 
+bool checkIfRoomAvailable(const EscapeSystem sys, int daysFromToday, int hour, ListElement room);
 
 
 
 MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
 MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl);
+
+MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, ListElement order, SetElement room, SetElement escaper );
+
 
 
 
