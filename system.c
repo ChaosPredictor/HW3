@@ -21,11 +21,6 @@ const int NUMBER_OF_FACULTIES = UNKNOWN;
 
 
 
-
-//static SetElement copyCompany(SetElement company);
-//static void freeCompany(SetElement company);
-//static int compareCompanies(SetElement company1, SetElement company2);
-
 int main(int argc, char *argv[]) {
 
 	FILE *filein = NULL;
@@ -60,6 +55,7 @@ int main(int argc, char *argv[]) {
 	char line[MAX_NAME_LENG];
 
 	EscapeSystem system = malloc(sizeof(struct EscapeSystem_t));
+	//TODO check return value
 	system->escapers = setCreate(copyEscaper, freeEscaper, compareEscapers);
 	system->companies = setCreate(copyCompany, freeCompany, compareCompanies);
 	system->rooms = setCreate(copyRoom, freeRoom, compareRooms);
@@ -695,25 +691,5 @@ bool emailValidity(const char* email) {
 	return ( count == 1);
 }
 
-/*
-static SetElement copyCompany(SetElement company){
-	assert(company);
-	Company newCompany = malloc(sizeof(newCompany));
-	//TODO return from malloc;
 
-	newCompany->email = malloc(strlen(((Company)company)->email)+1);
-	strcpy(newCompany->email, ((Company)company)->email);
-	//TODO return from malloc;
-	newCompany->faculty = ((Company)company)->faculty;
-	return newCompany != NULL ? newCompany : NULL;
-}
-
-static void freeCompany(SetElement company){
-	free(((Company)company)->email);
-	free(company);
-}
-
-static int compareCompanies(SetElement company1, SetElement company2) {
-	return strcmp(company1, company2);
-}*/
 

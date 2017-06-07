@@ -14,24 +14,7 @@
 #include "order.h"
 #include "system.h"
 
-//#include "visitor_room.h"
-//TODO add related files
 
-/* moved to system
-typedef enum {
-    COMPANY,
-	ESCAPER_1,
-	ESCAPER_2,
-	ESCAPER_3,
-	ESCAPER_4,
-	ESCAPER_5,
-	ESCAPER_6,
-	ESCAPER_7,
-	ESCAPER_8,
-	ESCAPER_9,
-	ESCAPER_10
-} TypeSkill;
-*/
 
 typedef struct escaper_t {
 	char* email;

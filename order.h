@@ -47,17 +47,9 @@ void freeOrder(ListElement order);
 //TODO maybe remove or moved to other place
 MtmErrorCode createOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
-//moved to system
-//MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
-//MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, int num_ppl );
-
 //TODO to do something
 MtmErrorCode addOrder2(List days, Order order, int daysFromToday);
 
-//TODO move to other place
-//MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, int hour, int num_ppl);
-
-\
 bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour);
 
 bool filterOrderByEscaper(const ListElement listElement, ListFilterKey email);
@@ -72,10 +64,6 @@ int compareOrderByHour(ListElement listElement1, ListElement listElement2);
 
 MtmErrorCode checkAvailability(List orders, int hour, char* email, TechnionFaculty faculty, int id);
 
-//TODO move to other place
-//int calculatePriceOfOrder( Set users, Set rooms, const char* email, const SetElement room);
-
-//MtmErrorCode addFirstAvailableOrder(List days, Order order, SetElement room, SetElement user );
 
 int getDay( const char* time );
 

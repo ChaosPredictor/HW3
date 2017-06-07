@@ -9,9 +9,6 @@
 #include "company.h"
 #include "room.h"
 
-//typedef struct EscapeSystem_t EscapeSystem;
-
-
 typedef struct EscapeSystem_t {
 	Set escapers;
 	Set companies;

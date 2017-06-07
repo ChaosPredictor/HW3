@@ -61,8 +61,6 @@ int compareRooms(SetElement room1, SetElement room2) {
 	}
 }
 
-
-
 int calculatePriceOfOrder(const Room room, TechnionFaculty escaperFaculty, int num_ppl) {
 	if( escaperFaculty == UNKNOWN ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 
@@ -74,76 +72,6 @@ int calculatePriceOfOrder(const Room room, TechnionFaculty escaperFaculty, int n
 	}
 	return price * num_ppl;
 }
-
-
-
-/* moved toi system
-MtmErrorCode addRoom(Set rooms, Set users, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty) {
-	if ( rooms == NULL || users == NULL ) return MTM_INVALID_PARAMETER;
-	if ( email == NULL || !emailValidity(email) )  return MTM_INVALID_PARAMETER;
-
-	TechnionFaculty faculty = findCompanyFacultyFromEmail(users, email);
-	if ( faculty == UNKNOWN ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
-
-
-	//TODO check email exist
-	//TODO check email not in the list
-	//TODO faculty & id unic
-	Room newRoom = malloc(sizeof(struct room_t));
-	if ( newRoom == NULL) {
-		return MTM_OUT_OF_MEMORY;
-	}
-	newRoom->email = malloc(sizeof(char) * (strlen(email)+1));
-	if ( newRoom->email == NULL) {
-		free(newRoom);
-		return MTM_OUT_OF_MEMORY;
-	}
-	if ( id < 1 || price < 1 || price % 4 != 0 || num_ppl < 1) {
-		free(newRoom->email);
-		free(newRoom);
-		return MTM_INVALID_PARAMETER;
-	}
-
-	int from =  fromHour(working_hrs);
-	int to =  toHour(working_hrs);
-//TODO open till 24
-	if ( from < 0 || from >= to || to > 23) {
-		free(newRoom->email);
-		free(newRoom);
-		return MTM_INVALID_PARAMETER;
-	}
-
-	if ( difficulty < 1 || difficulty > 10 ) {
-		free(newRoom->email);
-		free(newRoom);
-		return MTM_INVALID_PARAMETER;
-	}
-
-	strcpy(newRoom->email, email);
-	newRoom->id = id;
-	newRoom->faculty = faculty;
-	newRoom->price = price;
-	newRoom->num_ppl = num_ppl;
-	newRoom->from_hrs = from;
-	newRoom->to_hrs = to;
-	newRoom->difficulty = difficulty;
-	//printf("faculty: %d id: %d\n", faculty, id);
-	if( setIsIn(rooms, newRoom) ) {
-		free(newRoom->email);
-		free(newRoom);
-		return MTM_ID_ALREADY_EXIST;
-	}
-
-	setAdd(rooms, newRoom);
-	free(newRoom->email);
-	free(newRoom);
-	return MTM_SUCCESS;
-}
-*/
-
-
-
-
 
 MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, char* working_hrs, int difficulty) {
 	newRoom->email = malloc(sizeof(char) * (strlen(email)+1));
@@ -184,28 +112,6 @@ MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, in
 }
 
 
-/* moved to system
-MtmErrorCode removeRoom(Set setRoom, TechnionFaculty faculty, int id) {
-	if( setRoom == NULL ) return MTM_INVALID_PARAMETER;
-	if( faculty < 0 || faculty > 17 ) return MTM_INVALID_PARAMETER;
-	if( id < 1 ) return MTM_INVALID_PARAMETER;
-	//TODO not remove company with order
-	SET_FOREACH(Room, val, setRoom) {
-		if ( val->faculty == faculty && val->id == id ) {
-			//TODO if is order
-			if ( false ) {
-				return MTM_RESERVATION_EXISTS;
-			} else {
-				//TODO remove all rooms
-				setRemove(setRoom, val);
-				return MTM_SUCCESS;
-			}
-		}
-	}
-	return MTM_ID_DOES_NOT_EXIST;
-}*/
-
-
 Set filterRoomSet(Set rooms, RecommendSetElement recommendSetElement, SetKey num_ppl, SetKey skill_level ) {
 	Room room = setGetFirst(rooms);
 	//User user = findUserFromEmail( users, email );
@@ -226,13 +132,6 @@ Set filterRoomSet(Set rooms, RecommendSetElement recommendSetElement, SetKey num
 	return recommendedRooms;
 }
 
-/*
-int getRoomPrice(const Set rooms, TechnionFaculty faculty, int id) {
-	Room room = findRoom(rooms, faculty, id);
-	if( room != NULL ) return room->price;
-	return -1;
-}
-*/
 
 int returnRoomPrice(const Room room) {
 	if( room != NULL ) return room->price;
@@ -241,22 +140,11 @@ int returnRoomPrice(const Room room) {
 
 
 
-
-
 int getTotalRoomPrice(const SetElement room, TechnionFaculty faculty) {
 	if ( ((Room)room)->faculty == faculty ) return ((((Room)room)->price * 75) / 100) ;
 	return ((Room)room)->price;
 }
 
-/*
-SetElement findRoom(const Set rooms, TechnionFaculty faculty, int id) {
-	SET_FOREACH(Room, val, rooms) {
-		if ( val->faculty == faculty && val->id == id ) {
-			return val;
-		}
-	}
-	return NULL;
-}*/
 
 void printRoom(const SetElement setElement) {
 	printf("\nRoom print\n");

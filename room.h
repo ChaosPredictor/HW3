@@ -40,11 +40,6 @@ typedef int SetKey;
 typedef int(*RecommendSetElement)(SetElement, SetKey, SetKey);
 
 
-//moved to system;
-//MtmErrorCode addRoom(Set rooms, Set companies, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty);
-//MtmErrorCode removeRoom(Set setRoom, TechnionFaculty faculty, int id);
-
-
 
 SetElement copyRoom(SetElement room);
 
@@ -63,11 +58,9 @@ int calculatePriceOfOrder(const Room room, TechnionFaculty escaperFaculty, int n
 int returnRoomPrice(const Room room);
 
 
-//int getRoomPrice(const Set rooms, TechnionFaculty faculty, int id);
 
 int getTotalRoomPrice(const SetElement room, TechnionFaculty faculty);
 
-//SetElement findRoom(const Set rooms, TechnionFaculty faculty, int id);
 
 Set filterRoomSet(Set rooms, RecommendSetElement recommendSetElement, SetKey num_ppl, SetKey skill_level );
 
