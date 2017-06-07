@@ -39,20 +39,24 @@ typedef int SetKey;
 typedef int(*RecommendSetElement)(SetElement, SetKey, SetKey);
 
 
-//TODO should move to system;
-//TODO working hours should be const
+//moved to system;
 //MtmErrorCode addRoom(Set rooms, Set companies, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty);
+//MtmErrorCode removeRoom(Set setRoom, TechnionFaculty faculty, int id);
 
 
-MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, char* working_hrs, int difficulty);
-
-MtmErrorCode removeRoom(Set setRoom, TechnionFaculty faculty, int id);
 
 SetElement copyRoom(SetElement room);
 
 void freeRoom(SetElement room);
 
 int compareRooms(SetElement room1, SetElement room2);
+
+
+
+MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, char* working_hrs, int difficulty);
+
+
+
 
 int getRoomPrice(const Set rooms, TechnionFaculty faculty, int id);
 

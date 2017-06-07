@@ -57,6 +57,11 @@ MtmErrorCode removeEscaper(EscapeSystem sys, const char* email);
 //TODO working hours should be const
 MtmErrorCode addRoom(EscapeSystem sys, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty);
 
+MtmErrorCode removeRoom(EscapeSystem sys, TechnionFaculty faculty, int id);
+
+
+
+MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
 
 

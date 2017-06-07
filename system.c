@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
 					int faculty = atoi( strtok(NULL, " ") );
 					int id = atoi( strtok(NULL, " ") );
 					//TODO check return value
-					removeRoom(system->rooms, faculty, id);
+					removeRoom(system, faculty, id);
 				}
 
 			} else if ( strcmp(command,"escaper") == 0) {
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
 					char* time = strtok(NULL, " ");
 					int num_ppl = atoi( strtok(NULL, " ") );
 					//TODO check return value
-					addOrder(system->days, system->users, system->rooms, email, faculty, id, time, num_ppl);
+					addOrder(system, email, faculty, id, time, num_ppl);
 				}  else if ( strcmp(subCommand, "recommend" ) == 0 ) {
 					//printf("this is escaper order\n");
 					//printf("your input a: %s", line);
@@ -310,7 +310,6 @@ MtmErrorCode addRoom(EscapeSystem sys, const char* email, int id, int price, int
 	TechnionFaculty faculty = findCompanyFacultyFromEmail(sys->users, email);
 	if ( faculty == UNKNOWN ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
 
-
 	//TODO check email exist
 	//TODO check email not in the list
 	//TODO faculty & id unic
@@ -321,43 +320,6 @@ MtmErrorCode addRoom(EscapeSystem sys, const char* email, int id, int price, int
 
 	createRoom(newRoom, email, id, faculty, price, num_ppl, working_hrs, difficulty);
 
-/*	newRoom->email = malloc(sizeof(char) * (strlen(email)+1));
-	if ( newRoom->email == NULL) {
-		free(newRoom);
-		return MTM_OUT_OF_MEMORY;
-	}
-	if ( id < 1 || price < 1 || price % 4 != 0 || num_ppl < 1) {
-		free(newRoom->email);
-		free(newRoom);
-		return MTM_INVALID_PARAMETER;
-	}
-
-	int from =  fromHour(working_hrs);
-	int to =  toHour(working_hrs);
-//TODO open till 24
-	if ( from < 0 || from >= to || to > 23) {
-		free(newRoom->email);
-		free(newRoom);
-		return MTM_INVALID_PARAMETER;
-	}
-
-	if ( difficulty < 1 || difficulty > 10 ) {
-		free(newRoom->email);
-		free(newRoom);
-		return MTM_INVALID_PARAMETER;
-	}
-
-	strcpy(newRoom->email, email);
-	newRoom->id = id;
-	newRoom->faculty = faculty;
-	newRoom->price = price;
-	newRoom->num_ppl = num_ppl;
-	newRoom->from_hrs = from;
-	newRoom->to_hrs = to;
-	newRoom->difficulty = difficulty;
-
-	*/
-	//printf("faculty: %d id: %d\n", faculty, id);
 	if( setIsIn(sys->rooms, newRoom) ) {
 		free(newRoom->email);
 		free(newRoom);
@@ -369,6 +331,103 @@ MtmErrorCode addRoom(EscapeSystem sys, const char* email, int id, int price, int
 	free(newRoom);
 	return MTM_SUCCESS;
 }
+
+MtmErrorCode removeRoom(EscapeSystem sys, TechnionFaculty faculty, int id) {
+	if( sys->rooms == NULL ) return MTM_INVALID_PARAMETER;
+	if( faculty < 0 || faculty > 17 ) return MTM_INVALID_PARAMETER;
+	if( id < 1 ) return MTM_INVALID_PARAMETER;
+	//TODO not remove room with order
+	SET_FOREACH(Room, val, sys->rooms) {
+		if ( val->faculty == faculty && val->id == id ) {
+			//TODO if is order
+			if ( false ) {
+				return MTM_RESERVATION_EXISTS;
+			} else {
+				//TODO remove all rooms
+				setRemove(sys->rooms, val);
+				return MTM_SUCCESS;
+			}
+		}
+	}
+	return MTM_ID_DOES_NOT_EXIST;
+}
+
+
+
+MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
+	assert ( email != NULL );
+
+	Order newOrder = malloc(sizeof(struct order_t));
+	if ( newOrder == NULL) return MTM_OUT_OF_MEMORY;
+	if ( email != NULL && emailValidity(email)) {
+		newOrder->email = malloc(sizeof(char) * (strlen(email) + 1));
+		if ( newOrder->email == NULL) {
+			free(newOrder);
+			return MTM_OUT_OF_MEMORY;
+		}
+		strcpy(newOrder->email, email);
+	} else {
+		free(newOrder);
+		return MTM_INVALID_PARAMETER;
+	}
+
+	if ( time == NULL ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_INVALID_PARAMETER;
+	} else if ( false ) { //TODO check time validity
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_INVALID_PARAMETER;
+	}
+
+	if ( findEscaperFacultyFromEmail(sys->users, email) == UNKNOWN ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+	}
+	User escaper = findUserFromEmail( sys->users, email );
+
+	int hour = getHour( time );
+	int daysFromToday = getDay( time );
+
+	Room room = findRoom(sys->rooms, faculty, id);
+	if ( room == NULL ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_ID_DOES_NOT_EXIST;
+	}
+
+	newOrder->faculty = faculty;
+	newOrder->id = id;
+	newOrder->price = calculatePriceOfOrder( sys->users, sys->rooms, email, room) * num_ppl;
+	newOrder->hour = hour;
+	newOrder->num_ppl = num_ppl;
+
+
+	//
+	if ( !checkIfRoomAvailable(sys->days, daysFromToday, hour, room) ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_ROOM_NOT_AVAILABLE;
+	}
+
+	if ( !checkIfEscaperAvailable(sys->days, daysFromToday, hour, escaper) ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_CLIENT_IN_ROOM;
+	}
+	/*
+	if ( checkIfRoomAvailable(days, daysFromToday, hour, room) && checkIfEscaperAvailable(days, daysFromToday, hour, escaper) ) {
+
+	} */
+
+	addOrder2(sys->days, newOrder, daysFromToday);
+	free(newOrder->email);
+	free(newOrder);
+	return MTM_SUCCESS;
+}
+
 
 
 

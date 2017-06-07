@@ -164,7 +164,7 @@ MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, in
 }
 
 
-
+/* moved to system
 MtmErrorCode removeRoom(Set setRoom, TechnionFaculty faculty, int id) {
 	if( setRoom == NULL ) return MTM_INVALID_PARAMETER;
 	if( faculty < 0 || faculty > 17 ) return MTM_INVALID_PARAMETER;
@@ -183,7 +183,7 @@ MtmErrorCode removeRoom(Set setRoom, TechnionFaculty faculty, int id) {
 		}
 	}
 	return MTM_ID_DOES_NOT_EXIST;
-}
+}*/
 
 
 Set filterRoomSet(Set rooms, RecommendSetElement recommendSetElement, SetKey num_ppl, SetKey skill_level ) {

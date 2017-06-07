@@ -95,6 +95,7 @@ MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email
 }
 
 //TODO should move to system
+/*
 MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
 	assert ( email != NULL );
 
@@ -157,17 +158,17 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFacu
 		free(newOrder->email);
 		free(newOrder);
 		return MTM_CLIENT_IN_ROOM;
-	}
+	}*/
 	/*
 	if ( checkIfRoomAvailable(days, daysFromToday, hour, room) && checkIfEscaperAvailable(days, daysFromToday, hour, escaper) ) {
 
-	} */
+	}
 
 	addOrder2(days, newOrder, daysFromToday);
 	free(newOrder->email);
 	free(newOrder);
 	return MTM_SUCCESS;
-
+}*/
 	//TODO check faculty validity
 
 
@@ -213,8 +214,8 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFacu
 		listInsertBeforeCurrent(days, newDay);
 		freeDay(newDay);
 	}
-	return MTM_SUCCESS;*/
-}
+	return MTM_SUCCESS;
+}*/
 
 MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, int num_ppl ) {
 	Order newOrder = malloc(sizeof(struct order_t));

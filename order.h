@@ -47,7 +47,7 @@ void freeOrder(ListElement order);
 MtmErrorCode createOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
 //TODO move to other place
-MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
+//MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
 
 MtmErrorCode addOrder2(List days, Order order, int daysFromToday);
