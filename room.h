@@ -56,6 +56,9 @@ int compareRooms(SetElement room1, SetElement room2);
 
 MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, char* working_hrs, int difficulty);
 
+int calculatePriceOfOrder(const Room room, TechnionFaculty escaperFaculty, int num_ppl);
+
+
 
 int returnRoomPrice(const Room room);
 

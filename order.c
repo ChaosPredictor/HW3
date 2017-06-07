@@ -8,7 +8,6 @@
 
 #include "order.h"
 
-#define DISCONT 25 //Percents
 
 ListElement copyOrder(ListElement order) {
 	if ( order == NULL ) return NULL;
@@ -426,7 +425,7 @@ MtmErrorCode checkAvailability(List orders, int hour, char* email, TechnionFacul
 	listDestroy(filteredOrders);
 	return MTM_SUCCESS;
 }
-
+/*
 int calculatePriceOfOrder( Set users, Set rooms, const char* email, const SetElement room) {
 	TechnionFaculty escaperFaculty = returnEscaperFaculty( findEscaperByEmail(users, email));
 	if( escaperFaculty == UNKNOWN ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
@@ -438,7 +437,7 @@ int calculatePriceOfOrder( Set users, Set rooms, const char* email, const SetEle
 		price /= 100;
 	}
 	return price;
-}
+}*/
 
 int getHour( const char* time ) {
 	char *temp = malloc(sizeof(char) * (strlen(time) + 1));

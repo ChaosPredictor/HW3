@@ -8,6 +8,10 @@
 
 #include "room.h"
 
+
+#define DISCONT 25 //Percents
+
+
 int fromHour(const char* working_hrs);
 int toHour(const char* working_hrs);
 int charToInt(char c);
@@ -56,6 +60,23 @@ int compareRooms(SetElement room1, SetElement room2) {
 		return facultyCompare;
 	}
 }
+
+
+
+int calculatePriceOfOrder(const Room room, TechnionFaculty escaperFaculty, int num_ppl) {
+//int calculatePriceOfOrder(const EscapeSystem sys, const char* email, const SetElement room, int num_ppl){
+	if( escaperFaculty == UNKNOWN ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+
+	if ( room == NULL ) return MTM_ID_DOES_NOT_EXIST;
+	int price = ((Room)room)->price;
+	if ( escaperFaculty == ((Room)room)->faculty ) {
+		price *= (100 - DISCONT);
+		price /= 100;
+	}
+	return price;
+}
+
+
 
 /* moved toi system
 MtmErrorCode addRoom(Set rooms, Set users, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty) {

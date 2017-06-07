@@ -15,6 +15,7 @@
 #define MAX_COMMAND_LENG 7
 #define NUMBER_OF_BEST 3
 
+
 const int NUMBER_OF_FACULTIES = UNKNOWN;
 
 
@@ -449,7 +450,9 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 
 	newOrder->faculty = faculty;
 	newOrder->id = id;
-	newOrder->price = calculatePriceOfOrder( sys->escapers, sys->rooms, email, room) * num_ppl;
+	TechnionFaculty escaperFaculty = returnEscaperFaculty( findEscaperByEmail(sys->escapers, email));
+
+	newOrder->price = calculatePriceOfOrder(room, escaperFaculty, num_ppl);
 	newOrder->hour = hour;
 	newOrder->num_ppl = num_ppl;
 
@@ -551,8 +554,6 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 
 	return MTM_SUCCESS;
 }
-
-
 
 
 MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem sys) {

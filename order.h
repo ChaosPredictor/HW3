@@ -75,7 +75,7 @@ bool checkIfEscaperAvailable(List days, int daysFromToday, int hour, SetElement 
 MtmErrorCode checkAvailability(List orders, int hour, char* email, TechnionFaculty faculty, int id);
 
 //TODO move to other place
-int calculatePriceOfOrder( Set users, Set rooms, const char* email, const SetElement room);
+//int calculatePriceOfOrder( Set users, Set rooms, const char* email, const SetElement room);
 
 MtmErrorCode addFirstAvailableOrder(List days, Order order, SetElement room, SetElement user );
 
