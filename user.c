@@ -120,7 +120,7 @@ bool emailValidity(const char* email) {
 	return ( count == 1);
 }
 
-
+/* moved to system
 MtmErrorCode removeCompany(Set setUser, const char* email) {
 	if( setUser == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
@@ -132,8 +132,7 @@ MtmErrorCode removeCompany(Set setUser, const char* email) {
 	//TODO remove all rooms of the company
 	setRemove(setUser, user);
 	return MTM_SUCCESS;
-
-}
+}*/
 
 TechnionFaculty findCompanyFacultyFromEmail( Set setUser, const char* email ) {
 	User user = findUserFromEmail( setUser, email );
@@ -142,7 +141,7 @@ TechnionFaculty findCompanyFacultyFromEmail( Set setUser, const char* email ) {
 	return user->faculty;
 }
 
-
+/* moved to system
 MtmErrorCode removeEscaper(Set setUser, const char* email) {
 	if( setUser == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
@@ -153,8 +152,7 @@ MtmErrorCode removeEscaper(Set setUser, const char* email) {
 	//TODO remove all his orders
 	setRemove(setUser, user);
 	return MTM_SUCCESS;
-
-}
+}*/
 
 TechnionFaculty findEscaperFacultyFromEmail( Set setUser, const char* email ) {
 	User user = findUserFromEmail( setUser, email );

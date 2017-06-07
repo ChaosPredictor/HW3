@@ -44,6 +44,13 @@ MtmErrorCode createCompanySet(EscapeSystem* sys);
 
 MtmErrorCode addUser(EscapeSystem sys, const char* email, TechnionFaculty faculty, TypeSkill typeSkill);
 
+MtmErrorCode removeCompany(EscapeSystem sys, const char* email);
+
+
+
+
+
+MtmErrorCode removeEscaper(EscapeSystem sys, const char* email);
 
 
 

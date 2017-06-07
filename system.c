@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
 					//printf("your input a: %s", line);
 					char* email = strtok(NULL, " ");
 					//TODO check return value
-					removeCompany(system->users, email);
+					removeCompany(system, email);
 				}
 			} else if ( strcmp(command,"room" ) == 0) {
 				char* subCommand = NULL;
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
 					//printf("your input a: %s", line);
 					char* email = strtok(NULL, " ");
 					//TODO check return value
-					removeEscaper(system->users, email);
+					removeEscaper(system, email);
 				} else {
 					printf("this is remove escaper\n");
 					printf("your input a: %s", line);
@@ -263,6 +263,7 @@ MtmErrorCode addUser(EscapeSystem sys, const char* email, TechnionFaculty facult
 	//TODO check return value
 	createUser(newUser, email, faculty, typeSkill);
 
+	//TODO check both escaper and company
 	if( setIsIn( sys->users, newUser ) ) {
 		free(newUser->email);
 		free(newUser);
@@ -272,6 +273,32 @@ MtmErrorCode addUser(EscapeSystem sys, const char* email, TechnionFaculty facult
 	setAdd(sys->users, newUser);
 	free(newUser->email);
 	free(newUser);
+	return MTM_SUCCESS;
+}
+
+
+MtmErrorCode removeCompany(EscapeSystem sys, const char* email) {
+	if( sys->users == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
+	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
+
+	User user = findUserFromEmail( sys->users, email );
+	if ( user == NULL || user->typeSkill != 0 ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
+
+	//TODO not remove company with order
+	//TODO remove all rooms of the company
+	setRemove(sys->users, user);
+	return MTM_SUCCESS;
+}
+
+MtmErrorCode removeEscaper(EscapeSystem sys, const char* email) {
+	if( sys->users == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
+	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
+
+	User user = findUserFromEmail( sys->users, email );
+	if ( user == NULL || user->typeSkill == 0 ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+
+	//TODO remove all his orders
+	setRemove(sys->users, user);
 	return MTM_SUCCESS;
 }
 

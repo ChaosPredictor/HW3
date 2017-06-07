@@ -49,6 +49,7 @@ int compareUsers(SetElement user1, SetElement user2);
 
 MtmErrorCode createUser(User user, const char* email, TechnionFaculty faculty, int typeSkill);
 
+//moved to system
 //MtmErrorCode addUser(Set setUser, const char* email, TechnionFaculty faculty, TypeSkill typeSkill);
 
 SetElement findUserFromEmail( Set setUser, const char* email );
@@ -57,13 +58,13 @@ bool emailValidity(const char* email);
 
 void printUser(SetElement user);
 
-
-MtmErrorCode removeCompany(Set setCompany, const char* email);
+//moved to system
+//MtmErrorCode removeCompany(Set setCompany, const char* email);
 
 TechnionFaculty findCompanyFacultyFromEmail( Set setCompany, const char* email );
 
-
-MtmErrorCode removeEscaper(Set setCompany, const char* email);
+//moved to system
+//MtmErrorCode removeEscaper(Set setCompany, const char* email);
 
 TechnionFaculty findEscaperFacultyFromEmail( Set setUser, const char* email );
 
