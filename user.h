@@ -56,6 +56,7 @@ SetElement findUserFromEmail( Set setUser, const char* email );
 
 bool emailValidity(const char* email);
 
+//TODO remove
 void printUser(SetElement user);
 
 //moved to system

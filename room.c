@@ -57,7 +57,7 @@ int compareRooms(SetElement room1, SetElement room2) {
 	}
 }
 
-
+/* moved toi system
 MtmErrorCode addRoom(Set rooms, Set users, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty) {
 	if ( rooms == NULL || users == NULL ) return MTM_INVALID_PARAMETER;
 	if ( email == NULL || !emailValidity(email) )  return MTM_INVALID_PARAMETER;
@@ -119,6 +119,50 @@ MtmErrorCode addRoom(Set rooms, Set users, const char* email, int id, int price,
 	free(newRoom);
 	return MTM_SUCCESS;
 }
+*/
+
+
+
+
+
+MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, char* working_hrs, int difficulty) {
+	newRoom->email = malloc(sizeof(char) * (strlen(email)+1));
+	if ( newRoom->email == NULL) {
+		free(newRoom);
+		return MTM_OUT_OF_MEMORY;
+	}
+	if ( id < 1 || price < 1 || price % 4 != 0 || num_ppl < 1) {
+		free(newRoom->email);
+		free(newRoom);
+		return MTM_INVALID_PARAMETER;
+	}
+
+	int from =  fromHour(working_hrs);
+	int to =  toHour(working_hrs);
+//TODO open till 24
+	if ( from < 0 || from >= to || to > 23) {
+		free(newRoom->email);
+		free(newRoom);
+		return MTM_INVALID_PARAMETER;
+	}
+
+	if ( difficulty < 1 || difficulty > 10 ) {
+		free(newRoom->email);
+		free(newRoom);
+		return MTM_INVALID_PARAMETER;
+	}
+
+	strcpy(newRoom->email, email);
+	newRoom->id = id;
+	newRoom->faculty = faculty;
+	newRoom->price = price;
+	newRoom->num_ppl = num_ppl;
+	newRoom->from_hrs = from;
+	newRoom->to_hrs = to;
+	newRoom->difficulty = difficulty;
+	return MTM_SUCCESS;
+}
+
 
 
 MtmErrorCode removeRoom(Set setRoom, TechnionFaculty faculty, int id) {
