@@ -393,6 +393,14 @@ MtmErrorCode removeRoom(EscapeSystem sys, TechnionFaculty faculty, int id) {
 	return MTM_ID_DOES_NOT_EXIST;
 }
 
+SetElement findRoom(const EscapeSystem sys, TechnionFaculty faculty, int id) {
+	SET_FOREACH(Room, val, sys->rooms) {
+		if ( val->faculty == faculty && val->id == id ) {
+			return val;
+		}
+	}
+	return NULL;
+}
 
 
 MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
@@ -432,7 +440,7 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 	int hour = getHour( time );
 	int daysFromToday = getDay( time );
 
-	Room room = findRoom(sys->rooms, faculty, id);
+	Room room = findRoom(sys, faculty, id);
 	if ( room == NULL ) {
 		free(newOrder->email);
 		free(newOrder);
@@ -547,9 +555,9 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 
 
 
-MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system) {
+MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem sys) {
 	//List days = system->days;
-	Day today = listGetFirst(system->days);
+	Day today = listGetFirst(sys->days);
 	List orders = today->dayOrders;
 	mtmPrintDayHeader(outputChannel, today->dayNumber, listGetSize(orders));
 
@@ -559,24 +567,24 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system) {
 	Order order = listGetFirst(orders);
 	while ( order != NULL ) {
 		//TODO check that escaper;
-		escaper = findEscaperByEmail( system->escapers, order->email );
+		escaper = findEscaperByEmail( sys->escapers, order->email );
 		//printUser(user);
-		room = findRoom(system->rooms, order->faculty, order->id);
+		room = findRoom(sys, order->faculty, order->id);
 		//printRoom(room);
 		//printOrder(order);
 		mtmPrintOrder(outputChannel, escaper->email, escaper->typeSkill, escaper->faculty, room->email, room->faculty, room->id, order->hour, room->difficulty, order->num_ppl, order->price);
-		addIncomeToFaculty(system->faculties, room->faculty, order->price );
+		addIncomeToFaculty(sys->faculties, room->faculty, order->price );
 		order = listGetNext(orders);
 	}
 	mtmPrintDayFooter(outputChannel, today->dayNumber);
 
-	if ( listGetSize(system->days) == 1 ) {
+	if ( listGetSize(sys->days) == 1 ) {
 		Day day = createDay(today->dayNumber+1);
-		listInsertLast(system->days, day);
+		listInsertLast(sys->days, day);
 		freeDay(day);
 	}
 
-	listRemoveCurrent(system->days);
+	listRemoveCurrent(sys->days);
 	return MTM_SUCCESS;
 }
 

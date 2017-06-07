@@ -51,15 +51,9 @@ MtmErrorCode createEscaper(Escaper escaper, const char* email, TechnionFaculty f
 
 TechnionFaculty returnEscaperFaculty( Escaper escaper );
 
-//moved to system
-//SetElement findEscaperByEmail( Set setEscaper, const char* email );
-
 
 //TODO remove
 void printEscaper(SetElement escaper);
-
-// removed
-//TechnionFaculty findEscaperFacultyFromEmail( Set setEscaper, const char* email );
 
 
 

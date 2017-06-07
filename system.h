@@ -65,6 +65,9 @@ MtmErrorCode addRoom(EscapeSystem sys, const char* email, int id, int price, int
 
 MtmErrorCode removeRoom(EscapeSystem sys, TechnionFaculty faculty, int id);
 
+SetElement findRoom(const EscapeSystem sys, TechnionFaculty faculty, int id);
+
+
 
 
 MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);

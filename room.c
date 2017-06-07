@@ -206,12 +206,21 @@ Set filterRoomSet(Set rooms, RecommendSetElement recommendSetElement, SetKey num
 	return recommendedRooms;
 }
 
-
+/*
 int getRoomPrice(const Set rooms, TechnionFaculty faculty, int id) {
 	Room room = findRoom(rooms, faculty, id);
 	if( room != NULL ) return room->price;
 	return -1;
 }
+*/
+
+int returnRoomPrice(const Room room) {
+	if( room != NULL ) return room->price;
+	return -1;
+}
+
+
+
 
 
 int getTotalRoomPrice(const SetElement room, TechnionFaculty faculty) {
@@ -219,6 +228,7 @@ int getTotalRoomPrice(const SetElement room, TechnionFaculty faculty) {
 	return ((Room)room)->price;
 }
 
+/*
 SetElement findRoom(const Set rooms, TechnionFaculty faculty, int id) {
 	SET_FOREACH(Room, val, rooms) {
 		if ( val->faculty == faculty && val->id == id ) {
@@ -226,7 +236,7 @@ SetElement findRoom(const Set rooms, TechnionFaculty faculty, int id) {
 		}
 	}
 	return NULL;
-}
+}*/
 
 void printRoom(const SetElement setElement) {
 	printf("\nRoom print\n");

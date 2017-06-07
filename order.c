@@ -67,7 +67,7 @@ MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email
 		free(newOrder);
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 	}
-
+/*
 	Room room = findRoom(rooms, faculty, id);
 	if ( room == NULL ) {
 		free(newOrder->email);
@@ -79,10 +79,11 @@ MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email
 		free(newOrder);
 		return MTM_ROOM_NOT_AVAILABLE;
 	}
-
+*/
 	newOrder->faculty = faculty;
 	newOrder->id = id;
-	newOrder->price = calculatePriceOfOrder( users, rooms, email, room);
+	newOrder->price = 10;
+			//calculatePriceOfOrder( users, rooms, email, room);
 	newOrder->hour = hour;
 	newOrder->num_ppl = num_ppl;
 

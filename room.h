@@ -57,13 +57,14 @@ int compareRooms(SetElement room1, SetElement room2);
 MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, char* working_hrs, int difficulty);
 
 
+int returnRoomPrice(const Room room);
 
 
-int getRoomPrice(const Set rooms, TechnionFaculty faculty, int id);
+//int getRoomPrice(const Set rooms, TechnionFaculty faculty, int id);
 
 int getTotalRoomPrice(const SetElement room, TechnionFaculty faculty);
 
-SetElement findRoom(const Set rooms, TechnionFaculty faculty, int id);
+//SetElement findRoom(const Set rooms, TechnionFaculty faculty, int id);
 
 Set filterRoomSet(Set rooms, RecommendSetElement recommendSetElement, SetKey num_ppl, SetKey skill_level );
 
