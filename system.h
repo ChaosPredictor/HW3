@@ -63,6 +63,7 @@ MtmErrorCode removeRoom(EscapeSystem sys, TechnionFaculty faculty, int id);
 
 MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
+MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl);
 
 
 MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system);

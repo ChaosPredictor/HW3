@@ -43,21 +43,20 @@ ListElement copyOrder(ListElement order);
 
 void freeOrder(ListElement order);
 
-//TODO move to other place
+//TODO maybe remove or moved to other place
 MtmErrorCode createOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
-//TODO move to other place
+//moved to system
 //MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
+//MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, int num_ppl );
 
-
+//TODO to do something
 MtmErrorCode addOrder2(List days, Order order, int daysFromToday);
 
 //TODO move to other place
 MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, int hour, int num_ppl);
 
-//TODO move to other place
-MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, int num_ppl );
-
+\
 bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour);
 
 bool filterOrderByEscaper(const ListElement listElement, ListFilterKey email);

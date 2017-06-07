@@ -149,7 +149,7 @@ int main(int argc, char *argv[]) {
 					char* email = strtok(NULL, " ");
 					int num_ppl = atoi( strtok(NULL, " ") );
 					//TODO check return value
-					addRecommendedOrder(system->days, system->users, system->rooms, email, num_ppl );
+					addRecommendedOrder(system, email, num_ppl );
 				} else if ( strcmp(subCommand, "remove" ) == 0 ) {
 					//printf("this is escaper order\n");
 					//printf("your input a: %s", line);
@@ -425,6 +425,81 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 	addOrder2(sys->days, newOrder, daysFromToday);
 	free(newOrder->email);
 	free(newOrder);
+	return MTM_SUCCESS;
+}
+
+
+MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
+	Order newOrder = malloc(sizeof(struct order_t));
+	if ( newOrder == NULL) return MTM_OUT_OF_MEMORY;
+	if ( email != NULL && emailValidity(email)) {
+		newOrder->email = malloc(sizeof(char) * (strlen(email) + 1));
+		if ( newOrder->email == NULL) {
+			free(newOrder);
+			return MTM_OUT_OF_MEMORY;
+		}
+		strcpy(newOrder->email, email);
+	} else {
+		free(newOrder);
+		return MTM_INVALID_PARAMETER;
+	}
+
+	if ( findEscaperFacultyFromEmail(sys->users, email) == UNKNOWN ) {
+		free(newOrder->email);
+		free(newOrder);
+		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+	}
+	User escaper = findUserFromEmail( sys->users, email );
+	newOrder->num_ppl = num_ppl;
+
+	//printf("\n number1: %d\n", setGetSize(rooms));
+	MtmErrorCode result = MTM_SUCCESS;
+	Set recommendedRooms = setCopy(sys->rooms);
+
+	Set recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNumOfPplandDifficulty, num_ppl, escaper->typeSkill );
+	if ( setGetSize(recommendedRooms2) != 1 ) {
+		setDestroy(recommendedRooms);
+		recommendedRooms = setCopy( recommendedRooms2 );
+		setDestroy(recommendedRooms2);
+		recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNearFaculty, escaper->faculty, 0 );
+		if ( setGetSize(recommendedRooms2) != 1 ) {
+			setDestroy(recommendedRooms);
+			recommendedRooms = setCopy( recommendedRooms2 );
+			setDestroy(recommendedRooms2);
+			recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNearFaculty, 0, 0 );
+			if ( setGetSize(recommendedRooms2) != 1 ) {
+				setDestroy(recommendedRooms);
+				recommendedRooms = setCopy( recommendedRooms2 );
+				setDestroy(recommendedRooms2);
+				recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNearId, 0, 0 );
+
+			}
+		}
+	}
+
+	//printf("\n number last: %d\n", setGetSize(recommendedRooms2));
+
+	setDestroy(recommendedRooms);
+
+	if ( setGetSize(recommendedRooms2) == 1) {
+		Room room = setGetFirst(recommendedRooms2);
+		newOrder->faculty=room->faculty;
+		newOrder->id=room->id;
+		newOrder->price = getTotalRoomPrice(room, escaper->faculty) * num_ppl;
+
+		result = addFirstAvailableOrder(sys->days, newOrder, room, escaper);
+		//TODO check return;
+		setDestroy(recommendedRooms2);
+		free(newOrder->email);
+		free(newOrder);
+		return result;
+	} else {
+		printf("why?!?");
+	}
+
+	free(newOrder->email);
+	free(newOrder);
+
 	return MTM_SUCCESS;
 }
 

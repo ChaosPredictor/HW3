@@ -216,7 +216,7 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFacu
 	}
 	return MTM_SUCCESS;
 }*/
-
+/*
 MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, int num_ppl ) {
 	Order newOrder = malloc(sizeof(struct order_t));
 	if ( newOrder == NULL) return MTM_OUT_OF_MEMORY;
@@ -290,8 +290,7 @@ MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, i
 
 	return MTM_SUCCESS;
 }
-
-
+*/
 
 
 MtmErrorCode addFirstAvailableOrder(List days, Order order, SetElement room, SetElement escaper ) {
