@@ -325,7 +325,7 @@ MtmErrorCode removeEscaper(EscapeSystem sys, const char* email) {
 	if( sys->escapers == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
 
-	Escaper escaper = findEscaperByEmail( sys->escapers, email );
+	Escaper escaper = findEscaperByEmail( sys, email );
 	if ( escaper == NULL || escaper->typeSkill == 0 ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 
 	//TODO remove all his orders
@@ -333,9 +333,9 @@ MtmErrorCode removeEscaper(EscapeSystem sys, const char* email) {
 	return MTM_SUCCESS;
 }
 
-SetElement findEscaperByEmail( Set setEscaper, const char* email ) {
-	if( setEscaper == NULL || email == NULL ) return NULL;
-	SET_FOREACH(Escaper, val, setEscaper) {
+SetElement findEscaperByEmail( const EscapeSystem sys, const char* email ) {
+	if( sys == NULL || email == NULL ) return NULL;
+	SET_FOREACH(Escaper, val, sys->escapers) {
 		if ( strcmp(val->email, email) == 0) {
 			return val;
 		}
@@ -480,12 +480,13 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 		return MTM_INVALID_PARAMETER;
 	}
 
-	if ( returnEscaperFaculty( findEscaperByEmail(sys->escapers, email))  == UNKNOWN ) {
+	Escaper escaper = findEscaperByEmail( sys, email );
+
+	if ( returnEscaperFaculty( escaper)  == UNKNOWN ) {
 		free(newOrder->email);
 		free(newOrder);
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 	}
-	Escaper escaper = findEscaperByEmail( sys->escapers, email );
 
 	int hour = getHour( time );
 	int daysFromToday = getDay( time );
@@ -499,7 +500,7 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 
 	newOrder->faculty = faculty;
 	newOrder->id = id;
-	TechnionFaculty escaperFaculty = returnEscaperFaculty( findEscaperByEmail(sys->escapers, email));
+	TechnionFaculty escaperFaculty = returnEscaperFaculty( findEscaperByEmail(sys, email));
 
 	newOrder->price = calculatePriceOfOrder(room, escaperFaculty, num_ppl);
 	newOrder->hour = hour;
@@ -545,12 +546,13 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 		return MTM_INVALID_PARAMETER;
 	}
 
-	if ( returnEscaperFaculty( findEscaperByEmail(sys->escapers, email)) == UNKNOWN ) {
+	Escaper escaper = findEscaperByEmail( sys, email );
+	if ( returnEscaperFaculty( escaper ) == UNKNOWN ) {
 		free(newOrder->email);
 		free(newOrder);
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 	}
-	Escaper escaper = findEscaperByEmail( sys->escapers, email );
+
 	newOrder->num_ppl = num_ppl;
 
 	//printf("\n number1: %d\n", setGetSize(rooms));
@@ -641,7 +643,7 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem sys) {
 	Order order = listGetFirst(orders);
 	while ( order != NULL ) {
 		//TODO check that escaper;
-		escaper = findEscaperByEmail( sys->escapers, order->email );
+		escaper = findEscaperByEmail( sys, order->email );
 		//printUser(user);
 		room = findRoom(sys, order->faculty, order->id);
 		//printRoom(room);

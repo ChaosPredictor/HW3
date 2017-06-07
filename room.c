@@ -72,7 +72,7 @@ int calculatePriceOfOrder(const Room room, TechnionFaculty escaperFaculty, int n
 		price *= (100 - DISCONT);
 		price /= 100;
 	}
-	return price;
+	return price * num_ppl;
 }
 
 

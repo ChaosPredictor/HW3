@@ -55,7 +55,7 @@ MtmErrorCode createOrder(List days, Set users, Set rooms, const char* email, Tec
 MtmErrorCode addOrder2(List days, Order order, int daysFromToday);
 
 //TODO move to other place
-MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, int hour, int num_ppl);
+//MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, int hour, int num_ppl);
 
 \
 bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour);

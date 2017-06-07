@@ -35,7 +35,7 @@ void freeOrder(ListElement order) {
 	free((Order)order);
 }
 
-
+/*
 MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, int hour, int num_ppl) {
 	//TODO escaper email should be checked before this function
 	assert ( email != NULL );
@@ -66,7 +66,7 @@ MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email
 		free(newOrder);
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 	}
-/*
+
 	Room room = findRoom(rooms, faculty, id);
 	if ( room == NULL ) {
 		free(newOrder->email);
@@ -78,7 +78,7 @@ MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email
 		free(newOrder);
 		return MTM_ROOM_NOT_AVAILABLE;
 	}
-*/
+
 	newOrder->faculty = faculty;
 	newOrder->id = id;
 	newOrder->price = 10;
@@ -93,7 +93,7 @@ MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email
 	//TODO check that the room (faculty&id) available in the hour;
 	//TODO check that the escaper available in the hour;
 	return MTM_SUCCESS;
-}
+}*/
 
 //TODO should move to system
 /*
