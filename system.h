@@ -17,6 +17,22 @@ typedef struct EscapeSystem_t {
 	List faculties;
 } *EscapeSystem;
 
+
+typedef enum {
+    COMPANY,
+	ESCAPER_1,
+	ESCAPER_2,
+	ESCAPER_3,
+	ESCAPER_4,
+	ESCAPER_5,
+	ESCAPER_6,
+	ESCAPER_7,
+	ESCAPER_8,
+	ESCAPER_9,
+	ESCAPER_10
+} TypeSkill;
+
+
 MtmErrorCode createSystem(EscapeSystem **sys);
 
 MtmErrorCode destroySystem(EscapeSystem *sys);
@@ -24,9 +40,22 @@ MtmErrorCode destroySystem(EscapeSystem *sys);
 MtmErrorCode createCompanySet(EscapeSystem* sys);
 
 
+
+
+MtmErrorCode addUser(EscapeSystem sys, const char* email, TechnionFaculty faculty, TypeSkill typeSkill);
+
+
+
+
+
 MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system);
 
 MtmErrorCode reportBest(FILE* outputChannel, EscapeSystem system);
+
+
+
+
+
 
 #endif /* SYSTEM_H_ */
 

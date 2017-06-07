@@ -16,6 +16,8 @@
 
 //#include "visitor_room.h"
 //TODO add related files
+
+/* moved to system
 typedef enum {
     COMPANY,
 	ESCAPER_1,
@@ -29,11 +31,12 @@ typedef enum {
 	ESCAPER_9,
 	ESCAPER_10
 } TypeSkill;
+*/
 
 typedef struct user_t {
 	char* email;
 	TechnionFaculty faculty;
-	TypeSkill typeSkill;
+	int typeSkill;
 } *User;
 
 
@@ -44,7 +47,9 @@ void freeUser(SetElement user);
 
 int compareUsers(SetElement user1, SetElement user2);
 
-MtmErrorCode addUser(Set setUser, const char* email, TechnionFaculty faculty, TypeSkill typeSkill);
+MtmErrorCode createUser(User user, const char* email, TechnionFaculty faculty, int typeSkill);
+
+//MtmErrorCode addUser(Set setUser, const char* email, TechnionFaculty faculty, TypeSkill typeSkill);
 
 SetElement findUserFromEmail( Set setUser, const char* email );
 

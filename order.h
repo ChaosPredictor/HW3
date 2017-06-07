@@ -84,6 +84,8 @@ int getDay( const char* time );
 int getHour( const char* time );
 
 
+
+
 ListElement copyDay(ListElement day);
 
 void freeDay(ListElement day);
@@ -97,12 +99,13 @@ ListElement createDay(int dayNumber);
 List createDays();
 
 
-//TODO remove to other place
+
+
+//TODO remove
 void printAllDays(List days);
-
-//TODO remove to other place
+//TODO remove
 void printAllOrders(List orders);
-
+//TODO remove
 void printOrder(ListElement order);
 
 

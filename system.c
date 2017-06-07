@@ -88,11 +88,14 @@ int main(int argc, char *argv[]) {
 				if ( strcmp(subCommand,"add" ) == 0 ) {
 					char* email = strtok(NULL, " ");
 					int faculty = atoi( strtok(NULL, " ") );
-					addUser(system->users, email, faculty, COMPANY);
+					//TODO check return value
+					addUser(system, email, faculty, COMPANY);
 				} else if ( strcmp(subCommand,"remove") == 0 ) {
-					printf("this is remove company\n");
-					printf("your input a: %s", line);
-
+					//printf("this is remove company\n");
+					//printf("your input a: %s", line);
+					char* email = strtok(NULL, " ");
+					//TODO check return value
+					removeCompany(system->users, email);
 				}
 			} else if ( strcmp(command,"room" ) == 0) {
 				char* subCommand = NULL;
@@ -106,10 +109,15 @@ int main(int argc, char *argv[]) {
 					int num_ppl = atoi( strtok(NULL, " ") );
 					char* working_hrs = strtok(NULL, " ");
 					int difficulty = atoi( strtok(NULL, " ") );
+					//TODO check return value
 					addRoom(system->rooms, system->users, email, id, price, num_ppl, working_hrs, difficulty);
-				} else {
-					printf("this is remove room\n");
-					printf("your input a: %s", line);
+				} if ( strcmp(subCommand, "remove\n" ) == 0 ) {
+					//printf("this is add room\n");
+					//printf("your input a: %s", line);
+					int faculty = atoi( strtok(NULL, " ") );
+					int id = atoi( strtok(NULL, " ") );
+					//TODO check return value
+					removeRoom(system->rooms, faculty, id);
 				}
 
 			} else if ( strcmp(command,"escaper") == 0) {
@@ -123,7 +131,8 @@ int main(int argc, char *argv[]) {
 					char* email = strtok(NULL, " ");
 					int faculty = atoi( strtok(NULL, " ") );
 					int skill_level = atoi( strtok(NULL, " ") );
-					addUser(system->users, email, faculty, skill_level);
+					//TODO check return value
+					addUser(system, email, faculty, skill_level);
 				} else if ( strcmp(subCommand, "order" ) == 0 ) {
 					//printf("this is escaper order\n");
 					//printf("your input a: %s", line);
@@ -132,13 +141,21 @@ int main(int argc, char *argv[]) {
 					int id = atoi( strtok(NULL, " ") );
 					char* time = strtok(NULL, " ");
 					int num_ppl = atoi( strtok(NULL, " ") );
+					//TODO check return value
 					addOrder(system->days, system->users, system->rooms, email, faculty, id, time, num_ppl);
 				}  else if ( strcmp(subCommand, "recommend" ) == 0 ) {
 					//printf("this is escaper order\n");
 					//printf("your input a: %s", line);
 					char* email = strtok(NULL, " ");
 					int num_ppl = atoi( strtok(NULL, " ") );
+					//TODO check return value
 					addRecommendedOrder(system->days, system->users, system->rooms, email, num_ppl );
+				} else if ( strcmp(subCommand, "remove" ) == 0 ) {
+					//printf("this is escaper order\n");
+					//printf("your input a: %s", line);
+					char* email = strtok(NULL, " ");
+					//TODO check return value
+					removeEscaper(system->users, email);
 				} else {
 					printf("this is remove escaper\n");
 					printf("your input a: %s", line);
@@ -152,10 +169,12 @@ int main(int argc, char *argv[]) {
 				if ( strcmp(subCommand, "day\n" ) == 0 ) {
 					//printf("this is add escaper\n");
 					//printf("your input a: %s", line);
+					//TODO check return value
 					reportDay(fileout, system);
 				} else if ( strcmp(subCommand, "best\n" ) == 0 ) {
 					//printf("this is add escaper\n");
 					//printf("your input a: %s", line);
+					//TODO check return value
 					reportBest(fileout, system);
 				} else  {
 					printf("this is report not day\n");
@@ -238,16 +257,23 @@ MtmErrorCode createCompanySet(EscapeSystem *sys) {
 	return MTM_SUCCESS;
 }
 
+//To break to addCompany and addEscaper
+MtmErrorCode addUser(EscapeSystem sys, const char* email, TechnionFaculty faculty, TypeSkill typeSkill) {
+	User newUser = malloc(sizeof(struct user_t));
+	//TODO check return value
+	createUser(newUser, email, faculty, typeSkill);
 
-MtmErrorCode printanOrder(FILE* outputChannel, EscapeSystem system, Order order) {
+	if( setIsIn( sys->users, newUser ) ) {
+		free(newUser->email);
+		free(newUser);
+		return MTM_EMAIL_ALREADY_EXISTS;
+	}
 
-
+	setAdd(sys->users, newUser);
+	free(newUser->email);
+	free(newUser);
 	return MTM_SUCCESS;
-
-
-	//mtmPrintOrder(outputChannel, char* email, int skill, TechnionFaculty client_faculty, char* company_email, TechnionFaculty room_faculty, int id, int hour, int difficulty, int num_ppl, int totalPrice);
 }
-
 
 
 MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system) {

@@ -86,7 +86,7 @@ MtmErrorCode addRoom(Set rooms, Set users, const char* email, int id, int price,
 
 	int from =  fromHour(working_hrs);
 	int to =  toHour(working_hrs);
-
+//TODO open till 24
 	if ( from < 0 || from >= to || to > 23) {
 		free(newRoom->email);
 		free(newRoom);

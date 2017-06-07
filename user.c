@@ -44,6 +44,35 @@ int compareUsers(SetElement user1, SetElement user2) {
 	return strcmp(((User)user1)->email, ((User)user2)->email);
 }
 
+
+
+
+MtmErrorCode createUser(User newUser, const char* email, TechnionFaculty faculty, int typeSkill) {
+
+	if( email == NULL ) return MTM_INVALID_PARAMETER;
+	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
+	if( faculty < 0 || faculty>17 || typeSkill < 0  || typeSkill > 10 ) return MTM_INVALID_PARAMETER;
+	//TODO print by mtm_ex3
+	//newUser = malloc(sizeof(struct user_t));
+	//printf("address1: %p\n", (void*)newUser);
+	if( newUser == NULL ) return MTM_OUT_OF_MEMORY;
+	newUser->email = malloc(sizeof(char) * (strlen(email)+1));
+	if( newUser->email == NULL ) {
+		free(newUser);
+		return MTM_OUT_OF_MEMORY;
+	}
+	strcpy( newUser->email, email);
+	newUser->faculty = faculty;
+	newUser->typeSkill = typeSkill;
+
+	return MTM_SUCCESS;
+}
+
+
+
+
+
+/* Moved to system
 MtmErrorCode addUser(Set setUser, const char* email, TechnionFaculty faculty, TypeSkill typeSkill) {
 	if( setUser == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
@@ -69,7 +98,7 @@ MtmErrorCode addUser(Set setUser, const char* email, TechnionFaculty faculty, Ty
 	free(newUser->email);
 	free(newUser);
 	return MTM_SUCCESS;
-}
+}*/
 
 SetElement findUserFromEmail( Set setUser, const char* email ) {
 	if( setUser == NULL || email == NULL ) return NULL;

@@ -10,55 +10,60 @@
 
 
 
-Set testHelperUsers() {
-	Set users = setCreate(copyUser, freeUser, compareUsers);
-	ASSERT_TEST( users != NULL);
+EscapeSystem testHelperUsers() {
 
-	addUser( users, "company1@civil", CIVIL_ENGINEERING, COMPANY );
-	addUser( users, "company2@civil", CIVIL_ENGINEERING, COMPANY );
-	addUser( users, "company3@civil", CIVIL_ENGINEERING, COMPANY );
-	addUser( users, "company5@civil", CIVIL_ENGINEERING, COMPANY );
-	addUser( users, "company1@mechanical", MECHANICAL_ENGINEERING, COMPANY );
-	addUser( users, "company2@mechanical", MECHANICAL_ENGINEERING, COMPANY );
-	addUser( users, "company3@mechanical", MECHANICAL_ENGINEERING, COMPANY );
-	addUser( users, "company4@mechanical", MECHANICAL_ENGINEERING, COMPANY );
-	addUser( users, "company6@mechanical", MECHANICAL_ENGINEERING, COMPANY );
-	addUser( users, "company1@electrical", ELECTRICAL_ENGINEERING, COMPANY );
-	addUser( users, "company2@electrical", ELECTRICAL_ENGINEERING, COMPANY );
-	addUser( users, "company3@electrical", ELECTRICAL_ENGINEERING, COMPANY );
-	addUser( users, "company5@electrical", ELECTRICAL_ENGINEERING, COMPANY );
-	addUser( users, "company6@electrical", ELECTRICAL_ENGINEERING, COMPANY );
-	addUser( users, "company7@electrical", ELECTRICAL_ENGINEERING, COMPANY );
-	addUser( users, "company1@chemical", CHEMICAL_ENGINEERING, COMPANY );
-	addUser( users, "company1@biotechnology", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, COMPANY );
-	addUser( users, "company1@aerospace", AEROSPACE_ENGINEERING, COMPANY );
-	addUser( users, "company1@industrial", INDUSTRIAL_ENGINEERING_AND_MANAGEMENT, COMPANY );
-	addUser( users, "company1@mathematics", MATHEMATICS, COMPANY );
-	addUser( users, "company1@physics", PHYSICS, COMPANY );
-	addUser( users, "company1@chemistry", CHEMISTRY, COMPANY );
-	addUser( users, "company1@biology", BIOLOGY, COMPANY );
-	addUser( users, "company1@architecture", ARCHITECTURE, COMPANY );
-	addUser( users, "company1@education", EDUCATION_IN_TECH_AND_SCIENCE, COMPANY );
-	addUser( users, "company1@computer", COMPUTER_SCIENCE, COMPANY );
-	addUser( users, "company1@medicine", MEDICINE, COMPANY );
-	addUser( users, "company1@materials", MATERIALS_ENGINEERING, COMPANY );
-	addUser( users, "company1@humanites", HUMANITIES_AND_ARTS, COMPANY );
-	addUser( users, "company1@biomedical", BIOMEDICAL_ENGINEERING, COMPANY );
-	addUser( users, "escaper1@civil", CIVIL_ENGINEERING, ESCAPER_1 );
-	addUser( users, "escaper2@civil", CIVIL_ENGINEERING, ESCAPER_5 );
-	addUser( users, "escaper3@mechanical", MECHANICAL_ENGINEERING, ESCAPER_2 );
-	addUser( users, "escaper1@mechanical", MECHANICAL_ENGINEERING, ESCAPER_8 );
-	addUser( users, "escaper1@electrical", ELECTRICAL_ENGINEERING, ESCAPER_10 );
-	addUser( users, "escaper2@electrical", ELECTRICAL_ENGINEERING, ESCAPER_6 );
-	addUser( users, "escaper1@physics", PHYSICS, ESCAPER_6 );
-	addUser( users, "escaper1@biotechnology", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, ESCAPER_1 );
-	addUser( users, "escaper1@aerospace", AEROSPACE_ENGINEERING, ESCAPER_7 );
-	addUser( users, "escaper1@education", EDUCATION_IN_TECH_AND_SCIENCE, ESCAPER_9 );
-	addUser( users, "escaper1@mathematics", MATHEMATICS, ESCAPER_7 );
+	EscapeSystem system = malloc(sizeof(struct EscapeSystem_t));
+	system->users = setCreate(copyUser, freeUser, compareUsers);
 
 
-	ASSERT_TEST( setGetSize(users) == 41 );
-	return users;
+	//Set users = setCreate(copyUser, freeUser, compareUsers);
+	ASSERT_TEST( system != NULL);
+
+	addUser( system, "company1@civil", CIVIL_ENGINEERING, COMPANY );
+	addUser( system, "company2@civil", CIVIL_ENGINEERING, COMPANY );
+	addUser( system, "company3@civil", CIVIL_ENGINEERING, COMPANY );
+	addUser( system, "company5@civil", CIVIL_ENGINEERING, COMPANY );
+	addUser( system, "company1@mechanical", MECHANICAL_ENGINEERING, COMPANY );
+	addUser( system, "company2@mechanical", MECHANICAL_ENGINEERING, COMPANY );
+	addUser( system, "company3@mechanical", MECHANICAL_ENGINEERING, COMPANY );
+	addUser( system, "company4@mechanical", MECHANICAL_ENGINEERING, COMPANY );
+	addUser( system, "company6@mechanical", MECHANICAL_ENGINEERING, COMPANY );
+	addUser( system, "company1@electrical", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( system, "company2@electrical", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( system, "company3@electrical", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( system, "company5@electrical", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( system, "company6@electrical", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( system, "company7@electrical", ELECTRICAL_ENGINEERING, COMPANY );
+	addUser( system, "company1@chemical", CHEMICAL_ENGINEERING, COMPANY );
+	addUser( system, "company1@biotechnology", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, COMPANY );
+	addUser( system, "company1@aerospace", AEROSPACE_ENGINEERING, COMPANY );
+	addUser( system, "company1@industrial", INDUSTRIAL_ENGINEERING_AND_MANAGEMENT, COMPANY );
+	addUser( system, "company1@mathematics", MATHEMATICS, COMPANY );
+	addUser( system, "company1@physics", PHYSICS, COMPANY );
+	addUser( system, "company1@chemistry", CHEMISTRY, COMPANY );
+	addUser( system, "company1@biology", BIOLOGY, COMPANY );
+	addUser( system, "company1@architecture", ARCHITECTURE, COMPANY );
+	addUser( system, "company1@education", EDUCATION_IN_TECH_AND_SCIENCE, COMPANY );
+	addUser( system, "company1@computer", COMPUTER_SCIENCE, COMPANY );
+	addUser( system, "company1@medicine", MEDICINE, COMPANY );
+	addUser( system, "company1@materials", MATERIALS_ENGINEERING, COMPANY );
+	addUser( system, "company1@humanites", HUMANITIES_AND_ARTS, COMPANY );
+	addUser( system, "company1@biomedical", BIOMEDICAL_ENGINEERING, COMPANY );
+	addUser( system, "escaper1@civil", CIVIL_ENGINEERING, ESCAPER_1 );
+	addUser( system, "escaper2@civil", CIVIL_ENGINEERING, ESCAPER_5 );
+	addUser( system, "escaper3@mechanical", MECHANICAL_ENGINEERING, ESCAPER_2 );
+	addUser( system, "escaper1@mechanical", MECHANICAL_ENGINEERING, ESCAPER_8 );
+	addUser( system, "escaper1@electrical", ELECTRICAL_ENGINEERING, ESCAPER_10 );
+	addUser( system, "escaper2@electrical", ELECTRICAL_ENGINEERING, ESCAPER_6 );
+	addUser( system, "escaper1@physics", PHYSICS, ESCAPER_6 );
+	addUser( system, "escaper1@biotechnology", BIOTECHNOLOGY_AND_FOOD_ENGINEERING, ESCAPER_1 );
+	addUser( system, "escaper1@aerospace", AEROSPACE_ENGINEERING, ESCAPER_7 );
+	addUser( system, "escaper1@education", EDUCATION_IN_TECH_AND_SCIENCE, ESCAPER_9 );
+	addUser( system, "escaper1@mathematics", MATHEMATICS, ESCAPER_7 );
+
+
+	ASSERT_TEST( setGetSize(system->users) == 41 );
+	return system;
 }
 
 /*
