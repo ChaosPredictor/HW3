@@ -33,7 +33,7 @@ typedef enum {
 } TypeSkill;
 
 
-MtmErrorCode createSystem(EscapeSystem **sys);
+MtmErrorCode createSystem(EscapeSystem sys);
 
 MtmErrorCode destroySystem(EscapeSystem *sys);
 

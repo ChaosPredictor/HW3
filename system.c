@@ -56,10 +56,8 @@ int main(int argc, char *argv[]) {
 
 	EscapeSystem system = malloc(sizeof(struct EscapeSystem_t));
 	//TODO check return value
-	system->escapers = setCreate(copyEscaper, freeEscaper, compareEscapers);
-	system->companies = setCreate(copyCompany, freeCompany, compareCompanies);
-	system->rooms = setCreate(copyRoom, freeRoom, compareRooms);
-	system->days = createDays();
+	createSystem(system);
+
 
 
 	system->faculties = createFaculties(NUMBER_OF_FACULTIES);
@@ -197,7 +195,7 @@ int main(int argc, char *argv[]) {
 
 	//r=create_system("test_1.txt", &sys);
 
-	//createSystem(&sys);
+	//
 
 	//createCompanySet(sys);
 
@@ -222,10 +220,14 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
-MtmErrorCode createSystem(EscapeSystem **sys) {
-	*sys = malloc(sizeof(**sys));
+MtmErrorCode createSystem(EscapeSystem sys) {
+	assert(sys != NULL);
+			//TODO test all return values
+	sys->escapers = setCreate(copyEscaper, freeEscaper, compareEscapers);
+	sys->companies = setCreate(copyCompany, freeCompany, compareCompanies);
+	sys->rooms = setCreate(copyRoom, freeRoom, compareRooms);
+	sys->days = createDays();
 
-	//sys->days = createDays();
 	return MTM_SUCCESS;
 }
 
