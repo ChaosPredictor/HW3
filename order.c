@@ -348,14 +348,15 @@ MtmErrorCode addOrder2(List days, Order order, int daysFromToday) {
 	return MTM_SUCCESS;
 }
 
-bool checkIfEscaperAvailable(List days, int daysFromToday, int hour, SetElement user) {
+//TODO should move from here
+bool checkIfEscaperAvailable(List days, int daysFromToday, int hour, SetElement escaper) {
 	Day day = listGetFirst(days);
 	for(int i = 0; i < daysFromToday; i++ ) {
 		day = listGetNext(days);
 		if ( day == NULL ) return true;
 	}
 	List orders = day->dayOrders;
-	List ordersOfEscaper = listFilter(orders, filterOrderByEscaper, ((User)user)->email);
+	List ordersOfEscaper = listFilter(orders, filterOrderByEscaper, ((Escaper)escaper)->email);
 	Order order = listGetFirst(ordersOfEscaper);
 	for(int i = 0; i < listGetSize(ordersOfEscaper); i++) {
 		if ( order->hour == hour ) {

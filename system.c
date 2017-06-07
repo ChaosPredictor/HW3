@@ -59,11 +59,11 @@ int main(int argc, char *argv[]) {
 	char line[MAX_NAME_LENG];
 
 	EscapeSystem system = malloc(sizeof(struct EscapeSystem_t));
-	system->users = setCreate(copyUser, freeUser, compareUsers);
-	//system->users = &use;
+	system->escapers = setCreate(copyEscaper, freeEscaper, compareEscapers);
+	system->companies = setCreate(copyCompany, freeCompany, compareCompanies);
 	system->rooms = setCreate(copyRoom, freeRoom, compareRooms);
-	//system->days = createDays();
 	system->days = createDays();
+
 
 	system->faculties = createFaculties(NUMBER_OF_FACULTIES);
 	//printf("address %p", (void*)days);
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
 					char* email = strtok(NULL, " ");
 					int faculty = atoi( strtok(NULL, " ") );
 					//TODO check return value
-					addUser(system, email, faculty, COMPANY);
+					addCompany(system, email, faculty );
 				} else if ( strcmp(subCommand,"remove") == 0 ) {
 					//printf("this is remove company\n");
 					//printf("your input a: %s", line);
@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
 					int faculty = atoi( strtok(NULL, " ") );
 					int skill_level = atoi( strtok(NULL, " ") );
 					//TODO check return value
-					addUser(system, email, faculty, skill_level);
+					addEscaper(system, email, faculty, skill_level);
 				} else if ( strcmp(subCommand, "order" ) == 0 ) {
 					//printf("this is escaper order\n");
 					//printf("your input a: %s", line);
@@ -215,7 +215,8 @@ int main(int argc, char *argv[]) {
 	listDestroy(system->days);
 	listDestroy(system->faculties);
 	setDestroy(system->rooms);
-	setDestroy(system->users);
+	setDestroy(system->escapers);
+	setDestroy(system->companies);
 
 	free(system);
 
@@ -258,46 +259,65 @@ MtmErrorCode createCompanySet(EscapeSystem *sys) {
 }
 
 //To break to addCompany and addEscaper
-MtmErrorCode addUser(EscapeSystem sys, const char* email, TechnionFaculty faculty, TypeSkill typeSkill) {
-	User newUser = malloc(sizeof(struct user_t));
+MtmErrorCode addCompany(EscapeSystem sys, const char* email, TechnionFaculty faculty) {
+	Company newCompany = malloc(sizeof(struct company_t));
 	//TODO check return value
-	createUser(newUser, email, faculty, typeSkill);
+	createCompany(newCompany, email, faculty);
 
 	//TODO check both escaper and company
-	if( setIsIn( sys->users, newUser ) ) {
-		free(newUser->email);
-		free(newUser);
+	if( setIsIn( sys->companies, newCompany ) ) {
+		free(newCompany->email);
+		free(newCompany);
 		return MTM_EMAIL_ALREADY_EXISTS;
 	}
 
-	setAdd(sys->users, newUser);
-	free(newUser->email);
-	free(newUser);
+	setAdd(sys->companies, newCompany);
+	free(newCompany->email);
+	free(newCompany);
+	return MTM_SUCCESS;
+}
+
+
+MtmErrorCode addEscaper(EscapeSystem sys, const char* email, TechnionFaculty faculty, TypeSkill typeSkill) {
+	Escaper newEscaper = malloc(sizeof(struct escaper_t));
+	//TODO check return value
+	createEscaper(newEscaper, email, faculty, typeSkill);
+
+	//TODO check both escaper and company
+	if( setIsIn( sys->escapers, newEscaper ) ) {
+		free(newEscaper->email);
+		free(newEscaper);
+		return MTM_EMAIL_ALREADY_EXISTS;
+	}
+
+	setAdd(sys->escapers, newEscaper);
+	free(newEscaper->email);
+	free(newEscaper);
 	return MTM_SUCCESS;
 }
 
 MtmErrorCode removeCompany(EscapeSystem sys, const char* email) {
-	if( sys->users == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
+	if( sys->companies == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
 
-	User user = findUserFromEmail( sys->users, email );
-	if ( user == NULL || user->typeSkill != 0 ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
+	Company company = findCompanyFromEmail( sys->companies , email );
+	if ( company == NULL ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
 
 	//TODO not remove company with order
 	//TODO remove all rooms of the company
-	setRemove(sys->users, user);
+	setRemove(sys->companies , company);
 	return MTM_SUCCESS;
 }
 
 MtmErrorCode removeEscaper(EscapeSystem sys, const char* email) {
-	if( sys->users == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
+	if( sys->escapers == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
 
-	User user = findUserFromEmail( sys->users, email );
-	if ( user == NULL || user->typeSkill == 0 ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+	Escaper escaper = findEscaperFromEmail( sys->escapers, email );
+	if ( escaper == NULL || escaper->typeSkill == 0 ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 
 	//TODO remove all his orders
-	setRemove(sys->users, user);
+	setRemove(sys->escapers, escaper);
 	return MTM_SUCCESS;
 }
 
@@ -307,7 +327,7 @@ MtmErrorCode addRoom(EscapeSystem sys, const char* email, int id, int price, int
 	if ( sys == NULL ) return MTM_INVALID_PARAMETER;
 	if ( email == NULL || !emailValidity(email) )  return MTM_INVALID_PARAMETER;
 
-	TechnionFaculty faculty = findCompanyFacultyFromEmail(sys->users, email);
+	TechnionFaculty faculty = findCompanyFacultyFromEmail(sys->companies, email);
 	if ( faculty == UNKNOWN ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
 
 	//TODO check email exist
@@ -381,12 +401,12 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 		return MTM_INVALID_PARAMETER;
 	}
 
-	if ( findEscaperFacultyFromEmail(sys->users, email) == UNKNOWN ) {
+	if ( findEscaperFacultyFromEmail(sys->escapers, email) == UNKNOWN ) {
 		free(newOrder->email);
 		free(newOrder);
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 	}
-	User escaper = findUserFromEmail( sys->users, email );
+	Escaper escaper = findEscaperFromEmail( sys->escapers, email );
 
 	int hour = getHour( time );
 	int daysFromToday = getDay( time );
@@ -400,7 +420,7 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 
 	newOrder->faculty = faculty;
 	newOrder->id = id;
-	newOrder->price = calculatePriceOfOrder( sys->users, sys->rooms, email, room) * num_ppl;
+	newOrder->price = calculatePriceOfOrder( sys->escapers, sys->rooms, email, room) * num_ppl;
 	newOrder->hour = hour;
 	newOrder->num_ppl = num_ppl;
 
@@ -444,12 +464,12 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 		return MTM_INVALID_PARAMETER;
 	}
 
-	if ( findEscaperFacultyFromEmail(sys->users, email) == UNKNOWN ) {
+	if ( findEscaperFacultyFromEmail(sys->escapers, email) == UNKNOWN ) {
 		free(newOrder->email);
 		free(newOrder);
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 	}
-	User escaper = findUserFromEmail( sys->users, email );
+	Escaper escaper = findEscaperFromEmail( sys->escapers, email );
 	newOrder->num_ppl = num_ppl;
 
 	//printf("\n number1: %d\n", setGetSize(rooms));
@@ -513,17 +533,17 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system) {
 	mtmPrintDayHeader(outputChannel, today->dayNumber, listGetSize(orders));
 
 
-	User user = NULL;
+	Escaper escaper = NULL;
 	Room room = NULL;
 	Order order = listGetFirst(orders);
 	while ( order != NULL ) {
 		//TODO check that escaper;
-		user = findUserFromEmail( system->users, order->email );
+		escaper = findEscaperFromEmail( system->escapers, order->email );
 		//printUser(user);
 		room = findRoom(system->rooms, order->faculty, order->id);
 		//printRoom(room);
 		//printOrder(order);
-		mtmPrintOrder(outputChannel, user->email, user->typeSkill, user->faculty, room->email, room->faculty, room->id, order->hour, room->difficulty, order->num_ppl, order->price);
+		mtmPrintOrder(outputChannel, escaper->email, escaper->typeSkill, escaper->faculty, room->email, room->faculty, room->id, order->hour, room->difficulty, order->num_ppl, order->price);
 		addIncomeToFaculty(system->faculties, room->faculty, order->price );
 		order = listGetNext(orders);
 	}
@@ -557,6 +577,18 @@ MtmErrorCode reportBest(FILE* outputChannel, EscapeSystem system) {
 	return MTM_SUCCESS;
 }
 
+
+
+
+
+bool emailValidity(const char* email) {
+	size_t len = strlen(email);
+	int count = 0;
+	for (int i = 0; i < len; i++) {
+		if( email[i] == '@' ) count++;
+	}
+	return ( count == 1);
+}
 
 /*
 static SetElement copyCompany(SetElement company){

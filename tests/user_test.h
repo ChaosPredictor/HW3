@@ -12,8 +12,6 @@
 
 #include "./test_utilities.h"
 //#include "./../user.c"
-#include "./../user.h"
-
 #include <stdio.h>
 #include <assert.h>
 #include <stdbool.h>
@@ -21,6 +19,7 @@
 //#include "./../mtm_escape.h"
 #include <string.h>
 #include <ctype.h>
+#include "../escaper.h"
 
 
 Set testHelperAddUsers();

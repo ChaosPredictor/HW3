@@ -4,14 +4,16 @@
 #include <stdio.h> //TODO remove it
 #include <stdlib.h>
 
-#include "user.h"
+#include "escaper.h"
 #include "faculty.h"
+#include "company.h"
 
 //typedef struct EscapeSystem_t EscapeSystem;
 
 
 typedef struct EscapeSystem_t {
-	Set users;
+	Set escapers;
+	Set companies;
 	Set rooms;
 	List days;
 	List faculties;
@@ -42,13 +44,13 @@ MtmErrorCode createCompanySet(EscapeSystem* sys);
 
 
 
-MtmErrorCode addUser(EscapeSystem sys, const char* email, TechnionFaculty faculty, TypeSkill typeSkill);
+MtmErrorCode addCompany(EscapeSystem sys, const char* email, TechnionFaculty faculty);
 
 MtmErrorCode removeCompany(EscapeSystem sys, const char* email);
 
 
 
-
+MtmErrorCode addEscaper(EscapeSystem sys, const char* email, TechnionFaculty faculty, TypeSkill typeSkill);
 
 MtmErrorCode removeEscaper(EscapeSystem sys, const char* email);
 
@@ -69,6 +71,12 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl);
 MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system);
 
 MtmErrorCode reportBest(FILE* outputChannel, EscapeSystem system);
+
+
+
+
+bool emailValidity(const char* email);
+
 
 
 

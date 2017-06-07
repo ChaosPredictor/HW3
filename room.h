@@ -14,10 +14,11 @@
 #include <string.h>
 #include <assert.h>
 #include <math.h>
+
+#include "escaper.h"
 #include "set.h"
 #include "order.h"
 #include "system.h"
-#include "user.h"
 
 
 //#include "visitor_room.h"
