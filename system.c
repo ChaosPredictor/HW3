@@ -268,7 +268,7 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system) {
 		//printRoom(room);
 		//printOrder(order);
 		mtmPrintOrder(outputChannel, user->email, user->typeSkill, user->faculty, room->email, room->faculty, room->id, order->hour, room->difficulty, order->num_ppl, order->price);
-		addIncomeToFaculty(system->faculties, room->faculty, order->price);
+		addIncomeToFaculty(system->faculties, room->faculty, order->price );
 		order = listGetNext(orders);
 	}
 	mtmPrintDayFooter(outputChannel, today->dayNumber);
@@ -288,6 +288,7 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system) {
 MtmErrorCode reportBest(FILE* outputChannel, EscapeSystem system) {
 	Day today = listGetFirst(system->days);
 
+	listSort( system->faculties, compareFacultyByIncomeAndId);
 	mtmPrintFacultiesHeader(outputChannel, NUMBER_OF_FACULTIES, today->dayNumber, returnTotalRevenue(system->faculties));
 
 	List bestList = returnBestNFaculties(system->faculties, NUMBER_OF_BEST);
@@ -297,7 +298,7 @@ MtmErrorCode reportBest(FILE* outputChannel, EscapeSystem system) {
 		faculty = listGetNext(bestList);
 	}
 	mtmPrintFacultiesFooter(outputChannel);
-
+	listDestroy(bestList);
 
 	return MTM_SUCCESS;
 }

@@ -58,7 +58,7 @@ int compareFacultyByIncomeAndId(ListElement listElement1, ListElement listElemen
 	if ((((Faculty)listElement2)->income) > (((Faculty)listElement1)->income)) {
 		return 1;
 	} else if ((((Faculty)listElement2)->income) == (((Faculty)listElement1)->income)) {
-		return ((((Faculty)listElement2)->id) - (((Faculty)listElement1)->id));
+		return ((((Faculty)listElement1)->id) - (((Faculty)listElement2)->id));
 	} else {
 		return -1;
 	}

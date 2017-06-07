@@ -141,7 +141,7 @@ MtmErrorCode addOrder(List days, Set users, Set rooms, char* email, TechnionFacu
 
 	newOrder->faculty = faculty;
 	newOrder->id = id;
-	newOrder->price = calculatePriceOfOrder( users, rooms, email, room);
+	newOrder->price = calculatePriceOfOrder( users, rooms, email, room) * num_ppl;
 	newOrder->hour = hour;
 	newOrder->num_ppl = num_ppl;
 
@@ -272,7 +272,7 @@ MtmErrorCode addRecommendedOrder(List days, Set users, Set rooms, char* email, i
 		Room room = setGetFirst(recommendedRooms2);
 		newOrder->faculty=room->faculty;
 		newOrder->id=room->id;
-		newOrder->price = getTotalRoomPrice(room, escaper->faculty);
+		newOrder->price = getTotalRoomPrice(room, escaper->faculty) * num_ppl;
 
 		result = addFirstAvailableOrder(days, newOrder, room, escaper);
 		//TODO check return;
