@@ -48,11 +48,15 @@ MtmErrorCode addCompany(EscapeSystem sys, const char* email, TechnionFaculty fac
 
 MtmErrorCode removeCompany(EscapeSystem sys, const char* email);
 
+SetElement findCompanyByEmail( Set setCompany, const char* email );
+
 
 
 MtmErrorCode addEscaper(EscapeSystem sys, const char* email, TechnionFaculty faculty, TypeSkill typeSkill);
 
 MtmErrorCode removeEscaper(EscapeSystem sys, const char* email);
+
+SetElement findEscaperByEmail( Set setEscaper, const char* email );
 
 
 

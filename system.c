@@ -277,6 +277,30 @@ MtmErrorCode addCompany(EscapeSystem sys, const char* email, TechnionFaculty fac
 	return MTM_SUCCESS;
 }
 
+MtmErrorCode removeCompany(EscapeSystem sys, const char* email) {
+	if( sys->companies == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
+	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
+
+	Company company = findCompanyByEmail( sys->companies , email );
+	if ( company == NULL ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
+
+	//TODO not remove company with order
+	//TODO remove all rooms of the company
+	setRemove(sys->companies , company);
+	return MTM_SUCCESS;
+}
+
+SetElement findCompanyByEmail( Set setCompany, const char* email ) {
+	if( setCompany == NULL || email == NULL ) return NULL;
+	SET_FOREACH(Company, val, setCompany) {
+		if ( strcmp(val->email, email) == 0) {
+			return val;
+		}
+	}
+	return NULL;
+}
+
+
 
 MtmErrorCode addEscaper(EscapeSystem sys, const char* email, TechnionFaculty faculty, TypeSkill typeSkill) {
 	Escaper newEscaper = malloc(sizeof(struct escaper_t));
@@ -296,19 +320,6 @@ MtmErrorCode addEscaper(EscapeSystem sys, const char* email, TechnionFaculty fac
 	return MTM_SUCCESS;
 }
 
-MtmErrorCode removeCompany(EscapeSystem sys, const char* email) {
-	if( sys->companies == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
-	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
-
-	Company company = findCompanyByEmail( sys->companies , email );
-	if ( company == NULL ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
-
-	//TODO not remove company with order
-	//TODO remove all rooms of the company
-	setRemove(sys->companies , company);
-	return MTM_SUCCESS;
-}
-
 MtmErrorCode removeEscaper(EscapeSystem sys, const char* email) {
 	if( sys->escapers == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
@@ -319,6 +330,16 @@ MtmErrorCode removeEscaper(EscapeSystem sys, const char* email) {
 	//TODO remove all his orders
 	setRemove(sys->escapers, escaper);
 	return MTM_SUCCESS;
+}
+
+SetElement findEscaperByEmail( Set setEscaper, const char* email ) {
+	if( setEscaper == NULL || email == NULL ) return NULL;
+	SET_FOREACH(Escaper, val, setEscaper) {
+		if ( strcmp(val->email, email) == 0) {
+			return val;
+		}
+	}
+	return NULL;
 }
 
 

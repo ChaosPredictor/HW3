@@ -98,7 +98,7 @@ MtmErrorCode addUser(Set setUser, const char* email, TechnionFaculty faculty, Ty
 	free(newUser->email);
 	free(newUser);
 	return MTM_SUCCESS;
-}*/
+}
 
 SetElement findEscaperByEmail( Set setEscaper, const char* email ) {
 	if( setEscaper == NULL || email == NULL ) return NULL;
@@ -108,7 +108,7 @@ SetElement findEscaperByEmail( Set setEscaper, const char* email ) {
 		}
 	}
 	return NULL;
-}
+}*/
 
 
 TechnionFaculty findEscaperFacultyFromEmail( Set setEscaper, const char* email ) {

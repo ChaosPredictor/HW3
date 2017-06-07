@@ -93,7 +93,7 @@ MtmErrorCode addUser(Set setUser, const char* email, TechnionFaculty faculty, Ty
 	free(newUser->email);
 	free(newUser);
 	return MTM_SUCCESS;
-}*/
+}
 
 SetElement findCompanyByEmail( Set setCompany, const char* email ) {
 	if( setCompany == NULL || email == NULL ) return NULL;
@@ -104,7 +104,7 @@ SetElement findCompanyByEmail( Set setCompany, const char* email ) {
 	}
 	return NULL;
 }
-
+*/
 
 
 
