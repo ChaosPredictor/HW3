@@ -61,7 +61,8 @@ MtmErrorCode addOrderToADay(List orders, Set users, Set rooms, const char* email
 		return MTM_INVALID_PARAMETER;
 	}
 
-	if ( findEscaperFacultyFromEmail(users, email) == UNKNOWN ) {
+	if ( returnEscaperFaculty( findEscaperByEmail(users, email) ) == UNKNOWN ) {
+	//if ( findEscaperFacultyFromEmail(users, email) == UNKNOWN ) {
 		free(newOrder->email);
 		free(newOrder);
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
@@ -426,7 +427,7 @@ MtmErrorCode checkAvailability(List orders, int hour, char* email, TechnionFacul
 }
 
 int calculatePriceOfOrder( Set users, Set rooms, const char* email, const SetElement room) {
-	TechnionFaculty escaperFaculty = findEscaperFacultyFromEmail( users, email );
+	TechnionFaculty escaperFaculty = returnEscaperFaculty( findEscaperByEmail(users, email));
 	if( escaperFaculty == UNKNOWN ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 
 	if ( room == NULL ) return MTM_ID_DOES_NOT_EXIST;

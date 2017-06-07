@@ -108,7 +108,7 @@ SetElement findEscaperByEmail( Set setEscaper, const char* email ) {
 		}
 	}
 	return NULL;
-}*/
+}
 
 
 TechnionFaculty findEscaperFacultyFromEmail( Set setEscaper, const char* email ) {
@@ -117,6 +117,13 @@ TechnionFaculty findEscaperFacultyFromEmail( Set setEscaper, const char* email )
 	if ( escaper->typeSkill == COMPANY ) return UNKNOWN;
 	return escaper->faculty;
 }
+*/
+
+TechnionFaculty returnEscaperFaculty( Escaper escaper ) {
+	return escaper->faculty;
+}
+
+
 
 
 void printEscaper(SetElement escaper) {

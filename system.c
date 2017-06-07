@@ -422,7 +422,7 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 		return MTM_INVALID_PARAMETER;
 	}
 
-	if ( findEscaperFacultyFromEmail(sys->escapers, email) == UNKNOWN ) {
+	if ( returnEscaperFaculty( findEscaperByEmail(sys->escapers, email))  == UNKNOWN ) {
 		free(newOrder->email);
 		free(newOrder);
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
@@ -485,7 +485,7 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 		return MTM_INVALID_PARAMETER;
 	}
 
-	if ( findEscaperFacultyFromEmail(sys->escapers, email) == UNKNOWN ) {
+	if ( returnEscaperFaculty( findEscaperByEmail(sys->escapers, email)) == UNKNOWN ) {
 		free(newOrder->email);
 		free(newOrder);
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;

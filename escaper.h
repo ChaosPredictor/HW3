@@ -49,6 +49,8 @@ int compareEscapers(SetElement escasper1, SetElement escasper2);
 
 MtmErrorCode createEscaper(Escaper escaper, const char* email, TechnionFaculty faculty, int typeSkill);
 
+TechnionFaculty returnEscaperFaculty( Escaper escaper );
+
 //moved to system
 //SetElement findEscaperByEmail( Set setEscaper, const char* email );
 
@@ -56,8 +58,8 @@ MtmErrorCode createEscaper(Escaper escaper, const char* email, TechnionFaculty f
 //TODO remove
 void printEscaper(SetElement escaper);
 
-
-TechnionFaculty findEscaperFacultyFromEmail( Set setEscaper, const char* email );
+// removed
+//TechnionFaculty findEscaperFacultyFromEmail( Set setEscaper, const char* email );
 
 
 
