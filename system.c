@@ -300,7 +300,7 @@ MtmErrorCode removeCompany(EscapeSystem sys, const char* email) {
 	if( sys->companies == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
 
-	Company company = findCompanyFromEmail( sys->companies , email );
+	Company company = findCompanyByEmail( sys->companies , email );
 	if ( company == NULL ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
 
 	//TODO not remove company with order
@@ -313,7 +313,7 @@ MtmErrorCode removeEscaper(EscapeSystem sys, const char* email) {
 	if( sys->escapers == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
 
-	Escaper escaper = findEscaperFromEmail( sys->escapers, email );
+	Escaper escaper = findEscaperByEmail( sys->escapers, email );
 	if ( escaper == NULL || escaper->typeSkill == 0 ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 
 	//TODO remove all his orders
@@ -406,7 +406,7 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 		free(newOrder);
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 	}
-	Escaper escaper = findEscaperFromEmail( sys->escapers, email );
+	Escaper escaper = findEscaperByEmail( sys->escapers, email );
 
 	int hour = getHour( time );
 	int daysFromToday = getDay( time );
@@ -469,7 +469,7 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 		free(newOrder);
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 	}
-	Escaper escaper = findEscaperFromEmail( sys->escapers, email );
+	Escaper escaper = findEscaperByEmail( sys->escapers, email );
 	newOrder->num_ppl = num_ppl;
 
 	//printf("\n number1: %d\n", setGetSize(rooms));
@@ -538,7 +538,7 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system) {
 	Order order = listGetFirst(orders);
 	while ( order != NULL ) {
 		//TODO check that escaper;
-		escaper = findEscaperFromEmail( system->escapers, order->email );
+		escaper = findEscaperByEmail( system->escapers, order->email );
 		//printUser(user);
 		room = findRoom(system->rooms, order->faculty, order->id);
 		//printRoom(room);

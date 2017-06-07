@@ -100,7 +100,7 @@ MtmErrorCode addUser(Set setUser, const char* email, TechnionFaculty faculty, Ty
 	return MTM_SUCCESS;
 }*/
 
-SetElement findEscaperFromEmail( Set setEscaper, const char* email ) {
+SetElement findEscaperByEmail( Set setEscaper, const char* email ) {
 	if( setEscaper == NULL || email == NULL ) return NULL;
 	SET_FOREACH(Escaper, val, setEscaper) {
 		if ( strcmp(val->email, email) == 0) {
@@ -112,7 +112,7 @@ SetElement findEscaperFromEmail( Set setEscaper, const char* email ) {
 
 
 TechnionFaculty findEscaperFacultyFromEmail( Set setEscaper, const char* email ) {
-	Escaper escaper = findEscaperFromEmail( setEscaper, email );
+	Escaper escaper = findEscaperByEmail( setEscaper, email );
 	if ( escaper == NULL ) return UNKNOWN;
 	if ( escaper->typeSkill == COMPANY ) return UNKNOWN;
 	return escaper->faculty;

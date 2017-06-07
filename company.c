@@ -95,7 +95,7 @@ MtmErrorCode addUser(Set setUser, const char* email, TechnionFaculty faculty, Ty
 	return MTM_SUCCESS;
 }*/
 
-SetElement findCompanyFromEmail( Set setCompany, const char* email ) {
+SetElement findCompanyByEmail( Set setCompany, const char* email ) {
 	if( setCompany == NULL || email == NULL ) return NULL;
 	SET_FOREACH(Company, val, setCompany) {
 		if ( strcmp(val->email, email) == 0) {
@@ -123,7 +123,7 @@ MtmErrorCode removeCompany(Set setUser, const char* email) {
 }*/
 
 TechnionFaculty findCompanyFacultyFromEmail( Set setCompany, const char* email ) {
-	Company company = findCompanyFromEmail( setCompany, email );
+	Company company = findCompanyByEmail( setCompany, email );
 	if ( company == NULL ) return UNKNOWN;
 	return company->faculty;
 }
