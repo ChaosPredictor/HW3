@@ -112,6 +112,9 @@ MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, in
 }
 
 
+
+
+/*
 Set filterRoomSet(Set rooms, RecommendSetElement recommendSetElement, SetKey num_ppl, SetKey skill_level ) {
 	Room room = setGetFirst(rooms);
 	//User user = findUserFromEmail( users, email );
@@ -130,7 +133,7 @@ Set filterRoomSet(Set rooms, RecommendSetElement recommendSetElement, SetKey num
 		room = setGetNext(rooms);
 	}
 	return recommendedRooms;
-}
+}*/
 
 
 int returnRoomPrice(const Room room) {

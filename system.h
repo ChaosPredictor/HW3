@@ -34,6 +34,9 @@ typedef enum {
 } TypeSkill;
 
 
+
+
+
 MtmErrorCode createSystem(EscapeSystem sys);
 
 MtmErrorCode destroySystem(EscapeSystem sys);
@@ -69,6 +72,9 @@ MtmErrorCode removeRoom(EscapeSystem sys, TechnionFaculty faculty, int id);
 SetElement findRoom(const EscapeSystem sys, TechnionFaculty faculty, int id);
 
 bool checkIfRoomAvailable(const EscapeSystem sys, int daysFromToday, int hour, ListElement room);
+
+Set filterRoomSet(Set rooms, RecommendSetElement recommendSetElement, SetKey num_ppl, SetKey skill_level );
+
 
 
 

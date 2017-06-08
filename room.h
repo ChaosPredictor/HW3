@@ -11,14 +11,16 @@
 
 
 #include <assert.h>
+#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 #include <math.h>
 
-#include "escaper.h"
+//#include "system.h"
+//#include "escaper.h"
 #include "set.h"
-#include "order.h"
-#include "system.h"
+#include "mtm_ex3.h"
+//#include "order.h"
 
 
 //#include "visitor_room.h"
@@ -36,9 +38,7 @@ typedef struct room_t{
 
 typedef int SetKey;
 
-
 typedef int(*RecommendSetElement)(SetElement, SetKey, SetKey);
-
 
 
 SetElement copyRoom(SetElement room);
@@ -57,12 +57,10 @@ int calculatePriceOfOrder(const Room room, TechnionFaculty escaperFaculty, int n
 
 int returnRoomPrice(const Room room);
 
-
-
 int getTotalRoomPrice(const SetElement room, TechnionFaculty faculty);
 
 
-Set filterRoomSet(Set rooms, RecommendSetElement recommendSetElement, SetKey num_ppl, SetKey skill_level );
+
 
 int recommendByNumOfPplandDifficulty(const SetElement setElement, SetKey num_ppl, SetKey skill_level );
 
