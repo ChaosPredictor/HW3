@@ -250,7 +250,7 @@ MtmErrorCode removeCompany(EscapeSystem sys, const char* email) {
 	return MTM_SUCCESS;
 }
 
-SetElement findCompanyByEmail(EscapeSystem sys, const char* email ) {
+SetElement findCompanyByEmail(const EscapeSystem sys, const char* email ) {
 	if( sys->companies == NULL || email == NULL ) return NULL;
 	SET_FOREACH(Company, val, sys->companies) {
 		if ( strcmp(val->email, email) == 0) {
@@ -330,7 +330,6 @@ MtmErrorCode addRoom(EscapeSystem sys, const char* email, int id, int price, int
 
 	TechnionFaculty faculty = returnCompanyFaculty( findCompanyByEmail( sys, email) );
 
-	//TechnionFaculty faculty = findCompanyFacultyFromEmail(sys->companies, email);
 	if ( faculty == UNKNOWN ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
 
 	//TODO check email exist
@@ -411,13 +410,13 @@ bool checkIfRoomAvailable(const EscapeSystem sys, int daysFromToday, int hour, L
 	return true;
 }
 
-Set filterRoomSet(const Set rooms, RecommendSetElement recommendSetElement, SetKey num_ppl, SetKey skill_level ) {
+Set filterRoomSet(const Set rooms, RecommendSetElement recommendSetElement, SetKey key1, SetKey key2 ) {
 	Room room = setGetFirst(rooms);
 	//User user = findUserFromEmail( users, email );
 	long int minValue = -1, tempValue;
 	Set recommendedRooms = setCreate(copyRoom, freeRoom, compareRooms);
 	while ( room != NULL ) {
-		tempValue = recommendSetElement( room, num_ppl, skill_level);
+		tempValue = recommendSetElement( room, key1, key2);
 		//tempValue = ( (pow(room->num_ppl-num_ppl,2) + (pow(room->difficulty - user->typeSkill,2 )) );
 		if ( tempValue < minValue || minValue == -1) {
 			minValue = tempValue;
@@ -680,6 +679,35 @@ Day returnDayOfOrder(const EscapeSystem sys, int daysFromToday) {
 
 
 
+List createFaculties(int numberOfFaculties) {
+	List faculties = listCreate(copyFaculty, freeFaculty);
+	if ( faculties == NULL ) return NULL;
+
+	Faculty newFaculty = malloc(sizeof(struct faculty_t));
+
+	for( int i = 0; i < numberOfFaculties; i++) {
+		newFaculty->id = i;
+		newFaculty->income = 0;
+		listInsertFirst(faculties, newFaculty);
+	}
+	free(newFaculty);
+	return faculties;
+}
+
+
+Faculty findFacultyByNumber(List Faculties, TechnionFaculty facultyNumber) {
+	Faculty faculty = listGetFirst(Faculties);
+	while ( faculty != NULL ) {
+
+		if ( faculty->id == facultyNumber ) {
+			return faculty;
+		}
+		faculty = listGetNext(Faculties);
+	}
+	return NULL;
+}
+
+
 
 MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem sys) {
 	//List days = system->days;
@@ -699,7 +727,8 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem sys) {
 		//printRoom(room);
 		//printOrder(order);
 		mtmPrintOrder(outputChannel, escaper->email, escaper->typeSkill, escaper->faculty, room->email, room->faculty, room->id, order->hour, room->difficulty, order->num_ppl, order->price);
-		addIncomeToFaculty(sys->faculties, room->faculty, order->price );
+		addIncomeToFaculty( findFacultyByNumber(sys->faculties, room->faculty), order->price );
+		//addIncomeToFaculty(sys->faculties, room->faculty, order->price );
 		order = listGetNext(orders);
 	}
 	mtmPrintDayFooter(outputChannel, today->dayNumber);

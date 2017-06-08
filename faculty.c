@@ -25,34 +25,13 @@ void freeFaculty(ListElement faculty) {
 	free((Faculty)faculty);
 }
 
-List createFaculties(int numberOfFaculties) {
-	List faculties = listCreate(copyFaculty, freeFaculty);
-	if ( faculties == NULL ) return NULL;
 
-	Faculty newFaculty = malloc(sizeof(struct faculty_t));
-
-	for( int i = 0; i < numberOfFaculties; i++) {
-		newFaculty->id = i;
-		newFaculty->income = 0;
-		listInsertFirst(faculties, newFaculty);
-	}
-	free(newFaculty);
-	return faculties;
-}
-
-
-MtmErrorCode addIncomeToFaculty(List Faculties, TechnionFaculty facultyNumber, int income) {
-	Faculty faculty = listGetFirst(Faculties);
-	while ( faculty != NULL ) {
-
-		if ( faculty->id == facultyNumber ) {
-			faculty->income += income;
-			return MTM_SUCCESS;
-		}
-		faculty = listGetNext(Faculties);
-	}
+MtmErrorCode addIncomeToFaculty(Faculty faculty, int income) {
+	faculty->income += income;
 	return MTM_INVALID_PARAMETER;
 }
+
+
 
 int compareFacultyByIncomeAndId(ListElement listElement1, ListElement listElement2) {
 	if ((((Faculty)listElement2)->income) > (((Faculty)listElement1)->income)) {

@@ -30,14 +30,11 @@ SetElement copyCompany(SetElement company);
 
 void freeCompany(SetElement company);
 
-int compareCompanies(SetElement company1, SetElement company2);
+int compareCompanies(const SetElement company1, const SetElement company2);
 
 MtmErrorCode createCompany(Company company, const char* email, TechnionFaculty faculty);
 
-//TODO move to system
-//SetElement findCompanyByEmail(Company setCompany, const char* email );
-
-TechnionFaculty returnCompanyFaculty( Company company );
+TechnionFaculty returnCompanyFaculty(const Company company );
 
 
 

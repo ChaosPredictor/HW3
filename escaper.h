@@ -28,11 +28,11 @@ SetElement copyEscaper(SetElement escasper);
 
 void freeEscaper(SetElement escasper);
 
-int compareEscapers(SetElement escasper1, SetElement escasper2);
+int compareEscapers(const SetElement escasper1, const SetElement escasper2);
 
 MtmErrorCode createEscaper(Escaper escaper, const char* email, TechnionFaculty faculty, int typeSkill);
 
-TechnionFaculty returnEscaperFaculty( Escaper escaper );
+TechnionFaculty returnEscaperFaculty(const Escaper escaper );
 
 
 //TODO remove

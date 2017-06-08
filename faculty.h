@@ -19,14 +19,12 @@ typedef struct faculty_t{
 } *Faculty;
 
 
-ListElement copyDay(ListElement faculty);
+ListElement copyFaculty(ListElement faculty);
 
-void freeDay(ListElement faculty);
+void freeFaculty(ListElement faculty);
 
+MtmErrorCode addIncomeToFaculty(Faculty faculty, int income);
 
-List createFaculties(int numberOfFaculties);
-
-MtmErrorCode addIncomeToFaculty(List Faculties, TechnionFaculty facultyNumber, int income);
 
 int compareFacultyByIncomeAndId(ListElement listElement1, ListElement listElement2);
 
