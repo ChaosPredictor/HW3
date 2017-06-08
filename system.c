@@ -181,39 +181,12 @@ int main(int argc, char *argv[]) {
 
 
 			}
-			//free( command );
 			free( temp );
-			//free( command );
 
-
-			//int hour = atoi( strtok(NULL, "-") );
 		}
 	}
-	//EscapeSystem *sys=NULL;
-	//Result r=OK;
-
-	//r=create_system("test_1.txt", &sys);
-
-	//
-
-	//createCompanySet(sys);
-
-	//addCompany(sys->companies, "sdfefdgdfh5654654fgjhfgsdf", CIVIL_ENGINEERING);
-
-	//int size = listGetSize(sys->users);
-	//printf("size: %d\n", size);
-
-	//addCompany(Set setCompany, char* newEmail, TechnionFaculty faculty)
 
 	destroySystem(system);
-	/*
-	listDestroy(system->days);
-	listDestroy(system->faculties);
-	setDestroy(system->rooms);
-	setDestroy(system->escapers);
-	setDestroy(system->companies);
-
-	free(system);*/
 
 	fclose(fileout);
 	fclose(filein);
