@@ -47,8 +47,6 @@ void freeOrder(ListElement order);
 //TODO maybe remove or moved to other place
 MtmErrorCode createOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
-//TODO to do something
-MtmErrorCode addOrder2(List days, Order order, int daysFromToday);
 
 bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour);
 

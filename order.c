@@ -37,39 +37,6 @@ void freeOrder(ListElement order) {
 
 
 
-MtmErrorCode addOrder2(List days, Order order, int daysFromToday) {
-	Day day = listGetFirst(days);
-	bool endOfList = false;
-	int i = 0;
-	while ( !endOfList && i < daysFromToday ) {
-		day = listGetNext(days);
-		if ( day == NULL ) {
-			endOfList = true;
-			break;
-		}
-		i++;
-	}
-	while ( i < daysFromToday ) {
-		Day newDay = createDay(i+1);
-		if ( newDay == NULL ) {
-			freeDay(newDay);
-			return MTM_OUT_OF_MEMORY;
-		}
-		listInsertLast(days, newDay);
-		freeDay(newDay);
-		i++;
-	}
-	if ( endOfList ) {
-		day = listGetFirst(days);
-		for (int i = 0; i < daysFromToday; i++ ) {
-			day = listGetNext(days);
-		}
-	}
-	List orders = day->dayOrders;
-	listInsertFirst(orders, order);
-	return MTM_SUCCESS;
-}
-
 //TODO should move from here
 
 
