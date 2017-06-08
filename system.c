@@ -481,7 +481,7 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 	newOrder->faculty = faculty;
 	newOrder->id = id;
 	TechnionFaculty escaperFaculty = returnEscaperFaculty( findEscaperByEmail(sys, email));
-
+	//TODO check return value
 	newOrder->price = calculatePriceOfOrder(room, escaperFaculty, num_ppl);
 	newOrder->hour = hour;
 	newOrder->num_ppl = num_ppl;
@@ -574,22 +574,22 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 	MtmErrorCode result = MTM_SUCCESS;
 	Set recommendedRooms = setCopy(sys->rooms);
 
-	Set recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNumOfPplandDifficulty, num_ppl, escaper->typeSkill );
+	Set recommendedRooms2 = filterRoomSet( recommendedRooms, filterByNumOfPplandDifficulty, num_ppl, escaper->typeSkill );
 	if ( setGetSize(recommendedRooms2) != 1 ) {
 		setDestroy(recommendedRooms);
 		recommendedRooms = setCopy( recommendedRooms2 );
 		setDestroy(recommendedRooms2);
-		recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNearFaculty, escaper->faculty, 0 );
+		recommendedRooms2 = filterRoomSet( recommendedRooms, filterByNearFaculty, escaper->faculty, 0 );
 		if ( setGetSize(recommendedRooms2) != 1 ) {
 			setDestroy(recommendedRooms);
 			recommendedRooms = setCopy( recommendedRooms2 );
 			setDestroy(recommendedRooms2);
-			recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNearFaculty, 0, 0 );
+			recommendedRooms2 = filterRoomSet( recommendedRooms, filterByNearFaculty, 0, 0 );
 			if ( setGetSize(recommendedRooms2) != 1 ) {
 				setDestroy(recommendedRooms);
 				recommendedRooms = setCopy( recommendedRooms2 );
 				setDestroy(recommendedRooms2);
-				recommendedRooms2 = filterRoomSet( recommendedRooms, recommendByNearId, 0, 0 );
+				recommendedRooms2 = filterRoomSet( recommendedRooms, filterByNearId, 0, 0 );
 
 			}
 		}
@@ -603,7 +603,8 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 		Room room = setGetFirst(recommendedRooms2);
 		newOrder->faculty=room->faculty;
 		newOrder->id=room->id;
-		newOrder->price = getTotalRoomPrice(room, escaper->faculty) * num_ppl;
+		//newOrder->price = getTotalRoomPrice(room, escaper->faculty) * num_ppl;
+		newOrder->price = calculatePriceOfOrder(room, escaper->faculty, num_ppl);
 
 		result = addFirstAvailableOrder(sys, newOrder, room, escaper);
 		//TODO check return;

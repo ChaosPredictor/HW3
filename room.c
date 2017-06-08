@@ -46,7 +46,7 @@ void freeRoom(SetElement room){
 	free((Room)room);
 }
 
-int compareRooms(SetElement room1, SetElement room2) {
+int compareRooms(const SetElement room1, const SetElement room2) {
 	//TODO email to faculty
 	if ( room1 == NULL || room2 == NULL ) {
 		//TODO print that is null;
@@ -61,19 +61,7 @@ int compareRooms(SetElement room1, SetElement room2) {
 	}
 }
 
-int calculatePriceOfOrder(const Room room, TechnionFaculty escaperFaculty, int num_ppl) {
-	if( escaperFaculty == UNKNOWN ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
-
-	if ( room == NULL ) return MTM_ID_DOES_NOT_EXIST;
-	int price = ((Room)room)->price;
-	if ( escaperFaculty == ((Room)room)->faculty ) {
-		price *= (100 - DISCONT);
-		price /= 100;
-	}
-	return price * num_ppl;
-}
-
-MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, char* working_hrs, int difficulty) {
+MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, const char* working_hrs, int difficulty) {
 	newRoom->email = malloc(sizeof(char) * (strlen(email)+1));
 	if ( newRoom->email == NULL) {
 		free(newRoom);
@@ -87,7 +75,7 @@ MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, in
 
 	int from =  fromHour(working_hrs);
 	int to =  toHour(working_hrs);
-//TODO open till 24
+//TODO open till 24?
 	if ( from < 0 || from >= to || to > 23) {
 		free(newRoom->email);
 		free(newRoom);
@@ -111,18 +99,19 @@ MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, in
 	return MTM_SUCCESS;
 }
 
+int calculatePriceOfOrder(const Room room, TechnionFaculty escaperFaculty, int num_ppl) {
+	//TODO maybe doesn't test return value
+	if( escaperFaculty == UNKNOWN ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+	//TODO maybe doesn't test return value
+	if ( room == NULL ) return MTM_ID_DOES_NOT_EXIST;
 
+	if ( ((Room)room)->faculty == escaperFaculty ) return ((((Room)room)->price * 75) / 100) * num_ppl;
+	return returnRoomPrice( room ) * num_ppl;
+}
 
 int returnRoomPrice(const Room room) {
 	if( room != NULL ) return room->price;
 	return -1;
-}
-
-
-
-int getTotalRoomPrice(const SetElement room, TechnionFaculty faculty) {
-	if ( ((Room)room)->faculty == faculty ) return ((((Room)room)->price * 75) / 100) ;
-	return ((Room)room)->price;
 }
 
 
@@ -150,14 +139,14 @@ int charToInt(char c) {
 	return (c - (int)'0');
 }
 
-int recommendByNumOfPplandDifficulty(const SetElement setElement, SetKey num_ppl, SetKey skill_level ) {
+int filterByNumOfPplandDifficulty(const SetElement setElement, SetKey num_ppl, SetKey skill_level ) {
 	return (pow(((Room)setElement)->num_ppl-num_ppl,2) + (pow(((Room)setElement)->difficulty - skill_level,2 )) );
 }
 
-int recommendByNearFaculty(const SetElement setElement, SetKey faculty, SetKey junk ) {
+int filterByNearFaculty(const SetElement setElement, SetKey faculty, SetKey junk ) {
 	return abs(((Room)setElement)->faculty - faculty);
 }
 
-int recommendByNearId(const SetElement setElement, SetKey id, SetKey junk ) {
+int filterByNearId(const SetElement setElement, SetKey id, SetKey junk ) {
 	return abs(((Room)setElement)->id - id);
 }
