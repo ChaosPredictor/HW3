@@ -694,7 +694,6 @@ List createFaculties(int numberOfFaculties) {
 	return faculties;
 }
 
-
 Faculty findFacultyByNumber(List Faculties, TechnionFaculty facultyNumber) {
 	Faculty faculty = listGetFirst(Faculties);
 	while ( faculty != NULL ) {
@@ -707,6 +706,28 @@ Faculty findFacultyByNumber(List Faculties, TechnionFaculty facultyNumber) {
 	return NULL;
 }
 
+List returnListOfBestNFaculties(List faculties, int number) {
+	listSort(faculties, compareFacultyByIncomeAndId);
+	//TODO check return;
+	List newList = listCreate(copyFaculty, freeFaculty);
+	ListElement faculty = listGetFirst( faculties );
+	for(int i = 0; i < number; i++) {
+		listInsertLast(newList, faculty);
+		faculty = listGetNext( faculties );
+	}
+	return newList;
+}
+
+
+int returnTotalFacultiesRevenue(List faculties) {
+	Faculty faculty = listGetFirst(faculties);
+	int result = 0;
+	while ( faculty != NULL ) {
+		result += faculty->income;
+		faculty = listGetNext(faculties);
+	}
+	return result;
+}
 
 
 MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem sys) {
@@ -747,9 +768,9 @@ MtmErrorCode reportBest(FILE* outputChannel, EscapeSystem system) {
 	Day today = listGetFirst(system->days);
 
 	listSort( system->faculties, compareFacultyByIncomeAndId);
-	mtmPrintFacultiesHeader(outputChannel, NUMBER_OF_FACULTIES, today->dayNumber, returnTotalRevenue(system->faculties));
+	mtmPrintFacultiesHeader(outputChannel, NUMBER_OF_FACULTIES, today->dayNumber, returnTotalFacultiesRevenue(system->faculties));
 
-	List bestList = returnBestNFaculties(system->faculties, NUMBER_OF_BEST);
+	List bestList = returnListOfBestNFaculties(system->faculties, NUMBER_OF_BEST);
 	Faculty faculty = listGetFirst(bestList);
 	while ( faculty != NULL ) {
 		mtmPrintFaculty(outputChannel, faculty->id, faculty->income);

@@ -91,6 +91,11 @@ List createFaculties(int numberOfFaculties);
 
 Faculty findFacultyByNumber(List Faculties, TechnionFaculty facultyNumber);
 
+List returnListOfBestNFaculties(List faculties, int number);
+
+int returnTotalFacultiesRevenue(List faculties);
+
+
 
 
 MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem system);

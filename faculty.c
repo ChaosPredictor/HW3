@@ -25,15 +25,7 @@ void freeFaculty(ListElement faculty) {
 	free((Faculty)faculty);
 }
 
-
-MtmErrorCode addIncomeToFaculty(Faculty faculty, int income) {
-	faculty->income += income;
-	return MTM_INVALID_PARAMETER;
-}
-
-
-
-int compareFacultyByIncomeAndId(ListElement listElement1, ListElement listElement2) {
+int compareFacultyByIncomeAndId(const ListElement listElement1, const ListElement listElement2) {
 	if ((((Faculty)listElement2)->income) > (((Faculty)listElement1)->income)) {
 		return 1;
 	} else if ((((Faculty)listElement2)->income) == (((Faculty)listElement1)->income)) {
@@ -43,27 +35,7 @@ int compareFacultyByIncomeAndId(ListElement listElement1, ListElement listElemen
 	}
 }
 
-List returnBestNFaculties(List faculties, int number) {
-	listSort(faculties, compareFacultyByIncomeAndId);
-	//TODO check return;
-	List newList = listCreate(copyFaculty, freeFaculty);
-	ListElement faculty = listGetFirst( faculties );
-	for(int i = 0; i < number; i++) {
-		listInsertLast(newList, faculty);
-		faculty = listGetNext( faculties );
-	}
-	return newList;
+MtmErrorCode addIncomeToFaculty(Faculty faculty, int income) {
+	faculty->income += income;
+	return MTM_INVALID_PARAMETER;
 }
-
-int returnTotalRevenue(List faculties) {
-	Faculty faculty = listGetFirst(faculties);
-	int result = 0;
-	while ( faculty != NULL ) {
-		result += faculty->income;
-		faculty = listGetNext(faculties);
-	}
-	return result;
-}
-
-
-

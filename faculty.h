@@ -23,13 +23,13 @@ ListElement copyFaculty(ListElement faculty);
 
 void freeFaculty(ListElement faculty);
 
+int compareFacultyByIncomeAndId(const ListElement listElement1, const ListElement listElement2);
+
 MtmErrorCode addIncomeToFaculty(Faculty faculty, int income);
 
 
-int compareFacultyByIncomeAndId(ListElement listElement1, ListElement listElement2);
 
-List returnBestNFaculties(List faculties, int number);
 
-int returnTotalRevenue(List faculties);
+
 
 #endif /* FACULTY_H_ */
