@@ -468,8 +468,8 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 	}
 
-	int hour = getHour( time );
-	int daysFromToday = getDay( time );
+	int hour = convertHourStringToInt( time );
+	int daysFromToday = convertDayStringToInt( time );
 
 	Room room = findRoom(sys, faculty, id);
 	if ( room == NULL ) {
@@ -793,5 +793,19 @@ bool emailValidity(const char* email) {
 	return ( count == 1);
 }
 
+int convertDayStringToInt( const char* time ) {
+	char *temp = malloc(sizeof(char) * (strlen(time) + 1));
+	strcpy(temp,time);
+	int daysFromToday = atoi( strtok(temp, "-") );
+	free( temp );
+	return daysFromToday;
+}
 
-
+int convertHourStringToInt( const char* time ) {
+	char *temp = malloc(sizeof(char) * (strlen(time) + 1));
+	strcpy(temp,time);
+	atoi( strtok(temp, "-") );
+	int hour = atoi( strtok(NULL, "-") );
+	free( temp );
+	return hour;
+}

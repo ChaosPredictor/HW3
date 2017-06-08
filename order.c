@@ -28,107 +28,12 @@ ListElement copyOrder(ListElement order) {
 	return newOrder;
 }
 
-
 void freeOrder(ListElement order) {
 	if ( order == NULL ) return;
 	free(((Order)order)->email);
 	free((Order)order);
 }
 
-
-
-//TODO should move from here
-
-
-
-MtmErrorCode checkAvailability(List orders, int hour, char* email, TechnionFaculty faculty, int id) {
-	List filteredOrders = listFilter(orders, filterOrderByHour, &hour);
-	if ( listGetSize(filteredOrders) > 0 ) {
-		List filteredOrdersEscaper = listFilter(filteredOrders, filterOrderByEscaper, email);
-		if ( listGetSize(filteredOrdersEscaper) > 0 ) {
-
-			listDestroy(filteredOrders);
-			listDestroy(filteredOrdersEscaper);
-			return MTM_CLIENT_IN_ROOM;
-		}
-		listDestroy(filteredOrdersEscaper);
-		List filteredOrdersFaculty = listFilter(filteredOrders, filterOrderByFaculty, &faculty);
-		if ( listGetSize(filteredOrdersFaculty) > 0 ) {
-			List filteredOrdersId = listFilter(filteredOrders, filterOrderById, &id);
-			if ( listGetSize(filteredOrdersId) > 0 ) {
-				listDestroy(filteredOrdersId);
-				listDestroy(filteredOrdersFaculty);
-				listDestroy(filteredOrders);
-				return MTM_ROOM_NOT_AVAILABLE;
-			}
-			listDestroy(filteredOrdersId);
-		}
-		listDestroy(filteredOrdersFaculty);
-	}
-	listDestroy(filteredOrders);
-	return MTM_SUCCESS;
-}
-
-
-
-int getHour( const char* time ) {
-	char *temp = malloc(sizeof(char) * (strlen(time) + 1));
-	strcpy(temp,time);
-	atoi( strtok(temp, "-") );
-	int hour = atoi( strtok(NULL, "-") );
-	free( temp );
-	return hour;
-}
-
-int getDay( const char* time ) {
-	char *temp = malloc(sizeof(char) * (strlen(time) + 1));
-	strcpy(temp,time);
-	int daysFromToday = atoi( strtok(temp, "-") );
-	free( temp );
-	return daysFromToday;
-}
-
-
-//TODO maybe should be deleted
-int orderForToday (List days) {
-	if( days==NULL ) return MTM_INVALID_PARAMETER;
-
-	return 0;
-}
-
-//TODO maybe should be deleted
-void printAllDays(List days) {
-	printf("\nA New Print\n");
-	Day day = listGetFirst(days);
-	while ( day != NULL ) {
-		printf(" Day Number: %d\n", day->dayNumber);
-		printAllOrders(day->dayOrders);
-		day = listGetNext(days);
-	}
-}
-
-void printAllOrders(List orders) {
-	Order order = listGetFirst(orders);
-	while ( order != NULL ) {
-		printf("  A New Order\n");
-		printf("	Order email: %s\n", order->email);
-		printf("	Order faculty: %d\n", order->faculty);
-		printf("	Order id: %d\n", order->id);
-		printf("	Order hour: %d\n", order->hour);
-		printf("	Order price: %d\n", order->price);
-		order = listGetNext(orders);
-	}
-}
-
-
-void printOrder(ListElement order) {
-	printf("  A New Order\n");
-	printf("	Order email: %s\n", ((Order)order)->email);
-	printf("	Order faculty: %d\n", ((Order)order)->faculty);
-	printf("	Order id: %d\n", ((Order)order)->id);
-	printf("	Order hour: %d\n", ((Order)order)->hour);
-	printf("	Order price: %d\n", ((Order)order)->price);
-}
 
 ListElement copyDay(ListElement day) {
 	if ( day == NULL ) return NULL;
@@ -164,36 +69,22 @@ ListElement createDay(int dayNumber) {
 List createDays() {
 	List days = listCreate(copyDay, freeDay);
 
-
 	if ( days == NULL ) return NULL;
-	Day newDay = malloc(sizeof(struct day_t));
-	if ( newDay == NULL ) {
-		listDestroy(days);
-		return NULL;
-	}
-	newDay->dayOrders = NULL;
-	newDay->dayNumber = 0;
+	Day newDay = createDay(0);
+
 	listInsertFirst(days, newDay);
-	free(newDay);
+	freeDay(newDay);
 	return days;
 }
 
 
-MtmErrorCode addToday(List days) {
-	if ( days == NULL ) return MTM_INVALID_PARAMETER;
-	Day newDay = malloc(sizeof(struct day_t));
-	newDay->dayOrders = NULL;
-	newDay->dayNumber = 0;
-	listInsertFirst(days, newDay);
-	printf("\nnumber of days: %d\n", listGetSize(days));
-	return MTM_SUCCESS;
-}
+
 
 bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour) {
 	return ((((Order)listElement)->hour) == *(int*)hour);
 }
 
-bool filterOrderByEscaper(const ListElement listElement, ListFilterKey email) {
+bool filterOrderByEscaper(const ListElement listElement, const ListFilterKey email) {
 	return (strcmp((((Order)listElement)->email), (char*)email) == 0);
 }
 
@@ -205,11 +96,40 @@ bool filterOrderById(const ListElement listElement, const ListFilterKey id) {
 	return ((((Order)listElement)->id) == *(int*)id);
 }
 
-//TODO maybe wrong
-int compareOrderByHour(ListElement listElement1, ListElement listElement2) {
-	return ((((Order)listElement2)->hour) == (((Order)listElement1)->hour));
+
+
+//TODO maybe should be deleted
+void printAllDays(List days) {
+	printf("\nA New Print\n");
+	Day day = listGetFirst(days);
+	while ( day != NULL ) {
+		printf(" Day Number: %d\n", day->dayNumber);
+		printAllOrders(day->dayOrders);
+		day = listGetNext(days);
+	}
 }
 
+void printAllOrders(List orders) {
+	Order order = listGetFirst(orders);
+	while ( order != NULL ) {
+		printf("  A New Order\n");
+		printf("	Order email: %s\n", order->email);
+		printf("	Order faculty: %d\n", order->faculty);
+		printf("	Order id: %d\n", order->id);
+		printf("	Order hour: %d\n", order->hour);
+		printf("	Order price: %d\n", order->price);
+		order = listGetNext(orders);
+	}
+}
+
+void printOrder(ListElement order) {
+	printf("  A New Order\n");
+	printf("	Order email: %s\n", ((Order)order)->email);
+	printf("	Order faculty: %d\n", ((Order)order)->faculty);
+	printf("	Order id: %d\n", ((Order)order)->id);
+	printf("	Order hour: %d\n", ((Order)order)->hour);
+	printf("	Order price: %d\n", ((Order)order)->price);
+}
 
 
 

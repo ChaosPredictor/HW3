@@ -39,6 +39,9 @@ ListElement copyDay(ListElement day);
 
 void freeDay(ListElement day);
 
+ListElement createDay(int dayNumber);
+
+List createDays();
 
 
 
@@ -46,42 +49,17 @@ ListElement copyOrder(ListElement order);
 
 void freeOrder(ListElement order);
 
-//TODO maybe remove or moved to other place
-MtmErrorCode createOrder(List days, Set users, Set rooms, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
+
 
 bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour);
 
-bool filterOrderByEscaper(const ListElement listElement, ListFilterKey email);
+bool filterOrderByEscaper(const ListElement listElement, const ListFilterKey email);
 
 bool filterOrderByFaculty(const ListElement listElement, const ListFilterKey faculty);
 
 bool filterOrderById(const ListElement listElement, const ListFilterKey id);
 
-int compareOrderByHour(ListElement listElement1, ListElement listElement2);
 
-
-
-MtmErrorCode checkAvailability(List orders, int hour, char* email, TechnionFaculty faculty, int id);
-
-
-int getDay( const char* time );
-
-int getHour( const char* time );
-
-
-
-
-ListElement copyDay(ListElement day);
-
-void freeDay(ListElement day);
-
-int ordersForToday(List days);
-
-MtmErrorCode addToday(List days);
-
-ListElement createDay(int dayNumber);
-
-List createDays();
 
 
 

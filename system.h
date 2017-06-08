@@ -107,7 +107,9 @@ MtmErrorCode reportBest(FILE* outputChannel, EscapeSystem system);
 
 bool emailValidity(const char* email);
 
+int convertDayStringToInt(const char* time );
 
+int convertHourStringToInt(const char* time );
 
 
 
