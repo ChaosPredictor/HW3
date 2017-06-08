@@ -5,11 +5,13 @@
  *      Author: master
  */
 
-#include "system.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+
+#include "system.h"
+
 
 #define MAX_NAME_LENG 200
 #define MAX_COMMAND_LENG 7
@@ -215,24 +217,8 @@ MtmErrorCode destroySystem(EscapeSystem sys) {
 	return MTM_SUCCESS;
 }
 
-MtmErrorCode createCompanySet(EscapeSystem *sys) {
-	//Set set = setCreate(copyCompany, freeCompany, compareCompanies);
-	//int size = setGetSize(set);
-	//printf("size: %d", size);
-	//Set company = setCreate(copyCompany, freeCompany, compareCompanies);
-	//int size = setGetSize(company);
-	//printf("size: %d", size);
-	//sys->company = malloc(sizeof(*Set));
-	//sys->company = malloc(sizeof(Set*));
-	//sys->companies = setCreate(copyUser, freeUser, compareUsers);
-	//int size = setGetSize(sys->company);
-	//printf("size: %d\n", size);
-	//*sys->company = setCreate(copyCompany, freeCompany, compareCompanies);
-	//TODO check not NULL
-	return MTM_SUCCESS;
-}
 
-//To break to addCompany and addEscaper
+
 MtmErrorCode addCompany(EscapeSystem sys, const char* email, TechnionFaculty faculty) {
 	Company newCompany = malloc(sizeof(struct company_t));
 	//TODO check return value
@@ -255,7 +241,7 @@ MtmErrorCode removeCompany(EscapeSystem sys, const char* email) {
 	if( sys->companies == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
 
-	Company company = findCompanyByEmail( sys->companies , email );
+	Company company = findCompanyByEmail( sys , email );
 	if ( company == NULL ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
 
 	//TODO not remove company with order
@@ -264,9 +250,9 @@ MtmErrorCode removeCompany(EscapeSystem sys, const char* email) {
 	return MTM_SUCCESS;
 }
 
-SetElement findCompanyByEmail( Set setCompany, const char* email ) {
-	if( setCompany == NULL || email == NULL ) return NULL;
-	SET_FOREACH(Company, val, setCompany) {
+SetElement findCompanyByEmail(EscapeSystem sys, const char* email ) {
+	if( sys->companies == NULL || email == NULL ) return NULL;
+	SET_FOREACH(Company, val, sys->companies) {
 		if ( strcmp(val->email, email) == 0) {
 			return val;
 		}
@@ -341,7 +327,10 @@ MtmErrorCode addRoom(EscapeSystem sys, const char* email, int id, int price, int
 	if ( sys == NULL ) return MTM_INVALID_PARAMETER;
 	if ( email == NULL || !emailValidity(email) )  return MTM_INVALID_PARAMETER;
 
-	TechnionFaculty faculty = findCompanyFacultyFromEmail(sys->companies, email);
+
+	TechnionFaculty faculty = returnCompanyFaculty( findCompanyByEmail( sys, email) );
+
+	//TechnionFaculty faculty = findCompanyFacultyFromEmail(sys->companies, email);
 	if ( faculty == UNKNOWN ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
 
 	//TODO check email exist
@@ -422,7 +411,7 @@ bool checkIfRoomAvailable(const EscapeSystem sys, int daysFromToday, int hour, L
 	return true;
 }
 
-Set filterRoomSet(Set rooms, RecommendSetElement recommendSetElement, SetKey num_ppl, SetKey skill_level ) {
+Set filterRoomSet(const Set rooms, RecommendSetElement recommendSetElement, SetKey num_ppl, SetKey skill_level ) {
 	Room room = setGetFirst(rooms);
 	//User user = findUserFromEmail( users, email );
 	long int minValue = -1, tempValue;
@@ -558,41 +547,6 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 	return MTM_SUCCESS;
 }
 
-Day returnDayOfOrder(EscapeSystem sys, int daysFromToday) {
-	Day day = listGetFirst(sys->days);
-	bool endOfList = false;
-	int i = 0;
-	while ( !endOfList && i < daysFromToday ) {
-		day = listGetNext(sys->days);
-		if ( day == NULL ) {
-			endOfList = true;
-			break;
-		}
-		i++;
-	}
-	while ( i < daysFromToday ) {
-		Day newDay = createDay(i+1);
-		if ( newDay == NULL ) {
-			freeDay(newDay);
-			return MTM_OUT_OF_MEMORY;
-		}
-		listInsertLast(sys->days, newDay);
-		freeDay(newDay);
-		i++;
-	}
-	if ( endOfList ) {
-		day = listGetFirst(sys->days);
-		for (int i = 0; i < daysFromToday; i++ ) {
-			day = listGetNext(sys->days);
-		}
-	}
-	return day;
-}
-
-
-
-
-
 MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 	Order newOrder = malloc(sizeof(struct order_t));
 	if ( newOrder == NULL) return MTM_OUT_OF_MEMORY;
@@ -693,6 +647,37 @@ MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, ListElement order, SetElem
 	return MTM_SUCCESS;
 }
 
+Day returnDayOfOrder(const EscapeSystem sys, int daysFromToday) {
+	Day day = listGetFirst(sys->days);
+	bool endOfList = false;
+	int i = 0;
+	while ( !endOfList && i < daysFromToday ) {
+		day = listGetNext(sys->days);
+		if ( day == NULL ) {
+			endOfList = true;
+			break;
+		}
+		i++;
+	}
+	while ( i < daysFromToday ) {
+		Day newDay = createDay(i+1);
+		if ( newDay == NULL ) {
+			freeDay(newDay);
+			return MTM_OUT_OF_MEMORY;
+		}
+		listInsertLast(sys->days, newDay);
+		freeDay(newDay);
+		i++;
+	}
+	if ( endOfList ) {
+		day = listGetFirst(sys->days);
+		for (int i = 0; i < daysFromToday; i++ ) {
+			day = listGetNext(sys->days);
+		}
+	}
+	return day;
+}
+
 
 
 
@@ -746,8 +731,6 @@ MtmErrorCode reportBest(FILE* outputChannel, EscapeSystem system) {
 
 	return MTM_SUCCESS;
 }
-
-
 
 
 

@@ -121,10 +121,15 @@ MtmErrorCode removeCompany(Set setUser, const char* email) {
 	setRemove(setUser, user);
 	return MTM_SUCCESS;
 }*/
-
+/*
 TechnionFaculty findCompanyFacultyFromEmail( Set setCompany, const char* email ) {
 	Company company = findCompanyByEmail( setCompany, email );
 	if ( company == NULL ) return UNKNOWN;
+	return company->faculty;
+}*/
+
+
+TechnionFaculty returnCompanyFaculty( Company company ) {
 	return company->faculty;
 }
 

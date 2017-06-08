@@ -35,9 +35,9 @@ int compareCompanies(SetElement company1, SetElement company2);
 MtmErrorCode createCompany(Company company, const char* email, TechnionFaculty faculty);
 
 //TODO move to system
-SetElement findCompanyByEmail( Set setCompany, const char* email );
+//SetElement findCompanyByEmail(Company setCompany, const char* email );
 
-TechnionFaculty findCompanyFacultyFromEmail( Set setCompany, const char* email );
+TechnionFaculty returnCompanyFaculty( Company company );
 
 
 
