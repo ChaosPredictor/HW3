@@ -8,6 +8,7 @@
 #include "faculty.h"
 #include "company.h"
 #include "room.h"
+#include "order.h"
 
 typedef struct EscapeSystem_t {
 	Set escapers;
@@ -77,7 +78,7 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl);
 
 MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, ListElement order, SetElement room, SetElement escaper );
 
-
+Day returnDayOfOrder(EscapeSystem sys, int daysFromToday);
 
 
 

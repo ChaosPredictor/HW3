@@ -499,7 +499,48 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 
 	//addOrder2(sys->days, newOrder, daysFromToday);
 
+	//addOrder2 was start here
 
+	/*
+	Day day = listGetFirst(sys->days);
+	bool endOfList = false;
+	int i = 0;
+	while ( !endOfList && i < daysFromToday ) {
+		day = listGetNext(sys->days);
+		if ( day == NULL ) {
+			endOfList = true;
+			break;
+		}
+		i++;
+	}
+	while ( i < daysFromToday ) {
+		Day newDay = createDay(i+1);
+		if ( newDay == NULL ) {
+			freeDay(newDay);
+			return MTM_OUT_OF_MEMORY;
+		}
+		listInsertLast(sys->days, newDay);
+		freeDay(newDay);
+		i++;
+	}
+	if ( endOfList ) {
+		day = listGetFirst(sys->days);
+		for (int i = 0; i < daysFromToday; i++ ) {
+			day = listGetNext(sys->days);
+		}
+	}*/
+	Day day = returnDayOfOrder(sys, daysFromToday);
+	List orders = day->dayOrders;
+	listInsertFirst(orders, newOrder);
+	//addOrder2 was end here
+
+	free(newOrder->email);
+	free(newOrder);
+	return MTM_SUCCESS;
+}
+
+
+Day returnDayOfOrder(EscapeSystem sys, int daysFromToday) {
 	Day day = listGetFirst(sys->days);
 	bool endOfList = false;
 	int i = 0;
@@ -527,13 +568,11 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 			day = listGetNext(sys->days);
 		}
 	}
-	List orders = day->dayOrders;
-	listInsertFirst(orders, newOrder);
-
-	free(newOrder->email);
-	free(newOrder);
-	return MTM_SUCCESS;
+	return day;
 }
+
+
+
 
 MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 	Order newOrder = malloc(sizeof(struct order_t));
@@ -621,36 +660,13 @@ MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, ListElement order, SetElem
 		for( int hour = 0; hour < 24; hour++) {
 			if ( checkIfRoomAvailable(sys, daysFromToday, hour, room) && checkIfEscaperAvailable(sys, daysFromToday, hour, escaper) ) {
 				((Order)order)->hour = hour;
-				Day day = listGetFirst(sys->days);
-				bool endOfList = false;
-				int i = 0;
-				while ( !endOfList && i < daysFromToday ) {
-					day = listGetNext(sys->days);
-					if ( day == NULL ) {
-						endOfList = true;
-						break;
-					}
-					i++;
-				}
-				while ( i < daysFromToday ) {
-					Day newDay = createDay(i+1);
-					if ( newDay == NULL ) {
-						freeDay(newDay);
-						return MTM_OUT_OF_MEMORY;
-					}
-					listInsertLast(sys->days, newDay);
-					freeDay(newDay);
-					i++;
-				}
-				if ( endOfList ) {
-					day = listGetFirst(sys->days);
-					for (int i = 0; i < daysFromToday; i++ ) {
-						day = listGetNext(sys->days);
-					}
-				}
+				//addOrder2 was start here
+				Day day = returnDayOfOrder(sys, daysFromToday);
+
 				List orders = day->dayOrders;
 				listInsertFirst(orders, order);
 				return MTM_SUCCESS;
+				//addOrder2 was end here
 			}
 		}
 		daysFromToday++;

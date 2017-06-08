@@ -10,7 +10,6 @@
 
 
 
-#include "./test_utilities.h"
 //#include "./../user.c"
 #include <stdio.h>
 #include <assert.h>
@@ -20,6 +19,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "../escaper.h"
+#include "./test_utilities.h"
 
 
 Set testHelperAddUsers();
