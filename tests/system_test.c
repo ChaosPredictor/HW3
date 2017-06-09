@@ -136,16 +136,34 @@ static bool testReportDay() {
 
 static bool testHelperAddCompanies(EscapeSystem sys) {
 	addCompany(sys, "company1@civil", 0 );
-
+	ASSERT_TEST( setGetSize(sys->companies) == 1 );
 	return true;
 }
 
 
 static bool testHelperAddRooms(EscapeSystem sys) {
 	addARoom(sys, "company1@civil", 1, 4, 3, "00-24", 2);
+	addARoom(sys, "company1@civil", 2, 4, 3, "00-24", 2);
+	ASSERT_TEST( setGetSize(sys->rooms) == 2 );
 
 	return true;
 }
+
+
+static bool testHelperAddEscapers(EscapeSystem sys) {
+	addAEscaper(sys, "escaper1@civil", 0, 2);
+	ASSERT_TEST( setGetSize(sys->escapers) == 1 );
+	return true;
+}
+
+
+static bool testHelperAddOrders(EscapeSystem sys) {
+	addOrder(sys, "escaper1@civil", 0, 2, "0-5", 3);
+	Day day = listGetFirst(sys->days);
+	ASSERT_TEST( listGetSize( day->dayOrders ) == 1 );
+	return true;
+}
+
 
 
 
@@ -201,15 +219,38 @@ static bool testAddARoom() {
 static bool testRemoveARoom() {
 	EscapeSystem system = malloc(sizeof(struct EscapeSystem_t));
 	ASSERT_TEST( system != NULL );
-	createSystem(system);
-	testHelperAddCompanies(system);
-	testHelperAddRooms(system);
+	createSystem( system );
+	testHelperAddCompanies( system );
+	testHelperAddRooms( system );
+	testHelperAddEscapers( system );
+	testHelperAddOrders( system );
 
-	//EscapeSystem nullSystem = NULL;
+	EscapeSystem nullSystem = NULL;
 	TechnionFaculty faculty = CIVIL_ENGINEERING;
+	TechnionFaculty faculty2 = BIOMEDICAL_ENGINEERING;
+	TechnionFaculty invalidFaculty = UNKNOWN;
 	int id = 1;
+	int orderedId = 2;
+	int invalidId = 0;
+	int doesNotExistId = 999;
+
+
+	ASSERT_TEST( removeARoom(nullSystem, faculty, id) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( removeARoom(system, invalidFaculty, id) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( removeARoom(system, faculty, invalidId) == MTM_INVALID_PARAMETER );
+
+	ASSERT_TEST( removeARoom(system, faculty, doesNotExistId) == MTM_ID_DOES_NOT_EXIST );
+	ASSERT_TEST( removeARoom(system, faculty2, id) == MTM_ID_DOES_NOT_EXIST );
+
+
 	//printf("\n\n%d\n\n", removeARoom(system, faculty, id));
 	ASSERT_TEST( removeARoom(system, faculty, id) == MTM_SUCCESS );
+
+	ASSERT_TEST( removeARoom(system, faculty, orderedId) == MTM_RESERVATION_EXISTS );
+
+
+
+
 
 	destroySystem(system);
 	return true;

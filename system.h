@@ -54,7 +54,7 @@ TechnionFaculty findCompanyFacultyFromEmail(const  Set setCompany, const char* e
 
 
 
-MtmErrorCode addEscaper(EscapeSystem sys, const char* email, TechnionFaculty faculty, TypeSkill typeSkill);
+MtmErrorCode addAEscaper(EscapeSystem sys, const char* email, TechnionFaculty faculty, TypeSkill typeSkill);
 
 MtmErrorCode removeEscaper(EscapeSystem sys, const char* email);
 

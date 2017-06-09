@@ -121,7 +121,7 @@ int main2(int argc, char *argv[]) {
 					int faculty = atoi( strtok(NULL, " ") );
 					int skill_level = atoi( strtok(NULL, " ") );
 					//TODO check return value
-					addEscaper(system, email, faculty, skill_level);
+					addAEscaper(system, email, faculty, skill_level);
 				} else if ( strcmp(subCommand, "order" ) == 0 ) {
 
 					char* email = strtok(NULL, " ");
@@ -250,7 +250,7 @@ SetElement findCompanyByEmail(const EscapeSystem sys, const char* email ) {
 
 
 
-MtmErrorCode addEscaper(EscapeSystem sys, const char* email, TechnionFaculty faculty, TypeSkill typeSkill) {
+MtmErrorCode addAEscaper(EscapeSystem sys, const char* email, TechnionFaculty faculty, TypeSkill typeSkill) {
 	Escaper newEscaper = malloc(sizeof(struct escaper_t));
 	//TODO check return value
 	createEscaper(newEscaper, email, faculty, typeSkill);
@@ -359,7 +359,7 @@ MtmErrorCode addARoom(EscapeSystem sys, const char* email, int id, int price, in
 }
 
 MtmErrorCode removeARoom(EscapeSystem sys, TechnionFaculty faculty, int id) {
-	if( sys->rooms == NULL ) return MTM_INVALID_PARAMETER;
+	if( sys == NULL || sys->rooms == NULL ) return MTM_INVALID_PARAMETER;
 	if( faculty < 0 || faculty > 17 ) return MTM_INVALID_PARAMETER;
 	if( id < 1 ) return MTM_INVALID_PARAMETER;
 	//TODO not remove room with order
