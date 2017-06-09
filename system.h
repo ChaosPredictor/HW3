@@ -84,7 +84,7 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl);
 
 MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, ListElement order, SetElement room, SetElement escaper );
 
-Day returnDayOfOrder(const EscapeSystem sys, int daysFromToday);
+Day returnADay(const EscapeSystem sys, int daysFromToday);
 
 
 List createFaculties(int numberOfFaculties);

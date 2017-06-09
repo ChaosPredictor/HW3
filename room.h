@@ -57,7 +57,6 @@ int filterByNearId(const SetElement setElement, SetKey id, SetKey junk );
 
 
 
-
 //TODO should be removed;
 void printRoom(const SetElement setElement);
 

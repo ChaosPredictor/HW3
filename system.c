@@ -62,7 +62,6 @@ int main(int argc, char *argv[]) {
 
 
 
-	//printf("address %p", (void*)days);
 
 	while ( fgets(line, MAX_NAME_LENG, filein) != NULL) {
 
@@ -72,7 +71,6 @@ int main(int argc, char *argv[]) {
 		}
 		size_t len = strlen(firstNonSpace)+1;
 		memmove(line, firstNonSpace, len);
-		//const char *firstChar[1] = &a[0];
 		if ( strcmp(line,"") != 0 && line[0] != '#' ) {
 			char *temp = malloc(sizeof(char) * (strlen(line) + 1));
 			strcpy(temp,line);
@@ -87,8 +85,7 @@ int main(int argc, char *argv[]) {
 					//TODO check return value
 					addCompany(system, email, faculty );
 				} else if ( strcmp(subCommand,"remove") == 0 ) {
-					//printf("this is remove company\n");
-					//printf("your input a: %s", line);
+
 					char* email = strtok(NULL, " ");
 					//TODO check return value
 					removeCompany(system, email);
@@ -97,8 +94,7 @@ int main(int argc, char *argv[]) {
 				char* subCommand = NULL;
 				subCommand = strtok(NULL, " ");
 				if ( strcmp(subCommand, "add" ) == 0 ) {
-					//printf("this is add room\n");
-					//printf("your input a: %s", line);
+
 					char* email = strtok(NULL, " ");
 					int id = atoi( strtok(NULL, " ") );
 					int price = atoi( strtok(NULL, " ") );
@@ -108,8 +104,7 @@ int main(int argc, char *argv[]) {
 					//TODO check return value
 					addRoom(system, email, id, price, num_ppl, working_hrs, difficulty);
 				} if ( strcmp(subCommand, "remove\n" ) == 0 ) {
-					//printf("this is add room\n");
-					//printf("your input a: %s", line);
+
 					int faculty = atoi( strtok(NULL, " ") );
 					int id = atoi( strtok(NULL, " ") );
 					//TODO check return value
@@ -117,21 +112,18 @@ int main(int argc, char *argv[]) {
 				}
 
 			} else if ( strcmp(command,"escaper") == 0) {
-				//printf("this is escaper\n");
-				//printf("your input a: %s", line);
+
 				char* subCommand = NULL;
 				subCommand = strtok(NULL, " ");
 				if ( strcmp(subCommand, "add" ) == 0 ) {
-					//printf("this is add escaper\n");
-					//printf("your input a: %s", line);
+
 					char* email = strtok(NULL, " ");
 					int faculty = atoi( strtok(NULL, " ") );
 					int skill_level = atoi( strtok(NULL, " ") );
 					//TODO check return value
 					addEscaper(system, email, faculty, skill_level);
 				} else if ( strcmp(subCommand, "order" ) == 0 ) {
-					//printf("this is escaper order\n");
-					//printf("your input a: %s", line);
+
 					char* email = strtok(NULL, " ");
 					int faculty = atoi( strtok(NULL, " ") );
 					int id = atoi( strtok(NULL, " ") );
@@ -140,15 +132,13 @@ int main(int argc, char *argv[]) {
 					//TODO check return value
 					addOrder(system, email, faculty, id, time, num_ppl);
 				}  else if ( strcmp(subCommand, "recommend" ) == 0 ) {
-					//printf("this is escaper order\n");
-					//printf("your input a: %s", line);
+
 					char* email = strtok(NULL, " ");
 					int num_ppl = atoi( strtok(NULL, " ") );
 					//TODO check return value
 					addRecommendedOrder(system, email, num_ppl );
 				} else if ( strcmp(subCommand, "remove" ) == 0 ) {
-					//printf("this is escaper order\n");
-					//printf("your input a: %s", line);
+
 					char* email = strtok(NULL, " ");
 					//TODO check return value
 					removeEscaper(system, email);
@@ -158,18 +148,15 @@ int main(int argc, char *argv[]) {
 				}
 
 			} else if ( strcmp(command,"report") == 0) {
-				//printf("this is escaper\n");
-				//printf("your input a: %s", line);
+
 				char* subCommand = NULL;
 				subCommand = strtok(NULL, " ");
 				if ( strcmp(subCommand, "day\n" ) == 0 ) {
-					//printf("this is add escaper\n");
-					//printf("your input a: %s", line);
+
 					//TODO check return value
 					reportDay(fileout, system);
 				} else if ( strcmp(subCommand, "best\n" ) == 0 ) {
-					//printf("this is add escaper\n");
-					//printf("your input a: %s", line);
+
 					//TODO check return value
 					reportBest(fileout, system);
 				} else  {
@@ -393,8 +380,6 @@ bool checkIfRoomAvailable(const EscapeSystem sys, int daysFromToday, int hour, L
 		if ( day == NULL ) return true;
 	}
 	List orders = day->dayOrders;
-	//printRoom(((Room)room));
-	//printAllOrders(orders);
 	List ordersOfFaculty = listFilter(orders, filterOrderByFaculty, &(((Room)room)->faculty));
 	List ordersOfRoom = listFilter(ordersOfFaculty, filterOrderById, &(((Room)room)->id));
 	listDestroy(ordersOfFaculty);
@@ -412,12 +397,10 @@ bool checkIfRoomAvailable(const EscapeSystem sys, int daysFromToday, int hour, L
 
 Set filterRoomSet(const Set rooms, RecommendSetElement recommendSetElement, SetKey key1, SetKey key2 ) {
 	Room room = setGetFirst(rooms);
-	//User user = findUserFromEmail( users, email );
 	long int minValue = -1, tempValue;
 	Set recommendedRooms = setCreate(copyRoom, freeRoom, compareRooms);
 	while ( room != NULL ) {
 		tempValue = recommendSetElement( room, key1, key2);
-		//tempValue = ( (pow(room->num_ppl-num_ppl,2) + (pow(room->difficulty - user->typeSkill,2 )) );
 		if ( tempValue < minValue || minValue == -1) {
 			minValue = tempValue;
 			setClear(recommendedRooms);
@@ -499,47 +482,10 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 		free(newOrder);
 		return MTM_CLIENT_IN_ROOM;
 	}
-	/*
-	if ( checkIfRoomAvailable(days, daysFromToday, hour, room) && checkIfEscaperAvailable(days, daysFromToday, hour, escaper) ) {
 
-	} */
-
-	//addOrder2(sys->days, newOrder, daysFromToday);
-
-	//addOrder2 was start here
-
-	/*
-	Day day = listGetFirst(sys->days);
-	bool endOfList = false;
-	int i = 0;
-	while ( !endOfList && i < daysFromToday ) {
-		day = listGetNext(sys->days);
-		if ( day == NULL ) {
-			endOfList = true;
-			break;
-		}
-		i++;
-	}
-	while ( i < daysFromToday ) {
-		Day newDay = createDay(i+1);
-		if ( newDay == NULL ) {
-			freeDay(newDay);
-			return MTM_OUT_OF_MEMORY;
-		}
-		listInsertLast(sys->days, newDay);
-		freeDay(newDay);
-		i++;
-	}
-	if ( endOfList ) {
-		day = listGetFirst(sys->days);
-		for (int i = 0; i < daysFromToday; i++ ) {
-			day = listGetNext(sys->days);
-		}
-	}*/
-	Day day = returnDayOfOrder(sys, daysFromToday);
+	Day day = returnADay(sys, daysFromToday);
 	List orders = day->dayOrders;
 	listInsertFirst(orders, newOrder);
-	//addOrder2 was end here
 
 	free(newOrder->email);
 	free(newOrder);
@@ -570,7 +516,6 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 
 	newOrder->num_ppl = num_ppl;
 
-	//printf("\n number1: %d\n", setGetSize(rooms));
 	MtmErrorCode result = MTM_SUCCESS;
 	Set recommendedRooms = setCopy(sys->rooms);
 
@@ -595,7 +540,6 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 		}
 	}
 
-	//printf("\n number last: %d\n", setGetSize(recommendedRooms2));
 
 	setDestroy(recommendedRooms);
 
@@ -603,7 +547,6 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 		Room room = setGetFirst(recommendedRooms2);
 		newOrder->faculty=room->faculty;
 		newOrder->id=room->id;
-		//newOrder->price = getTotalRoomPrice(room, escaper->faculty) * num_ppl;
 		newOrder->price = calculatePriceOfOrder(room, escaper->faculty, num_ppl);
 
 		result = addFirstAvailableOrder(sys, newOrder, room, escaper);
@@ -623,8 +566,6 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 }
 
 MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, ListElement order, SetElement room, SetElement escaper ) {
-	//printRoom(room);
-	//return MTM_SUCCESS;
 
 	bool done = false;
 	int daysFromToday = 0;
@@ -633,13 +574,11 @@ MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, ListElement order, SetElem
 		for( int hour = 0; hour < 24; hour++) {
 			if ( checkIfRoomAvailable(sys, daysFromToday, hour, room) && checkIfEscaperAvailable(sys, daysFromToday, hour, escaper) ) {
 				((Order)order)->hour = hour;
-				//addOrder2 was start here
-				Day day = returnDayOfOrder(sys, daysFromToday);
+				Day day = returnADay(sys, daysFromToday);
 
 				List orders = day->dayOrders;
 				listInsertFirst(orders, order);
 				return MTM_SUCCESS;
-				//addOrder2 was end here
 			}
 		}
 		daysFromToday++;
@@ -647,7 +586,7 @@ MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, ListElement order, SetElem
 	return MTM_SUCCESS;
 }
 
-Day returnDayOfOrder(const EscapeSystem sys, int daysFromToday) {
+Day returnADay(const EscapeSystem sys, int daysFromToday) {
 	Day day = listGetFirst(sys->days);
 	bool endOfList = false;
 	int i = 0;
@@ -732,7 +671,6 @@ int returnTotalFacultiesRevenue(List faculties) {
 
 
 MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem sys) {
-	//List days = system->days;
 	Day today = listGetFirst(sys->days);
 	List orders = today->dayOrders;
 	mtmPrintDayHeader(outputChannel, today->dayNumber, listGetSize(orders));
@@ -744,13 +682,10 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem sys) {
 	while ( order != NULL ) {
 		//TODO check that escaper;
 		escaper = findEscaperByEmail( sys, order->email );
-		//printUser(user);
 		room = findRoom(sys, order->faculty, order->id);
-		//printRoom(room);
-		//printOrder(order);
+
 		mtmPrintOrder(outputChannel, escaper->email, escaper->typeSkill, escaper->faculty, room->email, room->faculty, room->id, order->hour, room->difficulty, order->num_ppl, order->price);
 		addIncomeToFaculty( findFacultyByNumber(sys->faculties, room->faculty), order->price );
-		//addIncomeToFaculty(sys->faculties, room->faculty, order->price );
 		order = listGetNext(orders);
 	}
 	mtmPrintDayFooter(outputChannel, today->dayNumber);
