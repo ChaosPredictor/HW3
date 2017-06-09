@@ -60,7 +60,7 @@ MtmErrorCode removeEscaper(EscapeSystem sys, const char* email);
 
 SetElement findEscaperByEmail(const EscapeSystem sys, const char* email );
 
-bool checkIfEscaperAvailable(const EscapeSystem sys, int daysFromToday, int hour, SetElement escaper);
+bool isEscaperAvailable(const EscapeSystem sys, int daysFromToday, int hour, SetElement escaper);
 
 
 
@@ -73,9 +73,12 @@ MtmErrorCode removeAllRoomsOfCompany(EscapeSystem sys, char* companyEmail);
 
 SetElement findRoom(const EscapeSystem sys, TechnionFaculty faculty, int id);
 
-bool checkIfRoomAvailable(const EscapeSystem sys, int daysFromToday, int hour, ListElement room);
+bool isRoomAvailable(const EscapeSystem sys, int daysFromToday, int hour, ListElement room);
 
 Set filterRoomSet(const Set rooms, RecommendSetElement recommendSetElement, SetKey key1, SetKey key2 );
+
+bool isCompanyOrdered(const EscapeSystem sys, const char* email);
+
 
 
 

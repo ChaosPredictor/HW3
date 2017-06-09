@@ -167,10 +167,9 @@ static bool testHelperAddOrders(EscapeSystem sys) {
 	Day day = listGetFirst(sys->days);
 	ASSERT_TEST( listGetSize( day->dayOrders ) == 1 );
 	addOrder(sys, "escaper1@civil", 0, 3, "1-5", 3);
-	//printf("\n\n%d\n\n",
+
 	addOrder(sys, "escaper1@electrical", 2, 1, "1-14", 1);
-	//);
-	//printAllDays(sys->days);
+
 	day = listGetFirst(sys->days);
 	day = listGetNext(sys->days);
 	ASSERT_TEST( listGetSize( day->dayOrders ) == 2 );
