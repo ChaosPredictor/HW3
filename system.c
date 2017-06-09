@@ -243,12 +243,8 @@ MtmErrorCode removeCompany(EscapeSystem sys, const char* email) {
 
 
 	if ( isCompanyOrdered(sys, email) ) return MTM_RESERVATION_EXISTS;
-	/*
-	SET_FOREACH(Room, val, sys->rooms) {
-		if ( strcmp(val->email, email) == 0) {
-			if ( IsARoomOrdered(sys, val->faculty, val->id) ) return MTM_RESERVATION_EXISTS;
-		}
-	}*/
+	MtmErrorCode result = removeAllRoomsOfCompany(sys, email);
+	if ( result != MTM_SUCCESS ) return result;
 
 	//TODO remove all rooms of the company
 	setRemove(sys->companies , company);
@@ -265,7 +261,6 @@ SetElement findCompanyByEmail(const EscapeSystem sys, const char* email ) {
 	return NULL;
 }
 
-
 bool isCompanyOrdered(const EscapeSystem sys, const char* email) {
 	SET_FOREACH(Room, val, sys->rooms) {
 		if ( strcmp(val->email, email) == 0) {
@@ -274,6 +269,7 @@ bool isCompanyOrdered(const EscapeSystem sys, const char* email) {
 	}
 	return false;
 }
+
 
 
 
@@ -402,9 +398,15 @@ MtmErrorCode removeARoom(EscapeSystem sys, TechnionFaculty faculty, int id) {
 	return MTM_ID_DOES_NOT_EXIST;
 }
 
-MtmErrorCode removeAllRoomsOfCompany(EscapeSystem sys, char* companyEmail) {
-	//TODO remove all rooms of company
-	return MTM_ID_DOES_NOT_EXIST;
+MtmErrorCode removeAllRoomsOfCompany(EscapeSystem sys, const char* companyEmail) {
+	MtmErrorCode result;
+	SET_FOREACH(Room, val, sys->rooms) {
+		if ( strcmp(val->email, companyEmail) == 0) {
+			result = removeARoom(sys, val->faculty, val->id);
+			if ( result != MTM_SUCCESS ) return result;
+		}
+	}
+	return MTM_SUCCESS;
 }
 
 SetElement findRoom(const EscapeSystem sys, TechnionFaculty faculty, int id) {
@@ -529,7 +531,7 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 		return MTM_CLIENT_IN_ROOM;
 	}
 
-	Day day = returnADay(sys, daysFromToday);
+	Day day = returnADayFromToday(sys, daysFromToday);
 	List orders = day->dayOrders;
 	listInsertFirst(orders, newOrder);
 
@@ -620,7 +622,7 @@ MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, ListElement order, SetElem
 		for( int hour = 0; hour < 24; hour++) {
 			if ( isRoomAvailable(sys, daysFromToday, hour, room) && isEscaperAvailable(sys, daysFromToday, hour, escaper) ) {
 				((Order)order)->hour = hour;
-				Day day = returnADay(sys, daysFromToday);
+				Day day = returnADayFromToday(sys, daysFromToday);
 
 				List orders = day->dayOrders;
 				listInsertFirst(orders, order);
@@ -643,7 +645,7 @@ bool IsARoomOrdered(const EscapeSystem sys, TechnionFaculty faculty, int id) {
 	return false;
 }
 
-Day returnADay(const EscapeSystem sys, int daysFromToday) {
+Day returnADayFromToday(const EscapeSystem sys, int daysFromToday) {
 	Day day = listGetFirst(sys->days);
 	bool endOfList = false;
 	int i = 0;

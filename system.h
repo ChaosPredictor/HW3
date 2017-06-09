@@ -50,7 +50,7 @@ MtmErrorCode removeCompany(EscapeSystem sys, const char* email);
 
 SetElement findCompanyByEmail(const EscapeSystem sys, const char* email);
 
-TechnionFaculty findCompanyFacultyFromEmail(const  Set setCompany, const char* email );
+bool isCompanyOrdered(const EscapeSystem sys, const char* email);
 
 
 
@@ -69,7 +69,7 @@ MtmErrorCode addARoom(EscapeSystem sys, const char* email, int id, int price, in
 
 MtmErrorCode removeARoom(EscapeSystem sys, TechnionFaculty faculty, int id);
 
-MtmErrorCode removeAllRoomsOfCompany(EscapeSystem sys, char* companyEmail);
+MtmErrorCode removeAllRoomsOfCompany(EscapeSystem sys, const char* companyEmail);
 
 SetElement findRoom(const EscapeSystem sys, TechnionFaculty faculty, int id);
 
@@ -77,7 +77,6 @@ bool isRoomAvailable(const EscapeSystem sys, int daysFromToday, int hour, ListEl
 
 Set filterRoomSet(const Set rooms, RecommendSetElement recommendSetElement, SetKey key1, SetKey key2 );
 
-bool isCompanyOrdered(const EscapeSystem sys, const char* email);
 
 
 
@@ -90,7 +89,7 @@ MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, ListElement order, SetElem
 
 bool IsARoomOrdered(const EscapeSystem sys, TechnionFaculty faculty, int id);
 
-Day returnADay(const EscapeSystem sys, int daysFromToday);
+Day returnADayFromToday(const EscapeSystem sys, int daysFromToday);
 
 
 

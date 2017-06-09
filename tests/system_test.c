@@ -146,9 +146,10 @@ static bool testHelperAddRooms(EscapeSystem sys) {
 	addARoom(sys, "company1@civil", 1, 4, 3, "00-24", 2);
 	addARoom(sys, "company1@civil", 2, 4, 3, "00-24", 2);
 	addARoom(sys, "company1@civil", 3, 4, 3, "00-24", 2);
+	addARoom(sys, "company2@civil", 4, 4, 3, "00-24", 2);
 	addARoom(sys, "company1@electrical", 1, 16, 2, "05-20", 8);
 
-	ASSERT_TEST( setGetSize(sys->rooms) == 4 );
+	ASSERT_TEST( setGetSize(sys->rooms) == 5 );
 
 	return true;
 }
@@ -225,6 +226,7 @@ static bool testRemoveACompany() {
 	testHelperAddRooms(system);
 	testHelperAddOrders(system);
 
+	int numberOfRoom = setGetSize(system->rooms);
 
 	EscapeSystem nullSystem = NULL;
 
@@ -248,9 +250,9 @@ static bool testRemoveACompany() {
 	ASSERT_TEST( removeCompany(system, orderedcompanyEmail) == MTM_RESERVATION_EXISTS );
 	ASSERT_TEST( removeCompany(system, orderedcompanyEmail2) == MTM_RESERVATION_EXISTS );
 
-
+	ASSERT_TEST( setGetSize(system->rooms) == numberOfRoom );
 	ASSERT_TEST( removeCompany(system, email) == MTM_SUCCESS );
-
+	ASSERT_TEST( setGetSize(system->rooms) < numberOfRoom );
 
 
 	destroySystem(system);
