@@ -58,6 +58,7 @@ MtmErrorCode createCompany(Company company, const char* email, TechnionFaculty f
 }
 
 TechnionFaculty returnCompanyFaculty(const Company company ) {
+	if ( company == NULL ) return UNKNOWN;
 	return company->faculty;
 }
 

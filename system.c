@@ -23,7 +23,7 @@ const int NUMBER_OF_FACULTIES = UNKNOWN;
 
 
 
-int main(int argc, char *argv[]) {
+int main2(int argc, char *argv[]) {
 
 	FILE *filein = NULL;
 	FILE *fileout = NULL;
@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
 					char* working_hrs = strtok(NULL, " ");
 					int difficulty = atoi( strtok(NULL, " ") );
 					//TODO check return value
-					addRoom(system, email, id, price, num_ppl, working_hrs, difficulty);
+					addARoom(system, email, id, price, num_ppl, working_hrs, difficulty);
 				} if ( strcmp(subCommand, "remove\n" ) == 0 ) {
 
 					int faculty = atoi( strtok(NULL, " ") );
@@ -310,34 +310,45 @@ bool checkIfEscaperAvailable(const EscapeSystem sys, int daysFromToday, int hour
 
 
 
-MtmErrorCode addRoom(EscapeSystem sys, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty) {
-	if ( sys == NULL ) return MTM_INVALID_PARAMETER;
-	if ( email == NULL || !emailValidity(email) )  return MTM_INVALID_PARAMETER;
-
-
-	TechnionFaculty faculty = returnCompanyFaculty( findCompanyByEmail( sys, email) );
-
-	if ( faculty == UNKNOWN ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
-
-	//TODO check email exist
-	//TODO check email not in the list
-	//TODO faculty & id unic
+MtmErrorCode addARoom(EscapeSystem sys, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty) {
 	Room newRoom = malloc(sizeof(struct room_t));
 	if ( newRoom == NULL) {
 		return MTM_OUT_OF_MEMORY;
 	}
+	//TODO working hours validity
+	if ( sys == NULL || working_hrs == NULL ) {
+		free(newRoom);
+		return MTM_INVALID_PARAMETER;
+	}
+	if ( email == NULL || !emailValidity(email) ) {
+		free(newRoom);
+		return MTM_INVALID_PARAMETER;
+	}
 
-	createRoom(newRoom, email, id, faculty, price, num_ppl, working_hrs, difficulty);
+	TechnionFaculty faculty = returnCompanyFaculty( findCompanyByEmail( sys, email) );
+	if ( faculty == UNKNOWN ) {
+		free(newRoom);
+		return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
+	}
+
+	//TODO check email exist
+	//TODO check email not in the list
+	//TODO faculty & id unic
+
+	//TODO test return value
+	MtmErrorCode result = createRoom(newRoom, email, id, faculty, price, num_ppl, working_hrs, difficulty);
+	if( result != MTM_SUCCESS ) {
+		free(newRoom);
+		return result;
+	}
 
 	if( setIsIn(sys->rooms, newRoom) ) {
-		free(newRoom->email);
-		free(newRoom);
+		freeRoom(newRoom);
 		return MTM_ID_ALREADY_EXIST;
 	}
 
 	setAdd(sys->rooms, newRoom);
-	free(newRoom->email);
-	free(newRoom);
+	freeRoom(newRoom);
 	return MTM_SUCCESS;
 }
 

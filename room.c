@@ -69,22 +69,19 @@ MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, in
 	}
 	if ( id < 1 || price < 1 || price % 4 != 0 || num_ppl < 1) {
 		free(newRoom->email);
-		free(newRoom);
 		return MTM_INVALID_PARAMETER;
 	}
 
 	int from =  fromHour(working_hrs);
 	int to =  toHour(working_hrs);
 //TODO open till 24?
-	if ( from < 0 || from >= to || to > 23) {
+	if ( from < 0 || from >= to || to > 24) {
 		free(newRoom->email);
-		free(newRoom);
 		return MTM_INVALID_PARAMETER;
 	}
 
 	if ( difficulty < 1 || difficulty > 10 ) {
 		free(newRoom->email);
-		free(newRoom);
 		return MTM_INVALID_PARAMETER;
 	}
 

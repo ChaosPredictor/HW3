@@ -134,9 +134,67 @@ static bool testReportDay() {
 
 
 
+static bool testHelperAddCompanies(EscapeSystem sys) {
+	addCompany(sys, "company1@electrical", 1 );
+
+	return true;
+}
+
+
+
+
+static bool testAddARoom() {
+	EscapeSystem system = malloc(sizeof(struct EscapeSystem_t));
+	ASSERT_TEST( system != NULL );
+	createSystem(system);
+	testHelperAddCompanies(system);
+
+	EscapeSystem nullSystem = NULL;
+	char* email = "company1@electrical";
+	char* nullEmail = NULL;
+	char* invalidEmail = "company1#electrical";
+	char* doesNotExistEmail = "company999@electrical";
+	int id = 1;
+	int invalidId = 0;
+	int price = 4;
+	int invalidPrice = 5;
+	int invalidPrice2 = -4;
+	int num_ppl = 3;
+	int invalidNum_ppl = 0;
+	char* working_hrs = "00-24";
+	char* nullWorking_hrs = NULL;
+	char* invalidWorking_hrs = "20-14";
+	int difficulty = 2;
+	int invalidDifficulty = 0;
+	int invalidDifficulty2 = 11;
+
+	ASSERT_TEST( addARoom(nullSystem, email, id, price, num_ppl, working_hrs, difficulty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addARoom(system, nullEmail, id, price, num_ppl, working_hrs, difficulty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addARoom(system, email, id, price, num_ppl, nullWorking_hrs, difficulty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addARoom(system, invalidEmail, id, price, num_ppl, working_hrs, difficulty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addARoom(system, email, id, price, num_ppl, invalidWorking_hrs, difficulty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addARoom(system, email, invalidId, price, num_ppl, working_hrs, difficulty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addARoom(system, email, id, invalidPrice, num_ppl, working_hrs, difficulty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addARoom(system, email, id, invalidPrice2, num_ppl, working_hrs, difficulty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addARoom(system, email, id, price, invalidNum_ppl, working_hrs, difficulty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addARoom(system, email, id, price, num_ppl, working_hrs, invalidDifficulty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addARoom(system, email, id, price, num_ppl, working_hrs, invalidDifficulty2) == MTM_INVALID_PARAMETER );
+
+
+	ASSERT_TEST( addARoom(system, doesNotExistEmail, id, price, num_ppl, working_hrs, difficulty) == MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
+	ASSERT_TEST( addARoom(system, email, id, price, num_ppl, working_hrs, difficulty) == MTM_SUCCESS );
+	ASSERT_TEST( addARoom(system, email, id, price, num_ppl, working_hrs, difficulty) == MTM_ID_ALREADY_EXIST );
+
+	destroySystem(system);
+	return true;
+}
+
+
+
 
 int systemTests (int argv, char** arc) {
 	//RUN_TEST(testReportDay);
+	RUN_TEST(testAddARoom);
 
 	return 0;
 }
