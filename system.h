@@ -67,7 +67,9 @@ bool checkIfEscaperAvailable(const EscapeSystem sys, int daysFromToday, int hour
 //TODO working hours should be const
 MtmErrorCode addARoom(EscapeSystem sys, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty);
 
-MtmErrorCode removeRoom(EscapeSystem sys, TechnionFaculty faculty, int id);
+MtmErrorCode removeARoom(EscapeSystem sys, TechnionFaculty faculty, int id);
+
+MtmErrorCode removeAllRoomsOfCompany(EscapeSystem sys, char* companyEmail);
 
 SetElement findRoom(const EscapeSystem sys, TechnionFaculty faculty, int id);
 
@@ -77,14 +79,16 @@ Set filterRoomSet(const Set rooms, RecommendSetElement recommendSetElement, SetK
 
 
 
-
 MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
 MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl);
 
 MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, ListElement order, SetElement room, SetElement escaper );
 
+bool IsARoomOrdered(const EscapeSystem sys, TechnionFaculty faculty, int id);
+
 Day returnADay(const EscapeSystem sys, int daysFromToday);
+
 
 
 List createFaculties(int numberOfFaculties);

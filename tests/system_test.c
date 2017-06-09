@@ -9,7 +9,7 @@
 #include "./system_test.h"
 
 
-
+/*
 EscapeSystem testHelperUsers() {
 
 	EscapeSystem system = malloc(sizeof(struct EscapeSystem_t));
@@ -69,7 +69,7 @@ EscapeSystem testHelperUsers() {
 
 	return system;
 }
-
+*/
 /*
 
 static List testHelperAddOrderToADay(EscapeSystem *sys) {
@@ -135,11 +135,17 @@ static bool testReportDay() {
 
 
 static bool testHelperAddCompanies(EscapeSystem sys) {
-	addCompany(sys, "company1@electrical", 1 );
+	addCompany(sys, "company1@civil", 0 );
 
 	return true;
 }
 
+
+static bool testHelperAddRooms(EscapeSystem sys) {
+	addARoom(sys, "company1@civil", 1, 4, 3, "00-24", 2);
+
+	return true;
+}
 
 
 
@@ -150,7 +156,7 @@ static bool testAddARoom() {
 	testHelperAddCompanies(system);
 
 	EscapeSystem nullSystem = NULL;
-	char* email = "company1@electrical";
+	char* email = "company1@civil";
 	char* nullEmail = NULL;
 	char* invalidEmail = "company1#electrical";
 	char* doesNotExistEmail = "company999@electrical";
@@ -192,9 +198,31 @@ static bool testAddARoom() {
 
 
 
-int systemTests (int argv, char** arc) {
+static bool testRemoveARoom() {
+	EscapeSystem system = malloc(sizeof(struct EscapeSystem_t));
+	ASSERT_TEST( system != NULL );
+	createSystem(system);
+	testHelperAddCompanies(system);
+	testHelperAddRooms(system);
+
+	//EscapeSystem nullSystem = NULL;
+	TechnionFaculty faculty = CIVIL_ENGINEERING;
+	int id = 1;
+	//printf("\n\n%d\n\n", removeARoom(system, faculty, id));
+	ASSERT_TEST( removeARoom(system, faculty, id) == MTM_SUCCESS );
+
+	destroySystem(system);
+	return true;
+}
+
+
+
+
+int systemTests () {
 	//RUN_TEST(testReportDay);
 	RUN_TEST(testAddARoom);
+	RUN_TEST(testRemoveARoom);
+
 
 	return 0;
 }

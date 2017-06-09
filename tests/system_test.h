@@ -13,8 +13,10 @@
 
 
 #include "./test_utilities.h"
-#include "./order_test.h"
+//#include "./order_test.h"
 #include "./../system.h"
+
+
 /*
 #include "./../mtm_escape.h"
 #include "./../room.h"
@@ -30,7 +32,7 @@
 
 
 
-int systemTests (int argv, char** arc);
+int systemTests();
 
 
 

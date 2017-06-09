@@ -108,7 +108,7 @@ int main2(int argc, char *argv[]) {
 					int faculty = atoi( strtok(NULL, " ") );
 					int id = atoi( strtok(NULL, " ") );
 					//TODO check return value
-					removeRoom(system, faculty, id);
+					removeARoom(system, faculty, id);
 				}
 
 			} else if ( strcmp(command,"escaper") == 0) {
@@ -179,6 +179,7 @@ int main2(int argc, char *argv[]) {
 
 	fclose(fileout);
 	fclose(filein);
+
 	return 0;
 }
 
@@ -325,11 +326,18 @@ MtmErrorCode addARoom(EscapeSystem sys, const char* email, int id, int price, in
 		return MTM_INVALID_PARAMETER;
 	}
 
-	TechnionFaculty faculty = returnCompanyFaculty( findCompanyByEmail( sys, email) );
+	Company company = findCompanyByEmail( sys, email);
+	if ( company  == NULL ) {
+		free(newRoom);
+		return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
+	}
+	TechnionFaculty faculty = returnCompanyFaculty( company );
 	if ( faculty == UNKNOWN ) {
 		free(newRoom);
 		return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
 	}
+
+
 
 	MtmErrorCode result = createRoom(newRoom, email, id, faculty, price, num_ppl, working_hrs, difficulty);
 	if( result != MTM_SUCCESS ) {
@@ -342,13 +350,37 @@ MtmErrorCode addARoom(EscapeSystem sys, const char* email, int id, int price, in
 		return MTM_ID_ALREADY_EXIST;
 	}
 
+	//TODO check return value
 	setAdd(sys->rooms, newRoom);
+	addARoomToCompany(company);
+
 	freeRoom(newRoom);
 	return MTM_SUCCESS;
 }
 
-MtmErrorCode removeRoom(EscapeSystem sys, TechnionFaculty faculty, int id) {
+MtmErrorCode removeARoom(EscapeSystem sys, TechnionFaculty faculty, int id) {
 	if( sys->rooms == NULL ) return MTM_INVALID_PARAMETER;
+	if( faculty < 0 || faculty > 17 ) return MTM_INVALID_PARAMETER;
+	if( id < 1 ) return MTM_INVALID_PARAMETER;
+	//TODO not remove room with order
+	SET_FOREACH(Room, val, sys->rooms) {
+		if ( val->faculty == faculty && val->id == id ) {
+			//TODO if is order
+			if ( IsARoomOrdered(sys, faculty, id) ) {
+				return MTM_RESERVATION_EXISTS;
+			} else {
+				//TODO remove all rooms
+				setRemove(sys->rooms, val);
+				return MTM_SUCCESS;
+			}
+		}
+	}
+	return MTM_ID_DOES_NOT_EXIST;
+}
+
+MtmErrorCode removeAllRoomsOfCompany(EscapeSystem sys, char* companyEmail) {
+
+	/*if( sys->rooms == NULL ) return MTM_INVALID_PARAMETER;
 	if( faculty < 0 || faculty > 17 ) return MTM_INVALID_PARAMETER;
 	if( id < 1 ) return MTM_INVALID_PARAMETER;
 	//TODO not remove room with order
@@ -363,7 +395,7 @@ MtmErrorCode removeRoom(EscapeSystem sys, TechnionFaculty faculty, int id) {
 				return MTM_SUCCESS;
 			}
 		}
-	}
+	}*/
 	return MTM_ID_DOES_NOT_EXIST;
 }
 
@@ -590,6 +622,17 @@ MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, ListElement order, SetElem
 		daysFromToday++;
 	}
 	return MTM_SUCCESS;
+}
+
+bool IsARoomOrdered(const EscapeSystem sys, TechnionFaculty faculty, int id) {
+	LIST_FOREACH(Day, dayVal, sys->days) {
+		LIST_FOREACH(Order, orderVal, dayVal->dayOrders) {
+			if ( orderVal->faculty == faculty && orderVal->id == id ) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 Day returnADay(const EscapeSystem sys, int daysFromToday) {

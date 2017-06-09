@@ -64,6 +64,17 @@ TechnionFaculty returnCompanyFaculty(const Company company ) {
 	return company->faculty;
 }
 
+MtmErrorCode addARoomToCompany(Company company) {
+	company->numberOfRooms++;
+	return MTM_SUCCESS;
+}
+
+MtmErrorCode removeARoomFromCompany(Company company) {
+	company->numberOfRooms--;
+	return MTM_SUCCESS;
+}
+
+
 //TODO remove
 void printCompany(Company company) {
 	printf("\nPrint Company\n");

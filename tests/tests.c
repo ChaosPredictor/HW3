@@ -11,10 +11,11 @@
 #include "system_test.h"
 
 
-int main(int argv, char** arc) {
+//int main2(int argv, char** arc) {
+int main() {
 	//userTests(argv, arc);
 	//roomTests(argv, arc);
 	//orderTests(argv, arc);
-	systemTests(argv, arc);
+	systemTests();
 	return 1;
 }
