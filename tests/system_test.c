@@ -140,15 +140,14 @@ static bool testHelperAddCompanies(EscapeSystem sys) {
 	return true;
 }
 
-
 static bool testHelperAddRooms(EscapeSystem sys) {
 	addARoom(sys, "company1@civil", 1, 4, 3, "00-24", 2);
 	addARoom(sys, "company1@civil", 2, 4, 3, "00-24", 2);
-	ASSERT_TEST( setGetSize(sys->rooms) == 2 );
+	addARoom(sys, "company1@civil", 3, 4, 3, "00-24", 2);
+	ASSERT_TEST( setGetSize(sys->rooms) == 3 );
 
 	return true;
 }
-
 
 static bool testHelperAddEscapers(EscapeSystem sys) {
 	addAEscaper(sys, "escaper1@civil", 0, 2);
@@ -156,11 +155,53 @@ static bool testHelperAddEscapers(EscapeSystem sys) {
 	return true;
 }
 
-
 static bool testHelperAddOrders(EscapeSystem sys) {
 	addOrder(sys, "escaper1@civil", 0, 2, "0-5", 3);
+	addOrder(sys, "escaper1@civil", 0, 3, "1-5", 3);
 	Day day = listGetFirst(sys->days);
 	ASSERT_TEST( listGetSize( day->dayOrders ) == 1 );
+	day = listGetNext(sys->days);
+	ASSERT_TEST( listGetSize( day->dayOrders ) == 1 );
+	return true;
+}
+
+
+static bool testAddACompany() {
+	EscapeSystem system = malloc(sizeof(struct EscapeSystem_t));
+	ASSERT_TEST( system != NULL );
+	createSystem(system);
+	testHelperAddEscapers(system);
+
+	EscapeSystem nullSystem = NULL;
+
+
+	char* email = "company1@civil";
+	char* nullEmail = NULL;
+	char* invalidEmail = "company1#electrical";
+	char* existEscaperEmail = "escaper1@civil";
+
+
+	TechnionFaculty faculty = CIVIL_ENGINEERING;
+	//TechnionFaculty faculty2 = BIOMEDICAL_ENGINEERING;
+	TechnionFaculty invalidFaculty = UNKNOWN;
+	TechnionFaculty invalidFaculty2 = -1;
+	TechnionFaculty invalidFaculty3 = 19;
+
+	ASSERT_TEST( addCompany(nullSystem, email, faculty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addCompany(system, nullEmail, faculty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addCompany(system, invalidEmail, faculty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addCompany(system, invalidEmail, faculty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addCompany(system, email, invalidFaculty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addCompany(system, email, invalidFaculty2) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addCompany(system, email, invalidFaculty3) == MTM_INVALID_PARAMETER );
+
+	ASSERT_TEST( addCompany(system, email, faculty) == MTM_SUCCESS );
+
+	ASSERT_TEST( addCompany(system, email, faculty) == MTM_EMAIL_ALREADY_EXISTS );
+	ASSERT_TEST( addCompany(system, existEscaperEmail, faculty) == MTM_EMAIL_ALREADY_EXISTS );
+
+
+	destroySystem(system);
 	return true;
 }
 
@@ -213,9 +254,6 @@ static bool testAddARoom() {
 	return true;
 }
 
-
-
-
 static bool testRemoveARoom() {
 	EscapeSystem system = malloc(sizeof(struct EscapeSystem_t));
 	ASSERT_TEST( system != NULL );
@@ -231,9 +269,9 @@ static bool testRemoveARoom() {
 	TechnionFaculty invalidFaculty = UNKNOWN;
 	int id = 1;
 	int orderedId = 2;
+	int orderedId2 = 3;
 	int invalidId = 0;
 	int doesNotExistId = 999;
-
 
 	ASSERT_TEST( removeARoom(nullSystem, faculty, id) == MTM_INVALID_PARAMETER );
 	ASSERT_TEST( removeARoom(system, invalidFaculty, id) == MTM_INVALID_PARAMETER );
@@ -242,15 +280,10 @@ static bool testRemoveARoom() {
 	ASSERT_TEST( removeARoom(system, faculty, doesNotExistId) == MTM_ID_DOES_NOT_EXIST );
 	ASSERT_TEST( removeARoom(system, faculty2, id) == MTM_ID_DOES_NOT_EXIST );
 
-
-	//printf("\n\n%d\n\n", removeARoom(system, faculty, id));
 	ASSERT_TEST( removeARoom(system, faculty, id) == MTM_SUCCESS );
 
 	ASSERT_TEST( removeARoom(system, faculty, orderedId) == MTM_RESERVATION_EXISTS );
-
-
-
-
+	ASSERT_TEST( removeARoom(system, faculty, orderedId2) == MTM_RESERVATION_EXISTS );
 
 	destroySystem(system);
 	return true;
@@ -260,9 +293,11 @@ static bool testRemoveARoom() {
 
 
 int systemTests () {
-	//RUN_TEST(testReportDay);
+	RUN_TEST(testAddACompany);
+
 	RUN_TEST(testAddARoom);
 	RUN_TEST(testRemoveARoom);
+
 
 
 	return 0;

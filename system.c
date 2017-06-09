@@ -209,19 +209,28 @@ MtmErrorCode destroySystem(EscapeSystem sys) {
 
 MtmErrorCode addCompany(EscapeSystem sys, const char* email, TechnionFaculty faculty) {
 	Company newCompany = malloc(sizeof(struct company_t));
-	//TODO check return value
+	if ( newCompany == NULL ) return MTM_OUT_OF_MEMORY;
+	if ( sys == NULL || email == NULL ||  !emailValidity(email) ) {
+		free(newCompany);
+		return MTM_INVALID_PARAMETER;
+	}
+
+	if ( faculty < 0 || faculty >= NUMBER_OF_FACULTIES ) {
+		free(newCompany);
+		return MTM_INVALID_PARAMETER;
+	}
 	createCompany(newCompany, email, faculty);
 
 	//TODO check both escaper and company
-	if( setIsIn( sys->companies, newCompany ) ) {
-		free(newCompany->email);
-		free(newCompany);
+	if( setIsIn( sys->companies, newCompany ) || findEscaperByEmail(sys, email) != NULL ) {
+		//free(newCompany->email);
+		freeCompany(newCompany);
 		return MTM_EMAIL_ALREADY_EXISTS;
 	}
 
 	setAdd(sys->companies, newCompany);
-	free(newCompany->email);
-	free(newCompany);
+	//free(newCompany->email);
+	freeCompany(newCompany);
 	return MTM_SUCCESS;
 }
 
@@ -362,14 +371,11 @@ MtmErrorCode removeARoom(EscapeSystem sys, TechnionFaculty faculty, int id) {
 	if( sys == NULL || sys->rooms == NULL ) return MTM_INVALID_PARAMETER;
 	if( faculty < 0 || faculty > 17 ) return MTM_INVALID_PARAMETER;
 	if( id < 1 ) return MTM_INVALID_PARAMETER;
-	//TODO not remove room with order
 	SET_FOREACH(Room, val, sys->rooms) {
 		if ( val->faculty == faculty && val->id == id ) {
-			//TODO if is order
 			if ( IsARoomOrdered(sys, faculty, id) ) {
 				return MTM_RESERVATION_EXISTS;
 			} else {
-				//TODO remove all rooms
 				setRemove(sys->rooms, val);
 				return MTM_SUCCESS;
 			}
@@ -379,23 +385,7 @@ MtmErrorCode removeARoom(EscapeSystem sys, TechnionFaculty faculty, int id) {
 }
 
 MtmErrorCode removeAllRoomsOfCompany(EscapeSystem sys, char* companyEmail) {
-
-	/*if( sys->rooms == NULL ) return MTM_INVALID_PARAMETER;
-	if( faculty < 0 || faculty > 17 ) return MTM_INVALID_PARAMETER;
-	if( id < 1 ) return MTM_INVALID_PARAMETER;
-	//TODO not remove room with order
-	SET_FOREACH(Room, val, sys->rooms) {
-		if ( val->faculty == faculty && val->id == id ) {
-			//TODO if is order
-			if ( false ) {
-				return MTM_RESERVATION_EXISTS;
-			} else {
-				//TODO remove all rooms
-				setRemove(sys->rooms, val);
-				return MTM_SUCCESS;
-			}
-		}
-	}*/
+	//TODO remove all rooms of company
 	return MTM_ID_DOES_NOT_EXIST;
 }
 
