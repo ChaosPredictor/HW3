@@ -10,9 +10,12 @@
 
 #include <assert.h>
 #include <string.h>
+#include <stdlib.h>
 #include "set.h"
-#include "order.h"
-#include "system.h"
+//#include "order.h"
+//#include "system.h"
+#include "mtm_ex3.h"
+#include "common.h"
 
 
 
@@ -24,13 +27,14 @@ typedef struct escaper_t {
 
 
 
+
 SetElement copyEscaper(SetElement escasper);
 
 void freeEscaper(SetElement escasper);
 
 int compareEscapers(const SetElement escasper1, const SetElement escasper2);
 
-MtmErrorCode createEscaper(Escaper escaper, const char* email, TechnionFaculty faculty, int typeSkill);
+MtmErrorCode createEscaper(Escaper escaper, const char* email, TechnionFaculty faculty, SkillLevel typeSkill);
 
 TechnionFaculty returnEscaperFaculty(const Escaper escaper );
 

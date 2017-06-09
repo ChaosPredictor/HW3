@@ -9,6 +9,7 @@
 #include "company.h"
 #include "room.h"
 #include "order.h"
+#include "common.h"
 
 typedef struct EscapeSystem_t {
 	Set escapers;
@@ -17,22 +18,6 @@ typedef struct EscapeSystem_t {
 	List days;
 	List faculties;
 } *EscapeSystem;
-
-
-typedef enum {
-    COMPANY,
-	ESCAPER_1,
-	ESCAPER_2,
-	ESCAPER_3,
-	ESCAPER_4,
-	ESCAPER_5,
-	ESCAPER_6,
-	ESCAPER_7,
-	ESCAPER_8,
-	ESCAPER_9,
-	ESCAPER_10
-} TypeSkill;
-
 
 
 
@@ -50,13 +35,13 @@ MtmErrorCode removeCompany(EscapeSystem sys, const char* email);
 
 SetElement findCompanyByEmail(const EscapeSystem sys, const char* email);
 
-bool isCompanyOrdered(const EscapeSystem sys, const char* email);
+bool isAnyRoomOfACompanyOrdered(const EscapeSystem sys, const char* email);
 
 
 
-MtmErrorCode addAEscaper(EscapeSystem sys, const char* email, TechnionFaculty faculty, TypeSkill typeSkill);
+MtmErrorCode addAnEscaper(EscapeSystem sys, const char* email, TechnionFaculty faculty, SkillLevel typeSkill);
 
-MtmErrorCode removeEscaper(EscapeSystem sys, const char* email);
+MtmErrorCode removeAnEscaper(EscapeSystem sys, const char* email);
 
 SetElement findEscaperByEmail(const EscapeSystem sys, const char* email );
 
@@ -81,7 +66,7 @@ Set filterRoomSet(const Set rooms, RecommendSetElement recommendSetElement, SetK
 
 
 
-MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
+MtmErrorCode addAnOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
 MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl);
 
@@ -91,6 +76,7 @@ bool IsARoomOrdered(const EscapeSystem sys, TechnionFaculty faculty, int id);
 
 Day returnADayFromToday(const EscapeSystem sys, int daysFromToday);
 
+MtmErrorCode markAsRemovedOrdersOfEscaper(EscapeSystem sys, const char* email );
 
 
 List createFaculties(int numberOfFaculties);
@@ -111,7 +97,9 @@ MtmErrorCode reportBest(FILE* outputChannel, EscapeSystem system);
 
 
 
-bool emailValidity(const char* email);
+
+
+
 
 int convertDayStringToInt(const char* time );
 

@@ -43,7 +43,7 @@ int compareEscapers(const SetElement escaper1, const SetElement escaper2) {
 }
 
 
-MtmErrorCode createEscaper(Escaper newEscaper, const char* email, TechnionFaculty faculty, int typeSkill) {
+MtmErrorCode createEscaper(Escaper newEscaper, const char* email, TechnionFaculty faculty, SkillLevel typeSkill) {
 
 	if( email == NULL ) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
