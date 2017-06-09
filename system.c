@@ -235,11 +235,17 @@ MtmErrorCode addCompany(EscapeSystem sys, const char* email, TechnionFaculty fac
 }
 
 MtmErrorCode removeCompany(EscapeSystem sys, const char* email) {
-	if( sys->companies == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
+	if( sys == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
 
 	Company company = findCompanyByEmail( sys , email );
 	if ( company == NULL ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
+
+	SET_FOREACH(Room, val, sys->rooms) {
+		if ( strcmp(val->email, email) == 0) {
+			if ( IsARoomOrdered(sys, val->faculty, val->id) ) return MTM_RESERVATION_EXISTS;
+		}
+	}
 
 	//TODO not remove company with order
 	//TODO remove all rooms of the company
@@ -513,7 +519,9 @@ MtmErrorCode addOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, in
 
 	Day day = returnADay(sys, daysFromToday);
 	List orders = day->dayOrders;
+	//printf("\n%d\n",listGetSize(orders));
 	listInsertFirst(orders, newOrder);
+	//printf("\n%d\n",listGetSize(orders));
 
 	free(newOrder->email);
 	free(newOrder);

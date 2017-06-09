@@ -136,7 +136,9 @@ static bool testReportDay() {
 
 static bool testHelperAddCompanies(EscapeSystem sys) {
 	addCompany(sys, "company1@civil", 0 );
-	ASSERT_TEST( setGetSize(sys->companies) == 1 );
+	addCompany(sys, "company2@civil", 0 );
+	addCompany(sys, "company1@electrical", 2 );
+	ASSERT_TEST( setGetSize(sys->companies) == 3 );
 	return true;
 }
 
@@ -144,24 +146,34 @@ static bool testHelperAddRooms(EscapeSystem sys) {
 	addARoom(sys, "company1@civil", 1, 4, 3, "00-24", 2);
 	addARoom(sys, "company1@civil", 2, 4, 3, "00-24", 2);
 	addARoom(sys, "company1@civil", 3, 4, 3, "00-24", 2);
-	ASSERT_TEST( setGetSize(sys->rooms) == 3 );
+	addARoom(sys, "company1@electrical", 1, 16, 2, "05-20", 8);
+
+	ASSERT_TEST( setGetSize(sys->rooms) == 4 );
 
 	return true;
 }
 
 static bool testHelperAddEscapers(EscapeSystem sys) {
 	addAEscaper(sys, "escaper1@civil", 0, 2);
-	ASSERT_TEST( setGetSize(sys->escapers) == 1 );
+	addAEscaper(sys, "escaper1@electrical", 2, 9);
+
+	ASSERT_TEST( setGetSize(sys->escapers) == 2 );
 	return true;
 }
 
 static bool testHelperAddOrders(EscapeSystem sys) {
 	addOrder(sys, "escaper1@civil", 0, 2, "0-5", 3);
-	addOrder(sys, "escaper1@civil", 0, 3, "1-5", 3);
+
 	Day day = listGetFirst(sys->days);
 	ASSERT_TEST( listGetSize( day->dayOrders ) == 1 );
+	addOrder(sys, "escaper1@civil", 0, 3, "1-5", 3);
+	//printf("\n\n%d\n\n",
+	addOrder(sys, "escaper1@electrical", 2, 1, "1-14", 1);
+	//);
+	//printAllDays(sys->days);
+	day = listGetFirst(sys->days);
 	day = listGetNext(sys->days);
-	ASSERT_TEST( listGetSize( day->dayOrders ) == 1 );
+	ASSERT_TEST( listGetSize( day->dayOrders ) == 2 );
 	return true;
 }
 
@@ -205,6 +217,46 @@ static bool testAddACompany() {
 	return true;
 }
 
+static bool testRemoveACompany() {
+	EscapeSystem system = malloc(sizeof(struct EscapeSystem_t));
+	ASSERT_TEST( system != NULL );
+	createSystem(system);
+	testHelperAddEscapers(system);
+	testHelperAddCompanies(system);
+	testHelperAddRooms(system);
+	testHelperAddOrders(system);
+
+
+	EscapeSystem nullSystem = NULL;
+
+
+	char* email = "company2@civil";
+	char* nullEmail = NULL;
+	char* invalidEmail = "company1#civil";
+	char* doesNotexistEmail = "company999@civil";
+	char* existEscaperEmail = "escaper1@civil";
+	char* orderedcompanyEmail = "company1@civil";
+	char* orderedcompanyEmail2 = "company1@electrical";
+
+
+	ASSERT_TEST( removeCompany(nullSystem, email) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( removeCompany(system, nullEmail) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( removeCompany(system, invalidEmail) == MTM_INVALID_PARAMETER );
+
+	ASSERT_TEST( removeCompany(system, doesNotexistEmail) == MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
+	ASSERT_TEST( removeCompany(system, existEscaperEmail) == MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
+
+	ASSERT_TEST( removeCompany(system, orderedcompanyEmail) == MTM_RESERVATION_EXISTS );
+	ASSERT_TEST( removeCompany(system, orderedcompanyEmail2) == MTM_RESERVATION_EXISTS );
+
+
+	ASSERT_TEST( removeCompany(system, email) == MTM_SUCCESS );
+
+
+
+	destroySystem(system);
+	return true;
+}
 
 
 
@@ -294,6 +346,7 @@ static bool testRemoveARoom() {
 
 int systemTests () {
 	RUN_TEST(testAddACompany);
+	RUN_TEST(testRemoveACompany);
 
 	RUN_TEST(testAddARoom);
 	RUN_TEST(testRemoveARoom);

@@ -63,6 +63,7 @@ MtmErrorCode createEscaper(Escaper newEscaper, const char* email, TechnionFacult
 }
 
 TechnionFaculty returnEscaperFaculty(const Escaper escaper ) {
+	if ( escaper == NULL ) return UNKNOWN;
 	return escaper->faculty;
 }
 
