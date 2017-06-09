@@ -22,6 +22,7 @@
 typedef struct company_t {
 	char* email;
 	TechnionFaculty faculty;
+	int numberOfRooms;
 } *Company;
 
 
@@ -36,6 +37,9 @@ MtmErrorCode createCompany(Company company, const char* email, TechnionFaculty f
 
 TechnionFaculty returnCompanyFaculty(const Company company );
 
+MtmErrorCode addARoomToCompany(Company company);
+
+MtmErrorCode removeARoomFromCompany(Company company);
 
 
 #endif /* COMPANY_H_ */

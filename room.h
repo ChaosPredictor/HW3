@@ -49,6 +49,8 @@ int returnRoomPrice(const Room room);
 
 
 
+
+
 int filterByNumOfPplandDifficulty(const SetElement setElement, SetKey num_ppl, SetKey skill_level );
 
 int filterByNearFaculty(const SetElement setElement, SetKey faculty, SetKey junk );

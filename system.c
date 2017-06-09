@@ -331,11 +331,6 @@ MtmErrorCode addARoom(EscapeSystem sys, const char* email, int id, int price, in
 		return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
 	}
 
-	//TODO check email exist
-	//TODO check email not in the list
-	//TODO faculty & id unic
-
-	//TODO test return value
 	MtmErrorCode result = createRoom(newRoom, email, id, faculty, price, num_ppl, working_hrs, difficulty);
 	if( result != MTM_SUCCESS ) {
 		free(newRoom);
