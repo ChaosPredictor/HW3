@@ -46,7 +46,10 @@ bool timeValidation(const char* time) {
 	return true;
 }
 
-
+bool idValidation(int id) {
+	if ( id > 0 ) return true;
+	return false;
+}
 
 
 

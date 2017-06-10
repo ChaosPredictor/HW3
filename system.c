@@ -469,21 +469,10 @@ Set filterRoomSet(const Set rooms, RecommendSetElement recommendSetElement, SetK
 MtmErrorCode addAnOrder(EscapeSystem sys, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
 	Order newOrder = malloc(sizeof(struct order_t));
 	if ( newOrder == NULL) return MTM_OUT_OF_MEMORY;
-	if ( sys == NULL || !emailValidity(email) || !timeValidation(time) ) {
+	if ( sys == NULL || !emailValidity(email) || !timeValidation(time) || !idValidation(id)) {
 		free(newOrder);
 		return MTM_INVALID_PARAMETER;
 	}
-/*
-	if ( time == NULL ) {
-		free(newOrder->email);
-		free(newOrder);
-		return MTM_INVALID_PARAMETER;
-	} else if ( false ) { //TODO check time validity
-		free(newOrder->email);
-		free(newOrder);
-		return MTM_INVALID_PARAMETER;
-	}
-*/
 
 	Escaper escaper = findEscaperByEmail( sys, email );
 

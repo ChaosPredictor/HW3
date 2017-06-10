@@ -444,9 +444,16 @@ static bool testAddAnOrder() {
 
 	char* email = "escaper1@civil";
 	char* invalidEmail = NULL;
+	char* invalidEmail2 = "escaper1#civil";
 	char* doesNotExistEmail = "escaper999@civil";
-	TechnionFaculty faculty = 0;
+	char* existCompanyEmail = "company1@civil";
+	TechnionFaculty faculty = CIVIL_ENGINEERING;
+	TechnionFaculty doesNotExistFaculty = BIOMEDICAL_ENGINEERING;
+
+
 	int id = 1;
+	int doesNotExistId = 999;
+
 	char* time = "0-5";
 	char* invalidTime = NULL;
 	int num_ppl = 3;
@@ -455,9 +462,16 @@ static bool testAddAnOrder() {
 
 	ASSERT_TEST( addAnOrder(invalidSystem, email, faculty, id, time, num_ppl) == MTM_INVALID_PARAMETER );
 	ASSERT_TEST( addAnOrder(system, invalidEmail, faculty, id, time, num_ppl) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addAnOrder(system, invalidEmail2, faculty, id, time, num_ppl) == MTM_INVALID_PARAMETER );
 	ASSERT_TEST( addAnOrder(system, email, faculty, id, invalidTime, num_ppl) == MTM_INVALID_PARAMETER );
 
+
 	ASSERT_TEST( addAnOrder(system, doesNotExistEmail, faculty, id, time, num_ppl) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST );
+	ASSERT_TEST( addAnOrder(system, existCompanyEmail, faculty, id, time, num_ppl) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST );
+
+	//printf("\n\n%d\n\n", addAnOrder(system, email, faculty, invalidId, time, num_ppl));
+	ASSERT_TEST( addAnOrder(system, email, faculty, doesNotExistId, time, num_ppl) == MTM_ID_DOES_NOT_EXIST );
+	ASSERT_TEST( addAnOrder(system, email, doesNotExistFaculty, id, time, num_ppl) == MTM_ID_DOES_NOT_EXIST );
 
 
 	ASSERT_TEST( addAnOrder(system, email, faculty, id, time, num_ppl) == MTM_SUCCESS );

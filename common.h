@@ -39,6 +39,8 @@ bool skillLevelValidation(SkillLevel skillLevel);
 
 bool timeValidation(const char* time);
 
+bool idValidation(int id);
+
 int convertDayStringToInt(const char* time );
 
 int convertHourStringToInt(const char* time );
