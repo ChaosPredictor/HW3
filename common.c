@@ -111,9 +111,9 @@ int convertStringToCommand( const char* line ) {
 			result = 8;
 		}
 	} else if ( strcmp(command, "report" ) == 0 ) {
-		if ( strcmp(subcommand, "day" ) == 0 ) {
+		if ( strcmp(subcommand, "day\n" ) == 0 || strcmp(subcommand, "day\0" ) == 0) {
 			result = 9;
-		} else if ( strcmp(subcommand, "best" ) == 0 ) {
+		} else if ( strcmp(subcommand, "best" ) == 0 || strcmp(subcommand, "best\0" ) == 0 ) {
 			result = 10;
 		}
 	}

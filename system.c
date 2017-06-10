@@ -18,10 +18,6 @@
 #define NUMBER_OF_BEST 3
 
 
-
-
-
-
 int main(int argc, char *argv[]) {
 
 	FILE *filein = NULL;
@@ -58,9 +54,6 @@ int main(int argc, char *argv[]) {
 	EscapeSystem system = malloc(sizeof(struct EscapeSystem_t));
 	//TODO check return value
 	createSystem(system);
-
-
-
 
 	while ( fgets(line, MAX_NAME_LENG, filein) != NULL) {
 
@@ -120,6 +113,7 @@ int main(int argc, char *argv[]) {
 			//TODO check return value
 			addRecommendedOrder(system, email, num_ppl );
 		} else if ( numberOfCommand == 9 ) {
+			printf("\ndsfsd\n");
 			//TODO check return value
 			reportDay(fileout, system);
 		} else if ( numberOfCommand == 10 ) {
@@ -136,7 +130,6 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
-
 
 
 MtmErrorCode createSystem(EscapeSystem sys) {
@@ -661,6 +654,7 @@ int returnTotalFacultiesRevenue(List faculties) {
 
 
 MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem sys) {
+	printf("\nreport run\n");
 	Day today = listGetFirst(sys->days);
 	List orders = today->dayOrders;
 	mtmPrintDayHeader(outputChannel, today->dayNumber, listGetSize(orders));
@@ -668,6 +662,8 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem sys) {
 
 	Escaper escaper = NULL;
 	Room room = NULL;
+	//TODO sort the orders
+	listSort(orders , sortOrderByTimeFacultyId);
 	Order order = listGetFirst(orders);
 	while ( order != NULL ) {
 		//TODO check that escaper;
@@ -686,7 +682,8 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem sys) {
 		listInsertLast(sys->days, day);
 		freeDay(day);
 	}
-
+	printAllDays(sys->days);
+	listGetFirst(sys->days);
 	listRemoveCurrent(sys->days);
 	return MTM_SUCCESS;
 }

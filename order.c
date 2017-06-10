@@ -123,6 +123,25 @@ bool filterOrderById(const ListElement listElement, const ListFilterKey id) {
 	return ((((Order)listElement)->id) == *(int*)id);
 }
 
+int sortOrderByTimeFacultyId(const ListElement listElement1, const ListElement listElement2) {
+	Order order1 = (Order)listElement1;
+	Order order2 = (Order)listElement2;
+	if ( (order1->hour) > (order2->hour) ) {
+		return 1;
+	} else if ( (order1->hour) < (order2->hour) ) {
+		return -1;
+	} else if ( (order1->faculty) > (order2->faculty) ) {
+		return 1;
+	} else if ( (order1->faculty) < (order2->faculty) ) {
+		return -1;
+	} else if ( (order1->id) > (order2->id) ) {
+		return 1;
+	} else if ( (order1->id) < (order2->id) ) {
+		return -1;
+	}
+	return 0;
+}
+
 
 
 //TODO maybe should be deleted

@@ -63,6 +63,8 @@ bool filterOrderByFaculty(const ListElement listElement, const ListFilterKey fac
 
 bool filterOrderById(const ListElement listElement, const ListFilterKey id);
 
+int sortOrderByTimeFacultyId(const ListElement listElement1, const ListElement listElement2);
+
 
 
 

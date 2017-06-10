@@ -61,6 +61,8 @@ static bool testConvertStringToCommand() {
 	ASSERT_TEST( convertStringToCommand( "escaper	 order 5@ 16 8 0-08 5" ) == 7 );
 
 	ASSERT_TEST( convertStringToCommand( "report day" ) == 9 );
+	ASSERT_TEST( convertStringToCommand( "report day " ) == 9 );
+	ASSERT_TEST( convertStringToCommand( "report day" ) == 9 );
 
 	return true;
 }
