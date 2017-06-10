@@ -137,7 +137,9 @@ int charToInt(char c) {
 }
 
 int filterByNumOfPplandDifficulty(const SetElement setElement, SetKey num_ppl, SetKey skill_level ) {
-	return (pow(((Room)setElement)->num_ppl-num_ppl,2) + (pow(((Room)setElement)->difficulty - skill_level,2 )) );
+	int deltaNumberOfPpl = ((Room)setElement)->num_ppl-num_ppl;
+	int deltadifficulty = ((Room)setElement)->difficulty - skill_level;
+	return  deltaNumberOfPpl*deltaNumberOfPpl + deltadifficulty*deltadifficulty;
 }
 
 int filterByNearFaculty(const SetElement setElement, SetKey faculty, SetKey junk ) {
