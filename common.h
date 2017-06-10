@@ -37,7 +37,11 @@ bool facultyValidity(TechnionFaculty faculty);
 
 bool skillLevelValidation(SkillLevel skillLevel);
 
+bool timeValidation(const char* time);
 
+int convertDayStringToInt(const char* time );
+
+int convertHourStringToInt(const char* time );
 
 
 #endif /* COMMON_H_ */

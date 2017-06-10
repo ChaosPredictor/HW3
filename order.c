@@ -9,30 +9,6 @@
 #include "order.h"
 
 
-ListElement copyOrder(ListElement order) {
-	if ( order == NULL ) return NULL;
-	//TODO maybe assert
-	Order newOrder = malloc(sizeof(struct order_t));
-	if( newOrder == NULL ) return NULL;
-	newOrder->email = malloc(sizeof(char) * (strlen(((Order)order)->email) + 1));
-	if( newOrder->email == NULL ) {
-		free( newOrder );
-		return NULL;
-	}
-	strcpy(newOrder->email, ((Order)order)->email);
-	newOrder->faculty = ((Order)order)->faculty;
-	newOrder->id = ((Order)order)->id;
-	newOrder->price = ((Order)order)->price;
-	newOrder->num_ppl = ((Order)order)->num_ppl;
-	newOrder->hour = ((Order)order)->hour;
-	return newOrder;
-}
-
-void freeOrder(ListElement order) {
-	if ( order == NULL ) return;
-	free(((Order)order)->email);
-	free((Order)order);
-}
 
 
 ListElement copyDay(ListElement day) {
@@ -66,6 +42,8 @@ ListElement createDay(int dayNumber) {
 	return newDay;
 }
 
+
+
 List createDays() {
 	List days = listCreate(copyDay, freeDay);
 
@@ -77,7 +55,49 @@ List createDays() {
 	return days;
 }
 
+ListElement copyOrder(ListElement order) {
+	if ( order == NULL ) return NULL;
+	//TODO maybe assert
+	Order newOrder = malloc(sizeof(struct order_t));
+	if( newOrder == NULL ) return NULL;
+	newOrder->email = malloc(sizeof(char) * (strlen(((Order)order)->email) + 1));
+	if( newOrder->email == NULL ) {
+		free( newOrder );
+		return NULL;
+	}
+	strcpy(newOrder->email, ((Order)order)->email);
+	newOrder->faculty = ((Order)order)->faculty;
+	newOrder->id = ((Order)order)->id;
+	newOrder->price = ((Order)order)->price;
+	newOrder->num_ppl = ((Order)order)->num_ppl;
+	newOrder->hour = ((Order)order)->hour;
+	return newOrder;
+}
 
+void freeOrder(ListElement order) {
+	if ( order == NULL ) return;
+	free(((Order)order)->email);
+	free((Order)order);
+}
+
+MtmErrorCode createOrder(Order order, const char* email, TechnionFaculty faculty, int id, int price, int num_ppl, int hour ) {
+	//printf("\n\nfaculty: %d\n\n", faculty);
+	if( order == NULL || !emailValidity(email)  || !facultyValidity(faculty)) return MTM_INVALID_PARAMETER;
+
+
+	order->email = malloc(sizeof(char) * (strlen(email)+1));
+
+
+	if( order->email == NULL ) return MTM_OUT_OF_MEMORY;
+	strcpy( order->email, email);
+
+	order->faculty = faculty;
+	order->id = id;
+	order->price = price;
+	order->num_ppl = num_ppl;
+	order->hour = hour;
+	return MTM_SUCCESS;
+}
 
 
 bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour) {

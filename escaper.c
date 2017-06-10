@@ -47,6 +47,7 @@ MtmErrorCode createEscaper(Escaper newEscaper, const char* email, TechnionFacult
 
 	if( email == NULL ) return MTM_INVALID_PARAMETER;
 	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
+	//TODO clean
 	if( faculty < 0 || faculty>17 || typeSkill < 0  || typeSkill > 10 ) return MTM_INVALID_PARAMETER;
 
 	if( newEscaper == NULL ) return MTM_OUT_OF_MEMORY;

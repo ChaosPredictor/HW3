@@ -343,15 +343,13 @@ bool isEscaperAvailable(const EscapeSystem sys, int daysFromToday, int hour, Set
 
 MtmErrorCode addARoom(EscapeSystem sys, const char* email, int id, int price, int num_ppl, char* working_hrs, int difficulty) {
 	Room newRoom = malloc(sizeof(struct room_t));
-	if ( newRoom == NULL) {
-		return MTM_OUT_OF_MEMORY;
-	}
+	if ( newRoom == NULL) return MTM_OUT_OF_MEMORY;
 	//TODO working hours validity
 	if ( sys == NULL || working_hrs == NULL ) {
 		free(newRoom);
 		return MTM_INVALID_PARAMETER;
 	}
-	if ( email == NULL || !emailValidity(email) ) {
+	if ( !emailValidity(email) || !skillLevelValidation(difficulty) ) {
 		free(newRoom);
 		return MTM_INVALID_PARAMETER;
 	}
@@ -366,8 +364,6 @@ MtmErrorCode addARoom(EscapeSystem sys, const char* email, int id, int price, in
 		free(newRoom);
 		return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
 	}
-
-
 
 	MtmErrorCode result = createRoom(newRoom, email, id, faculty, price, num_ppl, working_hrs, difficulty);
 	if( result != MTM_SUCCESS ) {
@@ -389,9 +385,7 @@ MtmErrorCode addARoom(EscapeSystem sys, const char* email, int id, int price, in
 }
 
 MtmErrorCode removeARoom(EscapeSystem sys, TechnionFaculty faculty, int id) {
-	if( sys == NULL || sys->rooms == NULL ) return MTM_INVALID_PARAMETER;
-	if( faculty < 0 || faculty > 17 ) return MTM_INVALID_PARAMETER;
-	if( id < 1 ) return MTM_INVALID_PARAMETER;
+	if( sys == NULL || !facultyValidity(faculty) || id < 1 ) return MTM_INVALID_PARAMETER;
 	SET_FOREACH(Room, val, sys->rooms) {
 		if ( val->faculty == faculty && val->id == id ) {
 			if ( IsARoomOrdered(sys, faculty, id) ) {
@@ -405,10 +399,11 @@ MtmErrorCode removeARoom(EscapeSystem sys, TechnionFaculty faculty, int id) {
 	return MTM_ID_DOES_NOT_EXIST;
 }
 
-MtmErrorCode removeAllRoomsOfCompany(EscapeSystem sys, const char* companyEmail) {
+MtmErrorCode removeAllRoomsOfCompany(EscapeSystem sys, const char* email) {
+	if ( sys == NULL || !emailValidity(email) ) return MTM_INVALID_PARAMETER;
 	MtmErrorCode result;
 	SET_FOREACH(Room, val, sys->rooms) {
-		if ( strcmp(val->email, companyEmail) == 0) {
+		if ( strcmp(val->email, email) == 0) {
 			result = removeARoom(sys, val->faculty, val->id);
 			if ( result != MTM_SUCCESS ) return result;
 		}
@@ -471,23 +466,14 @@ Set filterRoomSet(const Set rooms, RecommendSetElement recommendSetElement, SetK
 
 
 
-MtmErrorCode addAnOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
-	assert ( email != NULL );
-
+MtmErrorCode addAnOrder(EscapeSystem sys, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
 	Order newOrder = malloc(sizeof(struct order_t));
 	if ( newOrder == NULL) return MTM_OUT_OF_MEMORY;
-	if ( email != NULL && emailValidity(email)) {
-		newOrder->email = malloc(sizeof(char) * (strlen(email) + 1));
-		if ( newOrder->email == NULL) {
-			free(newOrder);
-			return MTM_OUT_OF_MEMORY;
-		}
-		strcpy(newOrder->email, email);
-	} else {
+	if ( sys == NULL || !emailValidity(email) || !timeValidation(time) ) {
 		free(newOrder);
 		return MTM_INVALID_PARAMETER;
 	}
-
+/*
 	if ( time == NULL ) {
 		free(newOrder->email);
 		free(newOrder);
@@ -497,11 +483,11 @@ MtmErrorCode addAnOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, 
 		free(newOrder);
 		return MTM_INVALID_PARAMETER;
 	}
+*/
 
 	Escaper escaper = findEscaperByEmail( sys, email );
 
 	if ( returnEscaperFaculty( escaper)  == UNKNOWN ) {
-		free(newOrder->email);
 		free(newOrder);
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 	}
@@ -511,18 +497,23 @@ MtmErrorCode addAnOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, 
 
 	Room room = findRoom(sys, faculty, id);
 	if ( room == NULL ) {
-		free(newOrder->email);
 		free(newOrder);
 		return MTM_ID_DOES_NOT_EXIST;
 	}
-
-	newOrder->faculty = faculty;
-	newOrder->id = id;
 	TechnionFaculty escaperFaculty = returnEscaperFaculty( findEscaperByEmail(sys, email));
+
+	MtmErrorCode result = createOrder(newOrder, email, faculty, id, calculatePriceOfOrder(room, escaperFaculty, num_ppl), num_ppl, hour );
+	if ( result != MTM_SUCCESS ) {
+		free(newOrder);
+		return result;
+	}
+
+	//newOrder->faculty = faculty;
+	//newOrder->id = id;
 	//TODO check return value
-	newOrder->price = calculatePriceOfOrder(room, escaperFaculty, num_ppl);
-	newOrder->hour = hour;
-	newOrder->num_ppl = num_ppl;
+	//newOrder->price = calculatePriceOfOrder(room, escaperFaculty, num_ppl);
+	//newOrder->hour = hour;
+	//newOrder->num_ppl = num_ppl;
 
 
 	//
@@ -799,22 +790,3 @@ MtmErrorCode reportBest(FILE* outputChannel, EscapeSystem system) {
 
 
 
-
-
-
-int convertDayStringToInt( const char* time ) {
-	char *temp = malloc(sizeof(char) * (strlen(time) + 1));
-	strcpy(temp,time);
-	int daysFromToday = atoi( strtok(temp, "-") );
-	free( temp );
-	return daysFromToday;
-}
-
-int convertHourStringToInt( const char* time ) {
-	char *temp = malloc(sizeof(char) * (strlen(time) + 1));
-	strcpy(temp,time);
-	atoi( strtok(temp, "-") );
-	int hour = atoi( strtok(NULL, "-") );
-	free( temp );
-	return hour;
-}

@@ -9,6 +9,7 @@
 //#include "user_test.h"
 //#include "order_test.h"
 #include "system_test.h"
+#include "common_test.h"
 
 
 //int main2(int argv, char** arc) {
@@ -16,6 +17,7 @@ int main() {
 	//userTests(argv, arc);
 	//roomTests(argv, arc);
 	//orderTests(argv, arc);
+	commonTests();
 	systemTests();
 	return 1;
 }

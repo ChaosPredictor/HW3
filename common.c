@@ -28,9 +28,44 @@ bool facultyValidity(TechnionFaculty faculty) {
 	return true;
 }
 
-
-
 bool skillLevelValidation(SkillLevel skillLevel) {
 	if ( skillLevel < ESCAPER_1 || skillLevel > ESCAPER_10 ) return false;
 	return true;
+}
+
+bool timeValidation(const char* time) {
+	if ( time == NULL ) return false;
+	size_t len = strlen(time);
+	if ( time[0] < '0' || time[0] > '9' ) return false;
+	if ( time[1] != '-' && time[2] != '-' ) return false;
+	if ( time[len-1] < '0' || time[len-1] > '9' ) return false;
+	int day = convertDayStringToInt( time );
+	if ( day < 0 || day > 10 ) return false;
+	int hour = convertHourStringToInt( time );
+	if ( hour < 0 || hour > 23 ) return false;
+	return true;
+}
+
+
+
+
+
+
+
+
+int convertDayStringToInt( const char* time ) {
+	char *temp = malloc(sizeof(char) * (strlen(time) + 1));
+	strcpy(temp,time);
+	int daysFromToday = atoi( strtok(temp, "-") );
+	free( temp );
+	return daysFromToday;
+}
+
+int convertHourStringToInt( const char* time ) {
+	char *temp = malloc(sizeof(char) * (strlen(time) + 1));
+	strcpy(temp,time);
+	atoi( strtok(temp, "-") );
+	int hour = atoi( strtok(NULL, "-") );
+	free( temp );
+	return hour;
 }

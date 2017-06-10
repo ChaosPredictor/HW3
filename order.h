@@ -10,6 +10,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include "common.h"
 
 
 //#include "escaper.h"
@@ -48,6 +49,9 @@ List createDays();
 ListElement copyOrder(ListElement order);
 
 void freeOrder(ListElement order);
+
+MtmErrorCode createOrder(Order order, const char* email, TechnionFaculty faculty, int id, int price, int num_ppl, int hour );
+
 
 
 

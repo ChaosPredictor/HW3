@@ -66,7 +66,7 @@ Set filterRoomSet(const Set rooms, RecommendSetElement recommendSetElement, SetK
 
 
 
-MtmErrorCode addAnOrder(EscapeSystem sys, char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
+MtmErrorCode addAnOrder(EscapeSystem sys, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
 MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl);
 
@@ -101,9 +101,7 @@ MtmErrorCode reportBest(FILE* outputChannel, EscapeSystem system);
 
 
 
-int convertDayStringToInt(const char* time );
 
-int convertHourStringToInt(const char* time );
 
 
 
