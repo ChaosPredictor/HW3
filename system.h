@@ -58,6 +58,8 @@ MtmErrorCode removeAllRoomsOfCompany(EscapeSystem sys, const char* companyEmail)
 
 SetElement findRoom(const EscapeSystem sys, TechnionFaculty faculty, int id);
 
+Room findRecommendedRoom(const EscapeSystem sys, const Escaper escaper, int  num_ppl);
+
 bool isRoomAvailable(const EscapeSystem sys, int daysFromToday, int hour, ListElement room);
 
 Set filterRoomSet(const Set rooms, RecommendSetElement recommendSetElement, SetKey key1, SetKey key2 );

@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <ctype.h>
 #include "mtm_ex3.h"
 
 
@@ -45,5 +46,6 @@ int convertDayStringToInt(const char* time );
 
 int convertHourStringToInt(const char* time );
 
+int convertStringToCommand( const char* line );
 
 #endif /* COMMON_H_ */

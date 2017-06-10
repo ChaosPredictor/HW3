@@ -192,7 +192,7 @@ static bool testAddACompany() {
 
 	char* email = "company1@civil";
 	char* nullEmail = NULL;
-	//char* invalidEmail = "company1#electrical";
+	char* invalidEmail = "company1#electrical";
 	char* existEscaperEmail = "escaper1@civil";
 
 
@@ -203,8 +203,7 @@ static bool testAddACompany() {
 
 	ASSERT_TEST( addCompany(nullSystem, email, faculty) == MTM_INVALID_PARAMETER );
 	ASSERT_TEST( addCompany(system, nullEmail, faculty) == MTM_INVALID_PARAMETER );
-	//ASSERT_TEST( addCompany(system, invalidEmail, faculty) == MTM_INVALID_PARAMETER );
-	//ASSERT_TEST( addCompany(system, invalidEmail, faculty) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addCompany(system, invalidEmail, faculty) == MTM_INVALID_PARAMETER );
 	ASSERT_TEST( addCompany(system, email, invalidFaculty) == MTM_INVALID_PARAMETER );
 	ASSERT_TEST( addCompany(system, email, invalidFaculty2) == MTM_INVALID_PARAMETER );
 	ASSERT_TEST( addCompany(system, email, invalidFaculty3) == MTM_INVALID_PARAMETER );
@@ -494,13 +493,9 @@ static bool testAddRecommendedOrder() {
 	EscapeSystem invalidSystem = NULL;
 
 	char* email = "escaper1@civil";
-	//char* invalidEmail = NULL;
-	//char* invalidEmail2 = "escaper1#civil";
-	//char* doesNotExistEmail = "escaper999@civil";
-	//char* existCompanyEmail = "company1@civil";
-	//TechnionFaculty faculty = CIVIL_ENGINEERING;
-	//TechnionFaculty invalidFaculty = UNKNOWN;
-	//TechnionFaculty doesNotExistFaculty = BIOMEDICAL_ENGINEERING;
+	char* invalidEmail = NULL;
+	char* invalidEmail2 = "escaper1#civil";
+	char* doesNotExistEmail = "escaper999@civil";
 
 	int num_ppl = 3;
 
@@ -510,6 +505,10 @@ static bool testAddRecommendedOrder() {
 	testHelperAddOrders( system );
 
 	ASSERT_TEST( addRecommendedOrder(invalidSystem, email, num_ppl) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addRecommendedOrder(system, invalidEmail, num_ppl) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addRecommendedOrder(system, invalidEmail2, num_ppl) == MTM_INVALID_PARAMETER );
+
+	ASSERT_TEST( addRecommendedOrder(system, doesNotExistEmail, num_ppl) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST );
 
 	ASSERT_TEST( addRecommendedOrder(system, email, num_ppl) == MTM_SUCCESS );
 

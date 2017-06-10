@@ -72,3 +72,51 @@ int convertHourStringToInt( const char* time ) {
 	free( temp );
 	return hour;
 }
+
+
+
+int convertStringToCommand( const char* line ) {
+	char *temp = malloc(sizeof(char) * (strlen(line) + 1));
+	strcpy(temp,line);
+	char* command = strtok(temp, " \t");
+	if ( command == NULL || command[0] == '#' ) {
+		free(temp);
+		return 0;
+	}
+	while(isspace((unsigned char)*command)) command++;
+	char* subcommand = strtok(NULL, " \t");
+	while(isspace((unsigned char)*subcommand)) subcommand++;
+	int result = 0;
+
+	if ( strcmp(command, "company" ) == 0 ) {
+		if ( strcmp(subcommand, "add" ) == 0 ) {
+			result = 1;
+		} else if ( strcmp(subcommand, "remove" ) == 0 ) {
+			result = 2;
+		}
+	} else if ( strcmp(command, "room" ) == 0 ) {
+		if ( strcmp(subcommand, "add" ) == 0 ) {
+			result = 3;
+		} else if ( strcmp(subcommand, "remove" ) == 0 ) {
+			result = 4;
+		}
+	} else if ( strcmp(command, "escaper" ) == 0 ) {
+		if ( strcmp(subcommand, "add" ) == 0 ) {
+			result = 5;
+		} else if ( strcmp(subcommand, "remove" ) == 0 ) {
+			result = 6;
+		} else if ( strcmp(subcommand, "order" ) == 0 ) {
+			result = 7;
+		} else if ( strcmp(subcommand, "recommend" ) == 0 ) {
+			result = 8;
+		}
+	} else if ( strcmp(command, "report" ) == 0 ) {
+		if ( strcmp(subcommand, "day" ) == 0 ) {
+			result = 9;
+		} else if ( strcmp(subcommand, "best" ) == 0 ) {
+			result = 10;
+		}
+	}
+	free( temp );
+	return result;
+}
