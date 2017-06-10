@@ -70,7 +70,7 @@ MtmErrorCode addAnOrder(EscapeSystem sys, const char* email, TechnionFaculty fac
 
 MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl);
 
-MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, ListElement order, SetElement room, SetElement escaper );
+MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, Order order, SetElement room, SetElement escaper );
 
 bool IsARoomOrdered(const EscapeSystem sys, TechnionFaculty faculty, int id);
 

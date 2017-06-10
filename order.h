@@ -52,7 +52,7 @@ void freeOrder(ListElement order);
 
 MtmErrorCode createOrder(Order order, const char* email, TechnionFaculty faculty, int id, int price, int num_ppl, int hour );
 
-
+MtmErrorCode setOrderHour(Order order, int hour);
 
 
 bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour);

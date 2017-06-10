@@ -100,6 +100,13 @@ MtmErrorCode createOrder(Order order, const char* email, TechnionFaculty faculty
 }
 
 
+MtmErrorCode setOrderHour(Order order, int hour) {
+	order->hour = hour;
+	return MTM_SUCCESS;
+}
+
+
+
 bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour) {
 	return ((((Order)listElement)->hour) == *(int*)hour);
 }

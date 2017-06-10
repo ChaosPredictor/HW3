@@ -469,27 +469,30 @@ Set filterRoomSet(const Set rooms, RecommendSetElement recommendSetElement, SetK
 MtmErrorCode addAnOrder(EscapeSystem sys, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
 	Order newOrder = malloc(sizeof(struct order_t));
 	if ( newOrder == NULL) return MTM_OUT_OF_MEMORY;
-	if ( sys == NULL || !emailValidity(email) || !timeValidation(time) || !idValidation(id)) {
+	if ( sys == NULL || !emailValidity(email) || !timeValidation(time) || !idValidation(id) || !facultyValidity(faculty)) {
 		free(newOrder);
 		return MTM_INVALID_PARAMETER;
 	}
 
 	Escaper escaper = findEscaperByEmail( sys, email );
-
-	if ( returnEscaperFaculty( escaper)  == UNKNOWN ) {
-		free(newOrder);
-		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
-	}
-
+	TechnionFaculty escaperFaculty = returnEscaperFaculty( escaper);
+	Room room = findRoom(sys, faculty, id);
 	int hour = convertHourStringToInt( time );
 	int daysFromToday = convertDayStringToInt( time );
 
-	Room room = findRoom(sys, faculty, id);
-	if ( room == NULL ) {
+	if ( escaper == NULL || escaperFaculty == UNKNOWN ) {
+		free(newOrder);
+		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+	} else if ( room == NULL ) {
 		free(newOrder);
 		return MTM_ID_DOES_NOT_EXIST;
+	} else if ( !isRoomAvailable(sys, daysFromToday, hour, room) ) {
+		free(newOrder);
+		return MTM_ROOM_NOT_AVAILABLE;
+	} else 	if ( !isEscaperAvailable(sys, daysFromToday, hour, escaper) ) {
+		free(newOrder);
+		return MTM_CLIENT_IN_ROOM;
 	}
-	TechnionFaculty escaperFaculty = returnEscaperFaculty( findEscaperByEmail(sys, email));
 
 	MtmErrorCode result = createOrder(newOrder, email, faculty, id, calculatePriceOfOrder(room, escaperFaculty, num_ppl), num_ppl, hour );
 	if ( result != MTM_SUCCESS ) {
@@ -497,61 +500,33 @@ MtmErrorCode addAnOrder(EscapeSystem sys, const char* email, TechnionFaculty fac
 		return result;
 	}
 
-	//newOrder->faculty = faculty;
-	//newOrder->id = id;
-	//TODO check return value
-	//newOrder->price = calculatePriceOfOrder(room, escaperFaculty, num_ppl);
-	//newOrder->hour = hour;
-	//newOrder->num_ppl = num_ppl;
-
-
-	//
-	if ( !isRoomAvailable(sys, daysFromToday, hour, room) ) {
-		free(newOrder->email);
-		free(newOrder);
-		return MTM_ROOM_NOT_AVAILABLE;
-	}
-
-	if ( !isEscaperAvailable(sys, daysFromToday, hour, escaper) ) {
-		free(newOrder->email);
-		free(newOrder);
-		return MTM_CLIENT_IN_ROOM;
-	}
-
 	Day day = returnADayFromToday(sys, daysFromToday);
 	List orders = day->dayOrders;
 	listInsertFirst(orders, newOrder);
 
-	free(newOrder->email);
-	free(newOrder);
+	freeOrder(newOrder);
 	return MTM_SUCCESS;
 }
 
 MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 	Order newOrder = malloc(sizeof(struct order_t));
 	if ( newOrder == NULL) return MTM_OUT_OF_MEMORY;
-	if ( email != NULL && emailValidity(email)) {
-		newOrder->email = malloc(sizeof(char) * (strlen(email) + 1));
-		if ( newOrder->email == NULL) {
-			free(newOrder);
-			return MTM_OUT_OF_MEMORY;
-		}
-		strcpy(newOrder->email, email);
-	} else {
+	if ( sys == NULL || !emailValidity(email) ) {
 		free(newOrder);
 		return MTM_INVALID_PARAMETER;
 	}
 
 	Escaper escaper = findEscaperByEmail( sys, email );
 	if ( returnEscaperFaculty( escaper ) == UNKNOWN ) {
-		free(newOrder->email);
 		free(newOrder);
 		return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 	}
 
-	newOrder->num_ppl = num_ppl;
+	if ( setGetSize(sys->rooms) == 0 ) {
+		free(newOrder);
+		return MTM_NO_ROOMS_AVAILABLE;
+	}
 
-	MtmErrorCode result = MTM_SUCCESS;
 	Set recommendedRooms = setCopy(sys->rooms);
 
 	Set recommendedRooms2 = filterRoomSet( recommendedRooms, filterByNumOfPplandDifficulty, num_ppl, escaper->typeSkill );
@@ -575,14 +550,19 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 		}
 	}
 
-
 	setDestroy(recommendedRooms);
 
 	if ( setGetSize(recommendedRooms2) == 1) {
 		Room room = setGetFirst(recommendedRooms2);
 		newOrder->faculty=room->faculty;
 		newOrder->id=room->id;
-		newOrder->price = calculatePriceOfOrder(room, escaper->faculty, num_ppl);
+		int price = calculatePriceOfOrder(room, escaper->faculty, num_ppl);
+
+		MtmErrorCode result = createOrder(newOrder, email, room->faculty, room->id, price, num_ppl, 0 );
+		if ( result != MTM_SUCCESS ) {
+			free(newOrder);
+			return result;
+		}
 
 		result = addFirstAvailableOrder(sys, newOrder, room, escaper);
 		//TODO check return;
@@ -600,7 +580,7 @@ MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 	return MTM_SUCCESS;
 }
 
-MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, ListElement order, SetElement room, SetElement escaper ) {
+MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, Order order, SetElement room, SetElement escaper ) {
 
 	bool done = false;
 	int daysFromToday = 0;
@@ -608,7 +588,7 @@ MtmErrorCode addFirstAvailableOrder(EscapeSystem sys, ListElement order, SetElem
 	while ( !done ) {
 		for( int hour = 0; hour < 24; hour++) {
 			if ( isRoomAvailable(sys, daysFromToday, hour, room) && isEscaperAvailable(sys, daysFromToday, hour, escaper) ) {
-				((Order)order)->hour = hour;
+				setOrderHour(order, hour);
 				Day day = returnADayFromToday(sys, daysFromToday);
 
 				List orders = day->dayOrders;
