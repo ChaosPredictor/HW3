@@ -46,7 +46,7 @@ ListElement createDay(int dayNumber) {
 
 List createDays() {
 	List days = listCreate(copyDay, freeDay);
-
+	//TODO tset retrun value
 	if ( days == NULL ) return NULL;
 	Day newDay = createDay(0);
 

@@ -9,7 +9,8 @@
 #include "common.h"
 
 
-
+#define MAX_DAYS_AHEAD 10
+#define LAST_HOUR_ADAY 23
 
 bool emailValidity(const char* email) {
 	if ( email == NULL ) return false;
@@ -40,9 +41,9 @@ bool timeValidation(const char* time) {
 	if ( time[1] != '-' && time[2] != '-' ) return false;
 	if ( time[len-1] < '0' || time[len-1] > '9' ) return false;
 	int day = convertDayStringToInt( time );
-	if ( day < 0 || day > 10 ) return false;
+	if ( day < 0 || day > MAX_DAYS_AHEAD ) return false;
 	int hour = convertHourStringToInt( time );
-	if ( hour < 0 || hour > 23 ) return false;
+	if ( hour < 0 || hour > LAST_HOUR_ADAY ) return false;
 	return true;
 }
 
@@ -113,7 +114,7 @@ int convertStringToCommand( const char* line ) {
 	} else if ( strcmp(command, "report" ) == 0 ) {
 		if ( strcmp(subcommand, "day\n" ) == 0 || strcmp(subcommand, "day\0" ) == 0) {
 			result = 9;
-		} else if ( strcmp(subcommand, "best" ) == 0 || strcmp(subcommand, "best\0" ) == 0 ) {
+		} else if ( strcmp(subcommand, "best\n" ) == 0 || strcmp(subcommand, "best\0" ) == 0 ) {
 			result = 10;
 		}
 	}

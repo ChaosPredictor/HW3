@@ -26,7 +26,7 @@ MtmErrorCode createSystem(EscapeSystem sys);
 
 MtmErrorCode destroySystem(EscapeSystem sys);
 
-
+MtmErrorCode inputChannelSelector(int argc, char* argv[], FILE** challenIn, FILE** challenOut );
 
 
 MtmErrorCode addCompany(EscapeSystem sys, const char* email, TechnionFaculty faculty);

@@ -13,49 +13,39 @@
 #include "system.h"
 
 
-#define MAX_NAME_LENG 200
+#define MAX_LINE_LENG 300
 #define MAX_COMMAND_LENG 7
 #define NUMBER_OF_BEST 3
 
 
 int main(int argc, char *argv[]) {
-
-	FILE *filein = NULL;
-	FILE *fileout = NULL;
-	//FILE *file = fopen("./tests/EscapeTechnion/test1.in", "r");
-
-	if ( !(argc == 1 || argc == 3 || argc == 5) ) {
-		printf("‫‪MTM_INVALID_COMMAND_LINE_PARAMETERS.‬‬\n");
-		//TODO change it to mtm_ex3 print function
-		//fclose(filein);
-		return -1;
-	} else if ( argc == 5 ) {
-		if ( strcmp(argv[1],"-i") == 0 ) {
-			//TODO check if opened
-			filein = fopen(argv[2], "r");
-			fileout = fopen(argv[4], "w");
-		} else if ( strcmp(argv[3],"-i") == 0 ) {
-			//TODO check if opened
-			filein = fopen(argv[4], "r");
-			fileout = fopen(argv[2], "w");
-		}
-		if ( filein == NULL ) {
-			printf("MTM_CANNOT_OPEN_FILE.");
-			//TODO change it to mtm_ex3 print function
-			//fclose(fileout);
-			return -1;
-		}
-
-		//TODO output
-	} //TODO 3 argc case
-
-	char line[MAX_NAME_LENG];
+	MtmErrorCode result;
 
 	EscapeSystem system = malloc(sizeof(struct EscapeSystem_t));
-	//TODO check return value
-	createSystem(system);
+	if ( system == NULL ) {
+		mtmPrintErrorMessage(stdout, MTM_OUT_OF_MEMORY);
+		return -1;
+	}
+	result = createSystem(system);
+	if ( result != MTM_SUCCESS) {
+		mtmPrintErrorMessage(stdout, MTM_INVALID_COMMAND_LINE_PARAMETERS);
+		free(system);
+		return -1;
+	}
 
-	while ( fgets(line, MAX_NAME_LENG, filein) != NULL) {
+	FILE *challenIn = NULL;
+	FILE *challenOut = NULL;
+
+	result = inputChannelSelector(argc, argv, &challenIn, &challenOut );
+	if ( result != MTM_SUCCESS) {
+		destroySystem(system);
+		mtmPrintErrorMessage(stdout, MTM_INVALID_COMMAND_LINE_PARAMETERS);
+		return -1;
+	}
+
+	char line[MAX_LINE_LENG];
+
+	while ( fgets(line, MAX_LINE_LENG, challenIn) != NULL) {
 
 		const char* firstNonSpace = line;
 		while(*firstNonSpace != '\0' && isspace(*firstNonSpace)) {
@@ -71,9 +61,11 @@ int main(int argc, char *argv[]) {
 		if ( numberOfCommand == 1 ) {
 			char* email = strtok(NULL, " ");
 			int faculty = atoi( strtok(NULL, " ") );
+			//TODO check return value
 			addCompany(system, email, faculty );
 		} else if ( numberOfCommand == 2 ) {
 			char* email = strtok(NULL, " ");
+			//TODO check return value
 			removeCompany(system, email);
 		} else if ( numberOfCommand == 3 ) {
 			char* email = strtok(NULL, " ");
@@ -113,20 +105,20 @@ int main(int argc, char *argv[]) {
 			//TODO check return value
 			addRecommendedOrder(system, email, num_ppl );
 		} else if ( numberOfCommand == 9 ) {
-			printf("\ndsfsd\n");
 			//TODO check return value
-			reportDay(fileout, system);
+			reportDay(challenOut, system);
 		} else if ( numberOfCommand == 10 ) {
 			//TODO check return value
-			reportBest(fileout, system);
+			reportBest(challenOut, system);
 		}
 
 	}
 
 	destroySystem(system);
 
-	fclose(fileout);
-	fclose(filein);
+	if ( challenIn != stdin) fclose(challenIn);
+	if ( challenOut != stdin) fclose(challenOut);
+
 
 	return 0;
 }
@@ -153,6 +145,42 @@ MtmErrorCode destroySystem(EscapeSystem sys) {
 	free(sys);
 	return MTM_SUCCESS;
 }
+
+MtmErrorCode inputChannelSelector(int argc, char* argv[], FILE** challenIn, FILE** challenOut ) {
+	if ( argc == 5 ) {
+		if ( strcmp(argv[1],"-i") == 0 && strcmp(argv[3],"-o") == 0) {
+			*challenIn = fopen(argv[2], "r");
+			if ( *challenIn == NULL ) return MTM_CANNOT_OPEN_FILE;
+			*challenOut = fopen(argv[4], "w");
+			if ( *challenOut == NULL ) {
+				fclose(*challenIn);
+				return MTM_CANNOT_OPEN_FILE;
+			}
+			return MTM_SUCCESS;
+		} else if ( strcmp(argv[1],"-o") == 0 && strcmp(argv[3],"-i") == 0 ) {
+			*challenIn = fopen(argv[4], "r");
+			if ( *challenIn == NULL ) return MTM_CANNOT_OPEN_FILE;
+			*challenOut = fopen(argv[2], "w");
+			if ( *challenOut == NULL ) {
+				fclose(*challenIn);
+				return MTM_CANNOT_OPEN_FILE;
+			}
+			return MTM_SUCCESS;
+		}
+	} else if ( argc == 3 ) {
+		if ( strcmp(argv[1],"-i") == 0 ) {
+			*challenIn = fopen(argv[2], "r");
+			if ( *challenIn == NULL ) return MTM_CANNOT_OPEN_FILE;
+			return MTM_SUCCESS;
+		} else if ( strcmp(argv[1],"-o") == 0 ) {
+			*challenOut = fopen(argv[2], "w");
+			if ( *challenOut == NULL ) return MTM_CANNOT_OPEN_FILE;
+			return MTM_SUCCESS;
+		}
+	}
+	return MTM_INVALID_COMMAND_LINE_PARAMETERS;
+}
+
 
 
 
@@ -654,7 +682,6 @@ int returnTotalFacultiesRevenue(List faculties) {
 
 
 MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem sys) {
-	printf("\nreport run\n");
 	Day today = listGetFirst(sys->days);
 	List orders = today->dayOrders;
 	mtmPrintDayHeader(outputChannel, today->dayNumber, listGetSize(orders));
@@ -682,7 +709,6 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem sys) {
 		listInsertLast(sys->days, day);
 		freeDay(day);
 	}
-	printAllDays(sys->days);
 	listGetFirst(sys->days);
 	listRemoveCurrent(sys->days);
 	return MTM_SUCCESS;
