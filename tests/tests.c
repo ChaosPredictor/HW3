@@ -13,7 +13,7 @@
 
 
 //int main2(int argv, char** arc) {
-int main2() {
+int main() {
 	//userTests(argv, arc);
 	//roomTests(argv, arc);
 	//orderTests(argv, arc);

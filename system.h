@@ -32,7 +32,7 @@ MtmErrorCode addCompany(EscapeSystem sys, const char* email, TechnionFaculty fac
 
 MtmErrorCode removeCompany(EscapeSystem sys, const char* email);
 
-SetElement findCompanyByEmail(const EscapeSystem sys, const char* email);
+Company findCompanyByEmail(const EscapeSystem sys, const char* email);
 
 bool isAnyRoomOfACompanyOrdered(const EscapeSystem sys, const char* email);
 
@@ -77,7 +77,7 @@ bool IsARoomOrdered(const EscapeSystem sys, TechnionFaculty faculty, int id);
 
 Day returnADayFromToday(const EscapeSystem sys, int daysFromToday);
 
-MtmErrorCode markAsRemovedOrdersOfEscaper(EscapeSystem sys, const char* email );
+MtmErrorCode removedOrdersOfEscaper(EscapeSystem sys, const char* email );
 
 
 List createFaculties(int numberOfFaculties);

@@ -1,11 +1,16 @@
 CC = gcc
-OBJS = system.o common.o escaper.o company.o room.o order.o faculty.o
+OBJS =  mtm_escape.o system.o common.o escaper.o company.o room.o order.o faculty.o
+OBJS_TEST =  tests.o common_test.o system_test.o system.o common.o escaper.o company.o room.o order.o faculty.o
+#TEST = ./tests/test.c ./tests/test.h ./tests/common_test.o ./tests/system_test.o
 EXEC = mtm_escape
 DEBUG_FLAG = -g -DNDEBUG
 COMP_FLAG = -std=c99 -Wall -pedantic-errors -Werror -L -lmtm
 
 $(EXEC) : $(OBJS)
 	$(CC) $(DEBUG_FLAG) $(OBJS) libmtm.a -o $@
+
+mtm_escape.o: mtm_escape.c mtm_escape.h common.h
+	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) $*.c
 
 system.o: system.c system.h escaper.h set.h common.h mtm_ex3.h faculty.h list.h company.h room.h order.h
 	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) $*.c
@@ -27,6 +32,18 @@ faculty.o: faculty.c faculty.h list.h mtm_ex3.h
 	
 common.o: common.c common.h mtm_ex3.h
 	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) $*.c
+
+test: $(OBJS_TEST) 
+	$(CC) $(DEBUG_FLAG) $(OBJS_TEST) libmtm.a -o $@
+
+tests.o: ./tests/tests.c common_test.o system_test.o
+	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/tests.c 
+
+common_test.o: ./tests/common_test.c ./tests/common_test.h ./order.c
+	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/common_test.c 
+
+system_test.o: ./tests/system_test.c ./tests/system_test.h ./system.c
+	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/system_test.c
 
 clean:
 	rm -f $(OBJS) $(EXEC)

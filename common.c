@@ -12,6 +12,7 @@
 #define MAX_DAYS_AHEAD 10
 #define LAST_HOUR_ADAY 23
 
+
 bool emailValidity(const char* email) {
 	if ( email == NULL ) return false;
 	size_t len = strlen(email);
