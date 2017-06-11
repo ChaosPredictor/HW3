@@ -10,14 +10,10 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include "list.h"
 #include "common.h"
 
 
-//#include "escaper.h"
-#include "mtm_ex3.h"
-#include "list.h"
-#include "set.h"
-//#include "room.h"
 
 typedef struct order_t{
 	char* email;

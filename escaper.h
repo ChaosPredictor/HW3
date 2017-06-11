@@ -11,10 +11,8 @@
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
+//#include "mtm_ex3.h"
 #include "set.h"
-//#include "order.h"
-//#include "system.h"
-#include "mtm_ex3.h"
 #include "common.h"
 
 

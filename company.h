@@ -9,12 +9,10 @@
 #define COMPANY_H_
 
 #include <assert.h>
-#include <string.h>
+//#include "mtm_ex3.h"
 #include "set.h"
-#include "order.h"
-#include "system.h"
+#include "common.h"
 
-//#include "visitor_room.h"
 //TODO add related files
 
 

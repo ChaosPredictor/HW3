@@ -3,13 +3,12 @@
 
 #include <stdio.h> //TODO remove it
 #include <stdlib.h>
-
 #include "escaper.h"
 #include "faculty.h"
 #include "company.h"
 #include "room.h"
 #include "order.h"
-#include "common.h"
+#include "mtm_ex3.h"
 
 typedef struct EscapeSystem_t {
 	Set escapers;
