@@ -451,8 +451,9 @@ static bool testfindEscaperByEmail() {
 	ASSERT_TEST( findEscaperByEmail(system, invalidEmail) == NULL );
 	ASSERT_TEST( findEscaperByEmail(system, existCompanyEmail) == NULL );
 
-	ASSERT_TEST( compareCompanies( findCompanyByEmail(system, email), escaper) == 0 );
+	ASSERT_TEST( compareEscapers( findEscaperByEmail(system, email), escaper) == 0 );
 
+	freeEscaper(escaper);
 	destroySystem(system);
 
 	return true;

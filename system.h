@@ -25,7 +25,19 @@ MtmErrorCode createSystem(EscapeSystem sys);
 
 MtmErrorCode destroySystem(EscapeSystem sys);
 
-MtmErrorCode inputChannelSelector(int argc, char* argv[], FILE** challenIn, FILE** challenOut );
+MtmErrorCode inputChannelSelector(int argc, char* argv[], FILE** challenIn, FILE** challenOut, FILE** challenErr );
+
+MtmErrorCode sellectAllFiles(char* argv[], FILE** challenIn, FILE** challenOut, FILE** challenErr);
+
+MtmErrorCode openAllFiles(const char *inFile, const char *outFile, const char *errFile, FILE** challenIn, FILE** challenOut, FILE** challenErr);
+
+char* addInSuffix(const char* string);
+
+char* addOutSuffix(const char* string);
+
+char* addErrSuffix(const char* string);
+
+void freeAllNames(char *in, char *out, char *err);
 
 
 MtmErrorCode addCompany(EscapeSystem sys, const char* email, TechnionFaculty faculty);

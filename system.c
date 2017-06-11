@@ -42,27 +42,10 @@ MtmErrorCode destroySystem(EscapeSystem sys) {
 	return MTM_SUCCESS;
 }
 
-MtmErrorCode inputChannelSelector(int argc, char* argv[], FILE** challenIn, FILE** challenOut ) {
+MtmErrorCode inputChannelSelector(int argc, char* argv[], FILE** challenIn, FILE** challenOut, FILE** challenErr ) {
 	if ( argc == 5 ) {
-		if ( strcmp(argv[1],"-i") == 0 && strcmp(argv[3],"-o") == 0) {
-			*challenIn = fopen(argv[2], "r");
-			if ( *challenIn == NULL ) return MTM_CANNOT_OPEN_FILE;
-			*challenOut = fopen(argv[4], "w");
-			if ( *challenOut == NULL ) {
-				fclose(*challenIn);
-				return MTM_CANNOT_OPEN_FILE;
-			}
-			return MTM_SUCCESS;
-		} else if ( strcmp(argv[1],"-o") == 0 && strcmp(argv[3],"-i") == 0 ) {
-			*challenIn = fopen(argv[4], "r");
-			if ( *challenIn == NULL ) return MTM_CANNOT_OPEN_FILE;
-			*challenOut = fopen(argv[2], "w");
-			if ( *challenOut == NULL ) {
-				fclose(*challenIn);
-				return MTM_CANNOT_OPEN_FILE;
-			}
-			return MTM_SUCCESS;
-		}
+		sellectAllFiles(argv, challenIn, challenOut, challenErr);
+		return MTM_SUCCESS;
 	} else if ( argc == 3 ) {
 		if ( strcmp(argv[1],"-i") == 0 ) {
 			*challenIn = fopen(argv[2], "r");
@@ -73,12 +56,99 @@ MtmErrorCode inputChannelSelector(int argc, char* argv[], FILE** challenIn, FILE
 			if ( *challenOut == NULL ) return MTM_CANNOT_OPEN_FILE;
 			return MTM_SUCCESS;
 		}
+	} else if ( argc == 3 ) {
+		return MTM_CANNOT_OPEN_FILE;
 	}
 	return MTM_INVALID_COMMAND_LINE_PARAMETERS;
 }
 
+MtmErrorCode sellectAllFiles(char* argv[], FILE** challenIn, FILE** challenOut, FILE** challenErr) {
+	char* inFile;
+	char* outFile;
+	char* errFile;
+	if ( strcmp(argv[1],"-i") == 0 && strcmp(argv[3],"-o") == 0) {
+		inFile = addInSuffix( argv[2] );
+		if ( inFile == NULL ) return MTM_OUT_OF_MEMORY;
+		outFile = addOutSuffix( argv[4] );
+		if ( outFile == NULL ) {
+			free(inFile);
+			return MTM_OUT_OF_MEMORY;
+		}
+		errFile = addErrSuffix( argv[4] );
+		if ( outFile == NULL ) {
+			free(inFile);
+			free(outFile);
+			return MTM_OUT_OF_MEMORY;
+		}
+	} else if ( strcmp(argv[1],"-o") == 0 && strcmp(argv[3],"-i") == 0 ) {
+		inFile = addInSuffix( argv[4] );
+		if ( inFile == NULL ) return MTM_OUT_OF_MEMORY;
+		outFile = addOutSuffix( argv[2] );
+		if ( outFile == NULL ) {
+			free(inFile);
+			return MTM_OUT_OF_MEMORY;
+		}
+		errFile = addErrSuffix( argv[2] );
+		if ( outFile == NULL ) {
+			free(inFile);
+			free(outFile);
+			return MTM_OUT_OF_MEMORY;
+		}
+	} else {
+		return MTM_INVALID_COMMAND_LINE_PARAMETERS;
+	}
+	openAllFiles(inFile, outFile, errFile, challenIn, challenOut, challenErr);
+	freeAllNames(inFile, outFile, errFile);	return MTM_SUCCESS;
+}
 
+MtmErrorCode openAllFiles(const char *inFile,const  char *outFile,const  char *errFile, FILE** challenIn, FILE** challenOut, FILE** challenErr) {
+	*challenIn = fopen(inFile, "r");
+	if ( *challenIn == NULL ) {
+		return MTM_CANNOT_OPEN_FILE;
+	}
+	*challenOut = fopen(outFile, "w");
+	if ( *challenOut == NULL ) {
+		fclose(*challenIn);
+		return MTM_CANNOT_OPEN_FILE;
+	}
+	*challenErr = fopen(errFile, "w");
+	if ( *challenErr == NULL ) {
+		fclose(*challenIn);
+		fclose(*challenOut);
+		return MTM_CANNOT_OPEN_FILE;
+	}
+	return MTM_SUCCESS;
+}
 
+char* addInSuffix(const char *s){
+    char *result = malloc(sizeof(char) * (strlen(s)+4));//+1 for the zero-terminator
+    if ( result == NULL ) return NULL;
+    strcpy(result, s);
+    strcat(result, ".in");
+    return result;
+}
+
+char* addOutSuffix(const char *s){
+    char *result = malloc(sizeof(char) * (strlen(s)+5));//+1 for the zero-terminator
+    if ( result == NULL ) return NULL;
+    strcpy(result, s);
+    strcat(result, ".out");
+    return result;
+}
+
+char* addErrSuffix(const char *s){
+    char *result = malloc(sizeof(char) * (strlen(s)+5));//+1 for the zero-terminator
+    if ( result == NULL ) return NULL;
+    strcpy(result, s);
+    strcat(result, ".err");
+    return result;
+}
+
+void freeAllNames(char *in, char *out, char *err) {
+	free(in);
+	free(out);
+	free(err);
+}
 
 MtmErrorCode addCompany(EscapeSystem sys, const char* email, TechnionFaculty faculty) {
 	Company newCompany = malloc(sizeof(struct company_t));
