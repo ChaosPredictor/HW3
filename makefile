@@ -1,6 +1,6 @@
 CC = gcc
 OBJS = system.o common.o escaper.o company.o room.o order.o faculty.o
-EXEC = mtm_escap
+EXEC = mtm_escape
 DEBUG_FLAG = -g -DNDEBUG
 COMP_FLAG = -std=c99 -Wall -pedantic-errors -Werror -L -lmtm
 

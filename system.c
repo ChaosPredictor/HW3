@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
 			//TODO check return value
 			addAnEscaper(system, email, faculty, skill_level);
 		} else if ( numberOfCommand == 6 ) {
-			char* email = strtok(NULL, " ");
+			char* email = strtok(NULL, " \n");
 			//TODO check return value
 			removeAnEscaper(system, email);
 		}  else if ( numberOfCommand == 7 ) {
@@ -278,20 +278,24 @@ MtmErrorCode addAnEscaper(EscapeSystem sys, const char* email, TechnionFaculty f
 }
 
 MtmErrorCode removeAnEscaper(EscapeSystem sys, const char* email) {
+	//printf("removeAnEscaper1\n");
 	if( sys == NULL || !emailValidity(email) ) return MTM_INVALID_PARAMETER;
-
+	//printf("removeAnEscaper2\n");
 	Escaper escaper = findEscaperByEmail( sys, email );
 	if ( escaper == NULL ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
-
+	//printf("removeAnEscaper3\n");
 	markAsRemovedOrdersOfEscaper( sys, email );
 	setRemove(sys->escapers, escaper);
+	//printf("removeAnEscaper4\n");
 	return MTM_SUCCESS;
 }
 
-SetElement findEscaperByEmail( const EscapeSystem sys, const char* email ) {
+Escaper findEscaperByEmail( const EscapeSystem sys, const char* email ) {
+	//printf("removeAnEscaper22 %s\n", email);
 	if( sys == NULL || email == NULL ) return NULL;
 	SET_FOREACH(Escaper, val, sys->escapers) {
 		if ( strcmp(val->email, email) == 0) {
+			//printf("removeAnEscaper Done %s\n", email);
 			return val;
 		}
 	}
@@ -619,13 +623,19 @@ Day returnADayFromToday(const EscapeSystem sys, int daysFromToday) {
 }
 
 MtmErrorCode markAsRemovedOrdersOfEscaper(EscapeSystem sys, const char* email ) {
-	LIST_FOREACH(Day, dayVal, sys->days) {
-		LIST_FOREACH(Order, orderVal, dayVal->dayOrders) {
-			if ( strcmp(orderVal->email, email) == 0 ) {
-				orderVal->faculty = UNKNOWN;
-				strcpy(orderVal->email, "");
+	Day day = listGetFirst(sys->days);
+	Order order;
+	while( day != NULL ) {
+		order = listGetFirst(day->dayOrders);
+		while( order != NULL ) {
+			if ( strcmp(order->email, email) == 0 ) {
+				listRemoveCurrent(day->dayOrders);
+				order = listGetFirst(day->dayOrders);
+			} else {
+				order = listGetNext(day->dayOrders);
 			}
 		}
+		day = listGetNext(sys->days);
 	}
 	return MTM_SUCCESS;
 }
@@ -694,12 +704,13 @@ MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem sys) {
 	Order order = listGetFirst(orders);
 	while ( order != NULL ) {
 		//TODO check that escaper;
-		if ( order->faculty != UNKNOWN ) {
-			escaper = findEscaperByEmail( sys, order->email );
-			room = findRoom(sys, order->faculty, order->id);
-			mtmPrintOrder(outputChannel, escaper->email, escaper->typeSkill, escaper->faculty, room->email, room->faculty, room->id, order->hour, room->difficulty, order->num_ppl, order->price);
-			addIncomeToFaculty( findFacultyByNumber(sys->faculties, room->faculty), order->price );
-		}
+
+		//if ( order->faculty != UNKNOWN ) {
+		escaper = findEscaperByEmail( sys, order->email );
+		room = findRoom(sys, order->faculty, order->id);
+		mtmPrintOrder(outputChannel, escaper->email, escaper->typeSkill, escaper->faculty, room->email, room->faculty, room->id, order->hour, room->difficulty, order->num_ppl, order->price);
+		addIncomeToFaculty( findFacultyByNumber(sys->faculties, room->faculty), order->price );
+		//}
 		order = listGetNext(orders);
 	}
 	mtmPrintDayFooter(outputChannel, today->dayNumber);

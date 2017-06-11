@@ -42,7 +42,7 @@ MtmErrorCode addAnEscaper(EscapeSystem sys, const char* email, TechnionFaculty f
 
 MtmErrorCode removeAnEscaper(EscapeSystem sys, const char* email);
 
-SetElement findEscaperByEmail(const EscapeSystem sys, const char* email );
+Escaper findEscaperByEmail(const EscapeSystem sys, const char* email );
 
 bool isEscaperAvailable(const EscapeSystem sys, int daysFromToday, int hour, SetElement escaper);
 
