@@ -25,8 +25,6 @@ SetElement copyCompany(SetElement company) {
 
 	strcpy(newCompany->email, ((Company)company)->email);
 	newCompany->faculty = ((Company)company)->faculty;
-	newCompany->numberOfRooms = ((Company)company)->numberOfRooms;
-
 	return newCompany;
 }
 
@@ -54,7 +52,6 @@ MtmErrorCode createCompany(Company company, const char* email, TechnionFaculty f
 	}
 	strcpy( company->email, email);
 	company->faculty = faculty;
-	company->numberOfRooms = 0;
 
 	return MTM_SUCCESS;
 }
@@ -63,23 +60,3 @@ TechnionFaculty returnCompanyFaculty(const Company company ) {
 	if ( company == NULL ) return UNKNOWN;
 	return company->faculty;
 }
-
-MtmErrorCode addARoomToCompany2(Company company) {
-	company->numberOfRooms++;
-	return MTM_SUCCESS;
-}
-
-MtmErrorCode removeARoomFromCompany(Company company) {
-	company->numberOfRooms--;
-	return MTM_SUCCESS;
-}
-
-
-//TODO remove
-void printCompany(Company company) {
-	printf("\nPrint Company\n");
-	printf("\n Company email: %s\n", ((Company)company)->email);
-	printf("\n Company faculty: %d\n", ((Company)company)->faculty);
-}
-
-

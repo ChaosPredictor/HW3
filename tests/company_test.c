@@ -135,25 +135,14 @@ static bool testReturnCompanyFaculty() {
 	return true;
 }
 
-static bool testAddARoomToCompany() {
-
-	return true;
-}
-
-static bool testRemoveARoomFromCompany() {
-
-	return true;
-}
-
 
 int companyTests () {
+	printf("\n\n ================ Company Tests ================ \n\n");
 	RUN_TEST(testCopyCompany);
 	RUN_TEST(testFreeCompany);
 	RUN_TEST(testCompareCompanies);
 	RUN_TEST(testCreateCompany);
 	RUN_TEST(testReturnCompanyFaculty);
-	RUN_TEST(testAddARoomToCompany);
-	RUN_TEST(testRemoveARoomFromCompany);
 
 	return 0;
 }

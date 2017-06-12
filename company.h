@@ -20,7 +20,6 @@
 typedef struct company_t {
 	char* email;
 	TechnionFaculty faculty;
-	int numberOfRooms;
 } *Company;
 
 
@@ -34,7 +33,5 @@ int compareCompanies(const SetElement company1, const SetElement company2);
 MtmErrorCode createCompany(Company company, const char* email, TechnionFaculty faculty);
 
 TechnionFaculty returnCompanyFaculty(const Company company );
-
-
 
 #endif /* COMPANY_H_ */
