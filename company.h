@@ -35,9 +35,6 @@ MtmErrorCode createCompany(Company company, const char* email, TechnionFaculty f
 
 TechnionFaculty returnCompanyFaculty(const Company company );
 
-MtmErrorCode addARoomToCompany(Company company);
-
-MtmErrorCode removeARoomFromCompany(Company company);
 
 
 #endif /* COMPANY_H_ */

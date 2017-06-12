@@ -111,7 +111,7 @@ MtmErrorCode addCompanyCase(EscapeSystem sys, FILE* channelErr) {
 }
 
 MtmErrorCode removeCompanyCase(EscapeSystem sys, FILE* channelErr) {
-	char* email = strtok(NULL, " \n");
+	char* email = strtok(NULL, " \r\n");
 	//TODO check return value
 	MtmErrorCode result = removeCompany(sys, email);
 	if ( result != MTM_SUCCESS ) {
@@ -159,7 +159,8 @@ MtmErrorCode addEscaperCase(EscapeSystem sys, FILE* channelErr) {
 }
 
 MtmErrorCode removeEscaperCase(EscapeSystem sys, FILE* channelErr) {
-	char* email = strtok(NULL, " \n");
+	char* email = strtok(NULL, " \r\n");
+	//if ( email == NULL ) printf("\n\nit's \n\n");
 	//TODO check return value
 	MtmErrorCode result = removeAnEscaper(sys, email);
 	if ( result != MTM_SUCCESS ) {
@@ -195,14 +196,14 @@ MtmErrorCode addRecommendedOrderCase(EscapeSystem sys, FILE* channelErr) {
 
 MtmErrorCode reportDayCase(EscapeSystem sys, FILE* channelOut) {
 	//TODO check return value
-	reportDay(channelOut, sys);
-	return MTM_SUCCESS;
+	MtmErrorCode result = reportDay(channelOut, sys);
+	return result;
 }
 
 MtmErrorCode reportBestCase(EscapeSystem sys, FILE* channelOut) {
 	//TODO check return value
-	reportBest(channelOut, sys);
-	return MTM_SUCCESS;
+	MtmErrorCode result = reportBest(channelOut, sys);
+	return result;
 }
 
 

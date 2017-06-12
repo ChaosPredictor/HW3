@@ -5,9 +5,7 @@
  *      Author: master
  */
 
-//#include "room_test.h"
-//#include "user_test.h"
-//#include "order_test.h"
+#include "company_test.h"
 #include "system_test.h"
 #include "common_test.h"
 
@@ -17,6 +15,7 @@ int main() {
 	//userTests(argv, arc);
 	//roomTests(argv, arc);
 	//orderTests(argv, arc);
+	companyTests();
 	commonTests();
 	systemTests();
 	return 1;

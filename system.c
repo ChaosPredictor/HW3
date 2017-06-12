@@ -353,7 +353,7 @@ MtmErrorCode addARoom(EscapeSystem sys, const char* email, int id, int price, in
 	}
 	//TODO check return value
 	setAdd(sys->rooms, newRoom);
-	addARoomToCompany(company);
+	//addARoomToCompany(company);
 	freeRoom(newRoom);
 	return MTM_SUCCESS;
 }
@@ -438,11 +438,12 @@ bool isRoomAvailable(const EscapeSystem sys, int daysFromToday, int hour, ListEl
 	listDestroy(ordersOfFaculty);
 	Order order = listGetFirst(ordersOfRoom);
 	//TODO check working hours
-	for(int i = 0; i < listGetSize(ordersOfRoom); i++) {
+	while ( order != NULL ) {
 		if ( order->hour == hour ) {
 			listDestroy(ordersOfRoom);
 			return false;
 		}
+		order = listGetNext(ordersOfRoom);
 	}
 	listDestroy(ordersOfRoom);
 	return true;

@@ -1,0 +1,227 @@
+#DAY 0#
+
+company add civil1@ 0
+company add civil2@ 0
+company add civil3@ 0
+company add civil4@ 0
+company add civil5@ 0
+
+company add mech1@ 1
+company add mech2@ 1
+
+company add elec1@ 2
+company add elec2@ 2
+
+#will be removed
+company add elec3@ 2
+company add elec4@ 2
+
+#3 error - already exists
+company add civil3@ 0
+company add mech1@ 1
+company add elec2@ 2
+
+#success
+company remove elec3@
+company remove elec4@
+
+#1 error - no such email
+company remove elec3@
+
+room add civil5@ 1 100 3 06-18 7
+
+#1 error already exists
+room add civil5@ 1 100 3 06-18 7
+
+#success
+company remove civil5@
+
+#1 error no such email
+room add civil5@ 1 100 3 06-18 7
+
+#Adding 5-5-5-5 rooms (hamsa aleha)
+room add civil1@ 1 100 3 06-18 7
+room add civil1@ 2 100 3 06-18 6
+room add civil1@ 3 100 3 06-18 5
+room add civil1@ 4 100 3 06-18 4
+room add civil1@ 5 100 3 06-18 3
+
+room add civil2@ 21 100 3 06-18 7
+room add civil2@ 22 100 3 06-18 6
+room add civil2@ 23 100 3 06-18 5
+room add civil2@ 24 100 3 06-18 4
+room add civil2@ 25 100 3 06-18 3
+
+room add civil3@ 31 100 3 06-18 7
+room add civil3@ 32 100 3 06-18 6
+room add civil3@ 33 100 3 06-18 5
+room add civil3@ 34 100 3 06-18 4
+room add civil3@ 35 100 3 06-18 3
+
+#add 5 rooms to mech1
+room add mech1@ 1 100 1 06-18 1
+room add mech1@ 2 100 2 06-18 2
+room add mech1@ 3 100 3 06-18 3
+room add mech1@ 4 100 4 06-18 4
+room add mech1@ 5 100 5 06-18 5
+
+escaper add ecivil1@ 0 10
+escaper add ecivil2@ 0 9
+escaper add ecivil3@ 0 8
+escaper add ecivil4@ 0 7
+escaper add ecivil5@ 0 6
+
+#empty report
+report day
+
+#DAY 1#
+escaper recommend ecivil1@ 1
+
+#empty in order - 0,1,2 (faculties)
+report best
+
+#room with id 1 wins
+report day
+
+escaper recommend ecivil1@ 5
+escaper recommend ecivil1@ 5
+escaper recommend ecivil1@ 3
+
+escaper recommend ecivil5@ 10
+
+#1 error reservation exists
+company remove civil1@
+
+room remove 0 1
+
+report day
+
+#DAY 3#
+
+#1 error not valid time
+escaper order ecivil1@ 0 1 00-05 5
+
+#3 success
+escaper order ecivil1@ 0 1 00-06 5
+escaper order ecivil1@ 0 1 00-07 5
+escaper order ecivil1@ 0 1 00-08 5
+
+
+#1 error room not available
+escaper order ecivil2@ 0 1 00-06 5
+
+#error - client in room
+escaper order ecivil1@ 0 2 00-06 5
+escaper order ecivil1@ 1 1 00-08 5
+
+#success
+escaper order ecivil1@ 1 1 00-09 5
+
+#error - client in room
+escaper order ecivil1@ 1 1 00-08 5
+
+escaper remove ecivil1@
+
+# zero reports
+report day
+
+################## DAY 4 ##########
+report best
+escaper add ecivil1@ 0 10
+
+#3 error email already exists
+escaper add ecivil1@ 0 10
+company add ecivil1@ 0
+company add ecivil1@ 4
+
+#3 success
+escaper order ecivil1@ 0 1 00-06 5
+escaper order ecivil1@ 0 1 00-07 5
+escaper order ecivil1@ 0 1 00-08 5
+
+escaper remove ecivil1@
+
+escaper add ecivil1@ 0 10
+
+#now success (before not)
+escaper order ecivil1@ 0 2 00-06 5
+escaper order ecivil1@ 1 1 00-07 5
+
+report day
+report best
+######## DAY 5##########
+
+escaper order ecivil1@ 0 1 00-06 5
+escaper order ecivil1@ 0 2 00-07 5
+escaper order ecivil1@ 0 3 00-08 5
+escaper order ecivil1@ 0 4 00-09 5
+escaper order ecivil1@ 0 5 00-10 5
+
+escaper order ecivil2@ 0 21 00-06 5
+escaper order ecivil2@ 0 22 00-07 5
+escaper order ecivil2@ 0 23 00-08 5
+escaper order ecivil2@ 0 24 00-09 5
+escaper order ecivil2@ 0 25 00-10 5
+
+escaper order ecivil3@ 0 31 00-06 5
+escaper order ecivil3@ 0 32 00-07 5
+escaper order ecivil3@ 0 33 00-08 5
+escaper order ecivil3@ 0 34 00-09 5
+escaper order ecivil3@ 0 35 00-10 5
+
+escaper order ecivil1@ 0 2 00-11 5
+escaper order ecivil1@ 0 2 00-12 5
+escaper order ecivil1@ 0 2 00-13 5
+escaper order ecivil1@ 0 2 00-14 5
+escaper order ecivil1@ 0 2 00-15 5
+
+escaper order ecivil2@ 1 1 00-11 5
+escaper order ecivil2@ 1 2 00-12 5
+escaper order ecivil2@ 1 3 00-13 5
+escaper order ecivil2@ 1 4 00-14 5
+escaper order ecivil2@ 1 5 00-15 5
+
+escaper order ecivil1@ 1 1 00-17 5
+escaper order ecivil3@ 1 3 00-17 5
+escaper order ecivil4@ 1 4 00-17 5
+escaper order ecivil5@ 1 5 00-17 5
+escaper order ecivil5@ 1 5 00-16 5
+
+report day
+
+########## DAY 6 #########
+
+#room not available
+escaper order ecivil5@ 1 5 00-20 5
+escaper order ecivil5@ 1 5 00-18 5
+
+
+escaper order ecivil5@ 1 5 04-06 5
+
+##pass 3 days- empty
+report day
+report day
+
+####DAY 8##
+
+#ERROR same time
+escaper order ecivil5@ 1 5 02-06 5
+
+escaper remove ecivil5@
+
+#mail not exists
+escaper order ecivil5@ 1 5 02-06 5
+
+#success
+escaper order ecivil3@ 1 5 02-06 5
+escaper add ecivil5@ 0 6
+
+#Exists
+escaper order ecivil5@ 1 5 02-06 5
+
+#Waste two days
+report day
+report day
+
+#order on ecivil3
+report day

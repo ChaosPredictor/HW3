@@ -64,7 +64,7 @@ TechnionFaculty returnCompanyFaculty(const Company company ) {
 	return company->faculty;
 }
 
-MtmErrorCode addARoomToCompany(Company company) {
+MtmErrorCode addARoomToCompany2(Company company) {
 	company->numberOfRooms++;
 	return MTM_SUCCESS;
 }

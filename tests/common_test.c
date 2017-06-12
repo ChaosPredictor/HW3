@@ -75,6 +75,7 @@ static bool testConvertStringToCommand() {
 
 
 
+
 int commonTests () {
 	RUN_TEST(testTimeValidation);
 	RUN_TEST(testPriceValidation);
