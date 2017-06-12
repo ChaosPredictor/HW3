@@ -61,7 +61,7 @@ void freeChannels(FILE* channelIn, FILE* channelOut , FILE* channelErr) {
 
 MtmErrorCode lineReader(EscapeSystem sys, FILE* channelIn, FILE* channelOut , FILE* channelErr) {
 	char line[MAX_LINE_LENG];
-	MtmErrorCode result;
+	MtmErrorCode result = MTM_SUCCESS;
 	while ( fgets(line, MAX_LINE_LENG, channelIn) != NULL) {
 
 		const char* firstNonSpace = line;
@@ -74,7 +74,6 @@ MtmErrorCode lineReader(EscapeSystem sys, FILE* channelIn, FILE* channelOut , FI
 		int numberOfCommand = convertStringToCommand( line );
 		strtok(line, " \t");
 		strtok(NULL, " \t");
-
 		if ( numberOfCommand == 1 ) {
 			result = addCompanyCase(sys, channelErr);
 		} else if ( numberOfCommand == 2 ) {
@@ -102,7 +101,7 @@ MtmErrorCode lineReader(EscapeSystem sys, FILE* channelIn, FILE* channelOut , FI
 }
 
 MtmErrorCode addCompanyCase(EscapeSystem sys, FILE* channelErr) {
-	char* email = strtok(NULL, " ");
+	char* email = strtok(NULL, " \t");
 	int faculty = atoi( strtok(NULL, " ") );
 	MtmErrorCode result = addCompany(sys, email, faculty );
 	if ( result != MTM_SUCCESS ) {
@@ -112,7 +111,7 @@ MtmErrorCode addCompanyCase(EscapeSystem sys, FILE* channelErr) {
 }
 
 MtmErrorCode removeCompanyCase(EscapeSystem sys, FILE* channelErr) {
-	char* email = strtok(NULL, " ");
+	char* email = strtok(NULL, " \n");
 	//TODO check return value
 	MtmErrorCode result = removeCompany(sys, email);
 	if ( result != MTM_SUCCESS ) {
@@ -122,11 +121,11 @@ MtmErrorCode removeCompanyCase(EscapeSystem sys, FILE* channelErr) {
 }
 
 MtmErrorCode addRoomCase(EscapeSystem sys, FILE* channelErr) {
-	char* email = strtok(NULL, " ");
+	char* email = strtok(NULL, " \t");
 	int id = atoi( strtok(NULL, " ") );
 	int price = atoi( strtok(NULL, " ") );
 	int num_ppl = atoi( strtok(NULL, " ") );
-	char* working_hrs = strtok(NULL, " ");
+	char* working_hrs = strtok(NULL, " \t");
 	int difficulty = atoi( strtok(NULL, " ") );
 	//TODO check return value
 	MtmErrorCode result = addARoom(sys, email, id, price, num_ppl, working_hrs, difficulty);
@@ -148,7 +147,7 @@ MtmErrorCode removeRoomCase(EscapeSystem sys, FILE* channelErr) {
 }
 
 MtmErrorCode addEscaperCase(EscapeSystem sys, FILE* channelErr) {
-	char* email = strtok(NULL, " ");
+	char* email = strtok(NULL, " \t");
 	int faculty = atoi( strtok(NULL, " ") );
 	int skill_level = atoi( strtok(NULL, " ") );
 	//TODO check return value
@@ -170,10 +169,10 @@ MtmErrorCode removeEscaperCase(EscapeSystem sys, FILE* channelErr) {
 }
 
 MtmErrorCode addAnOrderCase(EscapeSystem sys, FILE* channelErr) {
-	char* email = strtok(NULL, " ");
+	char* email = strtok(NULL, " \t");
 	int faculty = atoi( strtok(NULL, " ") );
 	int id = atoi( strtok(NULL, " ") );
-	char* time = strtok(NULL, " ");
+	char* time = strtok(NULL, " \t");
 	int num_ppl = atoi( strtok(NULL, " ") );
 	//TODO check return value
 	MtmErrorCode result = addAnOrder(sys, email, faculty, id, time, num_ppl);
@@ -184,7 +183,7 @@ MtmErrorCode addAnOrderCase(EscapeSystem sys, FILE* channelErr) {
 }
 
 MtmErrorCode addRecommendedOrderCase(EscapeSystem sys, FILE* channelErr) {
-	char* email = strtok(NULL, " ");
+	char* email = strtok(NULL, " \t");
 	int num_ppl = atoi( strtok(NULL, " ") );
 	//TODO check return value
 	MtmErrorCode result = addRecommendedOrder(sys, email, num_ppl );

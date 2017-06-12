@@ -82,7 +82,7 @@ void freeOrder(ListElement order) {
 
 MtmErrorCode createOrder(Order order, const char* email, TechnionFaculty faculty, int id, int price, int num_ppl, int hour ) {
 	//printf("\n\nfaculty: %d\n\n", faculty);
-	if( order == NULL || !emailValidity(email)  || !facultyValidity(faculty)) return MTM_INVALID_PARAMETER;
+	if( order == NULL || !emailValidation(email)  || !facultyValidation(faculty)) return MTM_INVALID_PARAMETER;
 
 
 	order->email = malloc(sizeof(char) * (strlen(email)+1));

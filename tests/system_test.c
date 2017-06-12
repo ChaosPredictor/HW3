@@ -364,9 +364,9 @@ static bool testAddAnEscaper() {
 	TechnionFaculty invalidFaculty = UNKNOWN;
 	TechnionFaculty invalidFaculty2 = -1;
 	TechnionFaculty invalidFaculty3 = 19;
-	SkillLevel skillLevel = ESCAPER_1;
-	SkillLevel invalidSkillLevel = ESCAPER_1 - 1;
-	SkillLevel invalidSkillLevel2 = ESCAPER_10 + 1;
+	SkillLevel skillLevel = 1;
+	SkillLevel invalidSkillLevel = 0;
+	SkillLevel invalidSkillLevel2 = 11;
 
 	ASSERT_TEST( addAnEscaper(nullSystem, email, faculty, skillLevel) == MTM_INVALID_PARAMETER );
 	ASSERT_TEST( addAnEscaper(system, nullEmail, faculty, skillLevel) == MTM_INVALID_PARAMETER );

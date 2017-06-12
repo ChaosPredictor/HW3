@@ -32,9 +32,9 @@ typedef enum {
 #define NUMBER_OF_FACULTIES UNKNOWN
 
 
-bool emailValidity(const char* email);
+bool emailValidation(const char* email);
 
-bool facultyValidity(TechnionFaculty faculty);
+bool facultyValidation(TechnionFaculty faculty);
 
 bool skillLevelValidation(SkillLevel skillLevel);
 
@@ -42,10 +42,23 @@ bool timeValidation(const char* time);
 
 bool idValidation(int id);
 
+bool hoursValidation (int from, int to);
+
+bool priceValidation (int price);
+
+bool numberOfPeoplepriceValidation (int num_ppl);
+
+
 int convertDayStringToInt(const char* time );
 
 int convertHourStringToInt(const char* time );
 
 int convertStringToCommand( const char* line );
+
+int fromHour(const char* working_hrs);
+
+int toHour(const char* working_hrs);
+
+int charToInt(char c);
 
 #endif /* COMMON_H_ */

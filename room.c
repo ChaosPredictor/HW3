@@ -61,7 +61,7 @@ int compareRooms(const SetElement room1, const SetElement room2) {
 	}
 }
 
-MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, const char* working_hrs, int difficulty) {
+MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, int from, int to, int difficulty) {
 	newRoom->email = malloc(sizeof(char) * (strlen(email)+1));
 	if ( newRoom->email == NULL) {
 		free(newRoom);
@@ -72,19 +72,17 @@ MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, in
 		return MTM_INVALID_PARAMETER;
 	}
 
-	int from =  fromHour(working_hrs);
-	int to =  toHour(working_hrs);
+	//int from =  fromHour(working_hrs);
+	//int to =  toHour(working_hrs);
 //TODO open till 24?
-	if ( from < 0 || from >= to || to > 24) {
-		free(newRoom->email);
-		return MTM_INVALID_PARAMETER;
-	}
-
-	if ( difficulty < 1 || difficulty > 10 ) {
-		free(newRoom->email);
-		return MTM_INVALID_PARAMETER;
-	}
-
+	//if ( from < 0 || from >= to || to > 24) {
+	//	free(newRoom->email);
+	//	return MTM_INVALID_PARAMETER;
+	//}
+	//if ( difficulty < 1 || difficulty > 10 ) {
+	//	free(newRoom->email);
+	//	return MTM_INVALID_PARAMETER;
+	//}
 	strcpy(newRoom->email, email);
 	newRoom->id = id;
 	newRoom->faculty = faculty;
@@ -124,17 +122,7 @@ void printRoom(const SetElement setElement) {
 }
 
 
-int fromHour(const char* working_hrs) {
-	return ( charToInt(working_hrs[1]) + ( charToInt(working_hrs[0]) * 10 ));
-}
 
-int toHour(const char* working_hrs) {
-	return ( charToInt(working_hrs[4]) + ( charToInt(working_hrs[3]) * 10 ));
-}
-
-int charToInt(char c) {
-	return (c - (int)'0');
-}
 
 int filterByNumOfPplandDifficulty(const SetElement setElement, SetKey num_ppl, SetKey skill_level ) {
 	int deltaNumberOfPpl = ((Room)setElement)->num_ppl-num_ppl;

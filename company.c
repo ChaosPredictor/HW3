@@ -43,7 +43,7 @@ int compareCompanies(const SetElement company1, const SetElement company2) {
 MtmErrorCode createCompany(Company company, const char* email, TechnionFaculty faculty) {
 
 	if( email == NULL ) return MTM_INVALID_PARAMETER;
-	if( !emailValidity(email) ) return MTM_INVALID_PARAMETER;
+	if( !emailValidation(email) ) return MTM_INVALID_PARAMETER;
 	if( faculty < 0 || faculty > 17 ) return MTM_INVALID_PARAMETER;
 
 	if( company == NULL ) return MTM_OUT_OF_MEMORY;

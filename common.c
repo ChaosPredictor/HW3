@@ -10,10 +10,13 @@
 
 
 #define MAX_DAYS_AHEAD 10
+#define MIN_DIFICULTY 1
+#define MAX_DIFICULTY 10
 #define LAST_HOUR_ADAY 23
 
 
-bool emailValidity(const char* email) {
+
+bool emailValidation(const char* email) {
 	if ( email == NULL ) return false;
 	size_t len = strlen(email);
 	int count = 0;
@@ -23,7 +26,7 @@ bool emailValidity(const char* email) {
 	return ( count == 1);
 }
 
-bool facultyValidity(TechnionFaculty faculty) {
+bool facultyValidation(TechnionFaculty faculty) {
 	if ( faculty < 0 || faculty >= NUMBER_OF_FACULTIES ) {
 		return false;
 	}
@@ -31,7 +34,7 @@ bool facultyValidity(TechnionFaculty faculty) {
 }
 
 bool skillLevelValidation(SkillLevel skillLevel) {
-	if ( skillLevel < ESCAPER_1 || skillLevel > ESCAPER_10 ) return false;
+	if ( skillLevel < MIN_DIFICULTY || skillLevel > MAX_DIFICULTY ) return false;
 	return true;
 }
 
@@ -53,7 +56,26 @@ bool idValidation(int id) {
 	return false;
 }
 
+bool hoursValidation (int from, int to) {
+	if ( from < 0 || from >= to || to > 24) {
+		return false;
+	}
+	return true;
+}
 
+bool numberOfPeoplepriceValidation (int num_ppl) {
+	if ( num_ppl < 1 ) {
+		return false;
+	}
+	return true;
+}
+
+bool priceValidation (int price) {
+	if ( price < 1 || price % 4 != 0 ) {
+		return false;
+	}
+	return true;
+}
 
 
 
@@ -74,8 +96,6 @@ int convertHourStringToInt( const char* time ) {
 	free( temp );
 	return hour;
 }
-
-
 
 int convertStringToCommand( const char* line ) {
 	char *temp = malloc(sizeof(char) * (strlen(line) + 1));
@@ -121,4 +141,17 @@ int convertStringToCommand( const char* line ) {
 	}
 	free( temp );
 	return result;
+}
+
+
+int fromHour(const char* working_hrs) {
+	return ( charToInt(working_hrs[1]) + ( charToInt(working_hrs[0]) * 10 ));
+}
+
+int toHour(const char* working_hrs) {
+	return ( charToInt(working_hrs[4]) + ( charToInt(working_hrs[3]) * 10 ));
+}
+
+int charToInt(char c) {
+	return (c - (int)'0');
 }

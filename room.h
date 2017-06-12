@@ -41,7 +41,7 @@ void freeRoom(SetElement room);
 int compareRooms(const SetElement room1, const SetElement room2);
 
 
-MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, const char* working_hrs, int difficulty);
+MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, int from, int to, int difficulty);
 
 int calculatePriceOfOrder(const Room room, TechnionFaculty escaperFaculty, int num_ppl);
 

@@ -38,6 +38,12 @@ static bool testTimeValidation() {
 	return true;
 }
 
+static bool testPriceValidation() {
+
+	ASSERT_TEST( priceValidation(0) == false );
+
+	return true;
+}
 
 static bool testConvertStringToCommand() {
 
@@ -71,6 +77,7 @@ static bool testConvertStringToCommand() {
 
 int commonTests () {
 	RUN_TEST(testTimeValidation);
+	RUN_TEST(testPriceValidation);
 	RUN_TEST(testConvertStringToCommand);
 
 

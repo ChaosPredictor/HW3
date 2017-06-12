@@ -193,7 +193,7 @@ void freeAllNames(char *in, char *out, char *err) {
 MtmErrorCode addCompany(EscapeSystem sys, const char* email, TechnionFaculty faculty) {
 	Company newCompany = malloc(sizeof(struct company_t));
 	if ( newCompany == NULL ) return MTM_OUT_OF_MEMORY;
-	if ( sys == NULL || !emailValidity(email) || !facultyValidity(faculty)) {
+	if ( sys == NULL || !emailValidation(email) || !facultyValidation(faculty)) {
 		free(newCompany);
 		return MTM_INVALID_PARAMETER;
 	}
@@ -211,7 +211,7 @@ MtmErrorCode addCompany(EscapeSystem sys, const char* email, TechnionFaculty fac
 }
 
 MtmErrorCode removeCompany(EscapeSystem sys, const char* email) {
-	if( sys == NULL || !emailValidity(email) ) return MTM_INVALID_PARAMETER;
+	if( sys == NULL || !emailValidation(email) ) return MTM_INVALID_PARAMETER;
 
 	Company company = findCompanyByEmail( sys , email );
 	if ( company == NULL ) return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
@@ -250,7 +250,7 @@ bool isAnyRoomOfACompanyOrdered(const EscapeSystem sys, const char* email) {
 MtmErrorCode addAnEscaper(EscapeSystem sys, const char* email, TechnionFaculty faculty, SkillLevel skillLevel) {
 	Escaper newEscaper = malloc(sizeof(struct escaper_t));
 	if ( newEscaper == NULL ) return MTM_OUT_OF_MEMORY;
-	if ( sys == NULL || !emailValidity(email) || !facultyValidity(faculty) || !skillLevelValidation(skillLevel)) {
+	if ( sys == NULL || !emailValidation(email) || !facultyValidation(faculty) || !skillLevelValidation(skillLevel)) {
 		free( newEscaper );
 		return MTM_INVALID_PARAMETER;
 	}
@@ -278,7 +278,7 @@ MtmErrorCode addAnEscaper(EscapeSystem sys, const char* email, TechnionFaculty f
 }
 
 MtmErrorCode removeAnEscaper(EscapeSystem sys, const char* email) {
-	if( sys == NULL || !emailValidity(email) ) return MTM_INVALID_PARAMETER;
+	if( sys == NULL || !emailValidation(email) ) return MTM_INVALID_PARAMETER;
 	Escaper escaper = findEscaperByEmail( sys, email );
 	if ( escaper == NULL ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
 	removedOrdersOfEscaper( sys, email );
@@ -321,15 +321,17 @@ MtmErrorCode addARoom(EscapeSystem sys, const char* email, int id, int price, in
 	Room newRoom = malloc(sizeof(struct room_t));
 	if ( newRoom == NULL) return MTM_OUT_OF_MEMORY;
 	//TODO working hours validity
-	if ( sys == NULL || working_hrs == NULL ) {
+	if ( sys == NULL || working_hrs == NULL || !idValidation(id) || !emailValidation(email) ) {
 		free(newRoom);
 		return MTM_INVALID_PARAMETER;
 	}
-	if ( !emailValidity(email) || !skillLevelValidation(difficulty) ) {
-		free(newRoom);
-		return MTM_INVALID_PARAMETER;
-	}
+	int from =  fromHour(working_hrs);
+	int to =  toHour(working_hrs);
 
+	if ( !hoursValidation (from, to) || !skillLevelValidation(difficulty) || !priceValidation(price) || !numberOfPeoplepriceValidation(num_ppl) ) {
+		free(newRoom);
+		return MTM_INVALID_PARAMETER;
+	}
 	Company company = findCompanyByEmail( sys, email);
 	if ( company  == NULL ) {
 		free(newRoom);
@@ -340,28 +342,24 @@ MtmErrorCode addARoom(EscapeSystem sys, const char* email, int id, int price, in
 		free(newRoom);
 		return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
 	}
-
-	MtmErrorCode result = createRoom(newRoom, email, id, faculty, price, num_ppl, working_hrs, difficulty);
+	MtmErrorCode result = createRoom(newRoom, email, id, faculty, price, num_ppl, from, to, difficulty);
 	if( result != MTM_SUCCESS ) {
 		free(newRoom);
 		return result;
 	}
-
 	if( setIsIn(sys->rooms, newRoom) ) {
 		freeRoom(newRoom);
 		return MTM_ID_ALREADY_EXIST;
 	}
-
 	//TODO check return value
 	setAdd(sys->rooms, newRoom);
 	addARoomToCompany(company);
-
 	freeRoom(newRoom);
 	return MTM_SUCCESS;
 }
 
 MtmErrorCode removeARoom(EscapeSystem sys, TechnionFaculty faculty, int id) {
-	if( sys == NULL || !facultyValidity(faculty) || id < 1 ) return MTM_INVALID_PARAMETER;
+	if( sys == NULL || !facultyValidation(faculty) || id < 1 ) return MTM_INVALID_PARAMETER;
 	SET_FOREACH(Room, val, sys->rooms) {
 		if ( val->faculty == faculty && val->id == id ) {
 			if ( IsARoomOrdered(sys, faculty, id) ) {
@@ -376,7 +374,7 @@ MtmErrorCode removeARoom(EscapeSystem sys, TechnionFaculty faculty, int id) {
 }
 
 MtmErrorCode removeAllRoomsOfCompany(EscapeSystem sys, const char* email) {
-	if ( sys == NULL || !emailValidity(email) ) return MTM_INVALID_PARAMETER;
+	if ( sys == NULL || !emailValidation(email) ) return MTM_INVALID_PARAMETER;
 	MtmErrorCode result;
 	SET_FOREACH(Room, val, sys->rooms) {
 		if ( strcmp(val->email, email) == 0) {
@@ -474,7 +472,7 @@ Set filterRoomSet(const Set rooms, RecommendSetElement recommendSetElement, SetK
 MtmErrorCode addAnOrder(EscapeSystem sys, const char* email, TechnionFaculty faculty, int id, const char* time, int num_ppl) {
 	Order newOrder = malloc(sizeof(struct order_t));
 	if ( newOrder == NULL) return MTM_OUT_OF_MEMORY;
-	if ( sys == NULL || !emailValidity(email) || !timeValidation(time) || !idValidation(id) || !facultyValidity(faculty)) {
+	if ( sys == NULL || !emailValidation(email) || !timeValidation(time) || !idValidation(id) || !facultyValidation(faculty) || !numberOfPeoplepriceValidation (num_ppl)) {
 		free(newOrder);
 		return MTM_INVALID_PARAMETER;
 	}
@@ -491,12 +489,12 @@ MtmErrorCode addAnOrder(EscapeSystem sys, const char* email, TechnionFaculty fac
 	} else if ( room == NULL ) {
 		free(newOrder);
 		return MTM_ID_DOES_NOT_EXIST;
-	} else if ( !isRoomAvailable(sys, daysFromToday, hour, room) ) {
-		free(newOrder);
-		return MTM_ROOM_NOT_AVAILABLE;
 	} else 	if ( !isEscaperAvailable(sys, daysFromToday, hour, escaper) ) {
 		free(newOrder);
 		return MTM_CLIENT_IN_ROOM;
+	} else if ( !isRoomAvailable(sys, daysFromToday, hour, room) ) {
+		free(newOrder);
+		return MTM_ROOM_NOT_AVAILABLE;
 	}
 
 	MtmErrorCode result = createOrder(newOrder, email, faculty, id, calculatePriceOfOrder(room, escaperFaculty, num_ppl), num_ppl, hour );
@@ -516,7 +514,7 @@ MtmErrorCode addAnOrder(EscapeSystem sys, const char* email, TechnionFaculty fac
 MtmErrorCode addRecommendedOrder(EscapeSystem sys, char* email, int num_ppl ) {
 	Order newOrder = malloc(sizeof(struct order_t));
 	if ( newOrder == NULL) return MTM_OUT_OF_MEMORY;
-	if ( sys == NULL || !emailValidity(email) ) {
+	if ( sys == NULL || !emailValidation(email) ) {
 		free(newOrder);
 		return MTM_INVALID_PARAMETER;
 	}
