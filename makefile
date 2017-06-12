@@ -1,6 +1,6 @@
 CC = gcc
 OBJS =  mtm_escape.o system.o common.o escaper.o company.o room.o order.o faculty.o
-OBJS_TEST =  tests.o common_test.o system_test.o escaper_test.o company_test.o faculty_test.o system.o common.o escaper.o company.o room.o order.o faculty.o
+OBJS_TEST =  tests.o common_test.o faculty_test.o company_test.o room_test.o escaper_test.o system_test.o system.o common.o escaper.o company.o room.o order.o faculty.o
 #TEST = ./tests/test.c ./tests/test.h ./tests/common_test.o ./tests/system_test.o
 EXEC = mtm_escape
 DEBUG_FLAG = -g -DNDEBUG
@@ -36,23 +36,26 @@ common.o: common.c common.h mtm_ex3.h
 test: $(OBJS_TEST) 
 	$(CC) $(DEBUG_FLAG) $(OBJS_TEST) libmtm.a -o $@
 
-tests.o: ./tests/tests.c common_test.o system_test.o company_test.o escaper_test.o faculty_test.o
+tests.o: ./tests/tests.c common_test.o faculty_test.o company_test.o room_test.o escaper_test.o system_test.o
 	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/tests.c 
 
 common_test.o: ./tests/common_test.c ./tests/common_test.h order.c
-	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/common_test.c 
+	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/common_test.c
 
-system_test.o: ./tests/system_test.c ./tests/system_test.h system.c
-	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/system_test.c
+faculty_test.o: ./tests/faculty_test.c ./tests/faculty_test.h faculty.c
+	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/faculty_test.c	
 
 company_test.o: ./tests/company_test.c ./tests/company_test.h company.c
 	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/company_test.c
 
+room_test.o: ./tests/room_test.c ./tests/room_test.h room.c
+	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/room_test.c
+
 escaper_test.o: ./tests/escaper_test.c ./tests/escaper_test.h escaper.c
 	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/escaper_test.c
 
-faculty_test.o: ./tests/faculty_test.c ./tests/faculty_test.h faculty.c
-	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/faculty_test.c	
+system_test.o: ./tests/system_test.c ./tests/system_test.h system.c
+	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/system_test.c
 
 clean:
 	rm -f $(OBJS) $(EXEC)

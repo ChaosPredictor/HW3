@@ -62,27 +62,18 @@ int compareRooms(const SetElement room1, const SetElement room2) {
 }
 
 MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, int from, int to, int difficulty) {
+	if ( email == NULL ) return MTM_INVALID_PARAMETER;
 	newRoom->email = malloc(sizeof(char) * (strlen(email)+1));
 	if ( newRoom->email == NULL) {
-		free(newRoom);
+		free(newRoom->email);
 		return MTM_OUT_OF_MEMORY;
 	}
-	if ( id < 1 || price < 1 || price % 4 != 0 || num_ppl < 1) {
+
+	if ( !idValidation(id) || !emailValidation(email) || !hoursValidation (from, to) || !skillLevelValidation(difficulty) || !priceValidation(price) || !numberOfPeoplepriceValidation(num_ppl)) {
 		free(newRoom->email);
 		return MTM_INVALID_PARAMETER;
 	}
 
-	//int from =  fromHour(working_hrs);
-	//int to =  toHour(working_hrs);
-//TODO open till 24?
-	//if ( from < 0 || from >= to || to > 24) {
-	//	free(newRoom->email);
-	//	return MTM_INVALID_PARAMETER;
-	//}
-	//if ( difficulty < 1 || difficulty > 10 ) {
-	//	free(newRoom->email);
-	//	return MTM_INVALID_PARAMETER;
-	//}
 	strcpy(newRoom->email, email);
 	newRoom->id = id;
 	newRoom->faculty = faculty;
@@ -101,13 +92,9 @@ int calculatePriceOfOrder(const Room room, TechnionFaculty escaperFaculty, int n
 	if ( room == NULL ) return MTM_ID_DOES_NOT_EXIST;
 
 	if ( ((Room)room)->faculty == escaperFaculty ) return ((((Room)room)->price * 75) / 100) * num_ppl;
-	return returnRoomPrice( room ) * num_ppl;
+	return room->price * num_ppl;
 }
 
-int returnRoomPrice(const Room room) {
-	if( room != NULL ) return room->price;
-	return -1;
-}
 
 
 void printRoom(const SetElement setElement) {

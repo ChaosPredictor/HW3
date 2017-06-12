@@ -637,6 +637,8 @@ static bool testAddRecommendedOrder() {
 
 
 int systemTests () {
+	printf("\n\n ================ System Tests ================ \n\n");
+
 	RUN_TEST(testCreateSystem);
 	RUN_TEST(testDestroySystemy);
 

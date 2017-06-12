@@ -77,6 +77,7 @@ static bool testConvertStringToCommand() {
 
 
 int commonTests () {
+	printf("\n\n ================ Common Tests ================ \n\n");
 	RUN_TEST(testTimeValidation);
 	RUN_TEST(testPriceValidation);
 	RUN_TEST(testConvertStringToCommand);

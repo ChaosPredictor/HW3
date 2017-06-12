@@ -5,11 +5,14 @@
  *      Author: master
  */
 
-#include "company_test.h"
-#include "escaper_test.h"
-#include "faculty_test.h"
-#include "system_test.h"
+
 #include "common_test.h"
+#include "faculty_test.h"
+#include "company_test.h"
+#include "room_test.h"
+#include "escaper_test.h"
+#include "system_test.h"
+
 
 
 //int main2(int argv, char** arc) {
@@ -17,10 +20,12 @@ int main() {
 	//userTests(argv, arc);
 	//roomTests(argv, arc);
 	//orderTests(argv, arc);
-	companyTests();
-	escaperTests();
-	facultyTests();
 	commonTests();
+	facultyTests();
+	companyTests();
+	roomTests();
+	escaperTests();
+
 	systemTests();
 	return 1;
 }

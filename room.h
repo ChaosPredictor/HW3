@@ -18,6 +18,7 @@
 
 #include "set.h"
 #include "mtm_ex3.h"
+#include "common.h"
 
 typedef struct room_t{
 	char* email;
@@ -44,9 +45,6 @@ int compareRooms(const SetElement room1, const SetElement room2);
 MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, int from, int to, int difficulty);
 
 int calculatePriceOfOrder(const Room room, TechnionFaculty escaperFaculty, int num_ppl);
-
-int returnRoomPrice(const Room room);
-
 
 
 

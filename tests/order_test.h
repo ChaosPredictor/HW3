@@ -8,30 +8,10 @@
 #ifndef TESTS_ORDER_TEST_H_
 #define TESTS_ORDER_TEST_H_
 
-#include <stdbool.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-
-
 #include "./test_utilities.h"
-#include "./user_test.h"
-#include "./room_test.h"
-#include "./../order.h"
+#include "./../ordery.h"
+#include "./../system.h"
 
-/*
-
-#include <stdio.h>
-
-#include <ctype.h>
-
-#include "./user_test.h"
-#include "./../mtm_escape.h"
-#include "./../room.h"
-#include "./../user.h"
-
-
-*/
 
 
 int orderTests (int argv, char** arc);
