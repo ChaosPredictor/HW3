@@ -585,33 +585,29 @@ bool IsARoomOrdered(const EscapeSystem sys, TechnionFaculty faculty, int id) {
 }
 
 Day returnADayFromToday(const EscapeSystem sys, int daysFromToday) {
+	if ( daysFromToday == 0 ) return listGetFirst(sys->days);
 	Day day = listGetFirst(sys->days);
-	bool endOfList = false;
-	int i = 0;
-	while ( !endOfList && i < daysFromToday ) {
+	int lastDayNumber  = day->dayNumber;
+	while ( day != NULL ) {
+		lastDayNumber  = day->dayNumber;
 		day = listGetNext(sys->days);
-		if ( day == NULL ) {
-			endOfList = true;
-			break;
-		}
-		i++;
 	}
-	while ( i < daysFromToday ) {
-		Day newDay = createDay(i+1);
+
+	while ( listGetSize(sys->days) <= daysFromToday ) {
+		Day newDay = createDay(++lastDayNumber);
 		if ( newDay == NULL ) {
 			freeDay(newDay);
 			return MTM_OUT_OF_MEMORY;
 		}
 		listInsertLast(sys->days, newDay);
 		freeDay(newDay);
-		i++;
 	}
-	if ( endOfList ) {
-		day = listGetFirst(sys->days);
-		for (int i = 0; i < daysFromToday; i++ ) {
-			day = listGetNext(sys->days);
-		}
+
+	day = listGetFirst(sys->days);
+	for(int i = 0; i < daysFromToday; i++) {
+		day = listGetNext(sys->days);
 	}
+
 	return day;
 }
 

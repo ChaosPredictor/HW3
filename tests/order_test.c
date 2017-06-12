@@ -174,7 +174,7 @@ static bool testSetOrderHour() {
 
 	ASSERT_TEST( order->hour == 8 );
 
-
+	freeOrder(order);
 	return true;
 }
 
