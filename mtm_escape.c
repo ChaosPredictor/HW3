@@ -17,41 +17,52 @@ int main(int argc, char *argv[]) {
 
 	EscapeSystem sys = malloc(sizeof(struct EscapeSystem_t));
 	if ( sys == NULL ) {
-		mtmPrintErrorMessage(stdout, MTM_OUT_OF_MEMORY);
+		mtmPrintErrorMessage(stderr, MTM_OUT_OF_MEMORY);
 		return -1;
 	}
 	result = createSystem(sys);
 	if ( result != MTM_SUCCESS) {
-		mtmPrintErrorMessage(stdout, result);
+		mtmPrintErrorMessage(stderr, result);
 		free(sys);
 		return -1;
 	}
 
-	FILE *challenIn = NULL;
-	FILE *challenOut = NULL;
-	FILE *challenErr = NULL;
+	FILE *channelIn = NULL;
+	FILE *channelOut = NULL;
+	FILE *channelErr = NULL;
 
-	result = inputChannelSelector(argc, argv, &challenIn, &challenOut, &challenErr );
+	result = inputChannelSelector(argc, argv, &channelIn, &channelOut, &channelErr );
 	if ( result != MTM_SUCCESS) {
 		destroySystem(sys);
-		mtmPrintErrorMessage(stdout, MTM_INVALID_COMMAND_LINE_PARAMETERS);
+		mtmPrintErrorMessage(stderr, result);
+		freeChannels(channelIn, channelOut , channelErr);
 		return -1;
 	}
 
-	lineReader(sys, challenIn, challenOut, challenErr );
-	//TODO check return value
+	result = lineReader(sys, channelIn, channelOut, channelErr );
+	if ( result != MTM_SUCCESS) {
+		destroySystem(sys);
+		mtmPrintErrorMessage(stderr, result);
+		freeChannels(channelIn, channelOut , channelErr);
+		return -1;
+	}
+
 	destroySystem(sys);
-
-	if ( challenIn != stdin) fclose(challenIn);
-	if ( challenOut != stdin) fclose(challenOut);
-
-
+	freeChannels(channelIn, channelOut , channelErr);
 	return 0;
 }
 
-void lineReader(EscapeSystem sys, FILE* challenIn, FILE* challenOut , FILE* challenErr) {
+void freeChannels(FILE* channelIn, FILE* channelOut , FILE* channelErr) {
+	if ( channelIn != stdin) fclose(channelIn);
+	if ( channelOut != stdout) fclose(channelOut);
+	if ( channelErr != stderr) fclose(channelErr);
+}
+
+
+MtmErrorCode lineReader(EscapeSystem sys, FILE* channelIn, FILE* channelOut , FILE* channelErr) {
 	char line[MAX_LINE_LENG];
-	while ( fgets(line, MAX_LINE_LENG, challenIn) != NULL) {
+	MtmErrorCode result;
+	while ( fgets(line, MAX_LINE_LENG, channelIn) != NULL) {
 
 		const char* firstNonSpace = line;
 		while(*firstNonSpace != '\0' && isspace(*firstNonSpace)) {
@@ -65,46 +76,52 @@ void lineReader(EscapeSystem sys, FILE* challenIn, FILE* challenOut , FILE* chal
 		strtok(NULL, " \t");
 
 		if ( numberOfCommand == 1 ) {
-			addCompanyCase(sys, challenErr);
+			result = addCompanyCase(sys, channelErr);
 		} else if ( numberOfCommand == 2 ) {
-			removeCompanyCase(sys, challenErr);
+			result = removeCompanyCase(sys, channelErr);
 		} else if ( numberOfCommand == 3 ) {
-			addRoomCase(sys, challenErr);
+			result = addRoomCase(sys, channelErr);
 		} else if ( numberOfCommand == 4 ) {
-			removeRoomCase(sys, challenErr);
+			result = removeRoomCase(sys, channelErr);
 		} else if ( numberOfCommand == 5 ) {
-			addEscaperCase(sys, challenErr);
+			result = addEscaperCase(sys, channelErr);
 		} else if ( numberOfCommand == 6 ) {
-			removeEscaperCase(sys, challenErr);
+			result = removeEscaperCase(sys, channelErr);
 		}  else if ( numberOfCommand == 7 ) {
-			addAnOrderCase(sys, challenErr);
+			result = addAnOrderCase(sys, channelErr);
 		} else if ( numberOfCommand == 8 ) {
-			addRecommendedOrderCase(sys, challenErr);
+			result = addRecommendedOrderCase(sys, channelErr);
 		} else if ( numberOfCommand == 9 ) {
-			reportDayCase(sys, challenOut);
+			result = reportDayCase(sys, channelOut);
 		} else if ( numberOfCommand == 10 ) {
-			reportBestCase(sys, challenOut);
+			result = reportBestCase(sys, channelOut);
 		}
-
+		if ( result == MTM_OUT_OF_MEMORY ) return result;
 	}
+	return MTM_SUCCESS;
 }
 
-void addCompanyCase(EscapeSystem sys, FILE* challenErr) {
+MtmErrorCode addCompanyCase(EscapeSystem sys, FILE* channelErr) {
 	char* email = strtok(NULL, " ");
 	int faculty = atoi( strtok(NULL, " ") );
-	//TODO check return value
-	addCompany(sys, email, faculty );
-	return;
+	MtmErrorCode result = addCompany(sys, email, faculty );
+	if ( result != MTM_SUCCESS ) {
+		mtmPrintErrorMessage(channelErr, result);
+	}
+	return result;
 }
 
-void removeCompanyCase(EscapeSystem sys, FILE* challenErr) {
+MtmErrorCode removeCompanyCase(EscapeSystem sys, FILE* channelErr) {
 	char* email = strtok(NULL, " ");
 	//TODO check return value
-	removeCompany(sys, email);
-	return;
+	MtmErrorCode result = removeCompany(sys, email);
+	if ( result != MTM_SUCCESS ) {
+		mtmPrintErrorMessage(channelErr, result);
+	}
+	return result;
 }
 
-void addRoomCase(EscapeSystem sys, FILE* challenErr) {
+MtmErrorCode addRoomCase(EscapeSystem sys, FILE* channelErr) {
 	char* email = strtok(NULL, " ");
 	int id = atoi( strtok(NULL, " ") );
 	int price = atoi( strtok(NULL, " ") );
@@ -112,57 +129,81 @@ void addRoomCase(EscapeSystem sys, FILE* challenErr) {
 	char* working_hrs = strtok(NULL, " ");
 	int difficulty = atoi( strtok(NULL, " ") );
 	//TODO check return value
-	addARoom(sys, email, id, price, num_ppl, working_hrs, difficulty);
-	return;
+	MtmErrorCode result = addARoom(sys, email, id, price, num_ppl, working_hrs, difficulty);
+	if ( result != MTM_SUCCESS ) {
+		mtmPrintErrorMessage(channelErr, result);
+	}
+	return result;
 }
 
-void removeRoomCase(EscapeSystem sys, FILE* challenErr) {
+MtmErrorCode removeRoomCase(EscapeSystem sys, FILE* channelErr) {
 	int faculty = atoi( strtok(NULL, " ") );
 	int id = atoi( strtok(NULL, " ") );
 	//TODO check return value
-	removeARoom(sys, faculty, id);
+	MtmErrorCode result = removeARoom(sys, faculty, id);
+	if ( result != MTM_SUCCESS ) {
+		mtmPrintErrorMessage(channelErr, result);
+	}
+	return result;
 }
 
-void addEscaperCase(EscapeSystem sys, FILE* challenErr) {
+MtmErrorCode addEscaperCase(EscapeSystem sys, FILE* channelErr) {
 	char* email = strtok(NULL, " ");
 	int faculty = atoi( strtok(NULL, " ") );
 	int skill_level = atoi( strtok(NULL, " ") );
 	//TODO check return value
-	addAnEscaper(sys, email, faculty, skill_level);
+	MtmErrorCode result = addAnEscaper(sys, email, faculty, skill_level);
+	if ( result != MTM_SUCCESS ) {
+		mtmPrintErrorMessage(channelErr, result);
+	}
+	return result;
 }
 
-void removeEscaperCase(EscapeSystem sys, FILE* challenErr) {
+MtmErrorCode removeEscaperCase(EscapeSystem sys, FILE* channelErr) {
 	char* email = strtok(NULL, " \n");
 	//TODO check return value
-	removeAnEscaper(sys, email);
-
+	MtmErrorCode result = removeAnEscaper(sys, email);
+	if ( result != MTM_SUCCESS ) {
+		mtmPrintErrorMessage(channelErr, result);
+	}
+	return result;
 }
 
-void addAnOrderCase(EscapeSystem sys, FILE* challenErr) {
+MtmErrorCode addAnOrderCase(EscapeSystem sys, FILE* channelErr) {
 	char* email = strtok(NULL, " ");
 	int faculty = atoi( strtok(NULL, " ") );
 	int id = atoi( strtok(NULL, " ") );
 	char* time = strtok(NULL, " ");
 	int num_ppl = atoi( strtok(NULL, " ") );
 	//TODO check return value
-	addAnOrder(sys, email, faculty, id, time, num_ppl);
+	MtmErrorCode result = addAnOrder(sys, email, faculty, id, time, num_ppl);
+	if ( result != MTM_SUCCESS ) {
+		mtmPrintErrorMessage(channelErr, result);
+	}
+	return result;
 }
 
-void addRecommendedOrderCase(EscapeSystem sys, FILE* challenErr) {
+MtmErrorCode addRecommendedOrderCase(EscapeSystem sys, FILE* channelErr) {
 	char* email = strtok(NULL, " ");
 	int num_ppl = atoi( strtok(NULL, " ") );
 	//TODO check return value
-	addRecommendedOrder(sys, email, num_ppl );
+	MtmErrorCode result = addRecommendedOrder(sys, email, num_ppl );
+	if ( result != MTM_SUCCESS ) {
+		mtmPrintErrorMessage(channelErr, result);
+	}
+	return result;
 }
 
-void reportDayCase(EscapeSystem sys, FILE* challenOut) {
+MtmErrorCode reportDayCase(EscapeSystem sys, FILE* channelOut) {
 	//TODO check return value
-	reportDay(challenOut, sys);
+	reportDay(channelOut, sys);
+	return MTM_SUCCESS;
 }
 
-void reportBestCase(EscapeSystem sys, FILE* challenOut) {
+MtmErrorCode reportBestCase(EscapeSystem sys, FILE* channelOut) {
 	//TODO check return value
-	reportBest(challenOut, sys);
+	reportBest(channelOut, sys);
+	return MTM_SUCCESS;
 }
 
 

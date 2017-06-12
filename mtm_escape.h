@@ -12,28 +12,28 @@
 #include "common.h"
 
 
-void lineReader(EscapeSystem sys, FILE* challenIn, FILE* challenOut, FILE* challenErr );
+MtmErrorCode lineReader(EscapeSystem sys, FILE* channelIn, FILE* channelOut, FILE* channelErr );
 
+void freeChannels(FILE* channelIn, FILE* channelOut , FILE* channelErr);
 
+MtmErrorCode addCompanyCase(EscapeSystem sys, FILE* channelErr);
 
-void addCompanyCase(EscapeSystem sys, FILE* challenErr);
+MtmErrorCode removeCompanyCase(EscapeSystem sys, FILE* channelErr);
 
-void removeCompanyCase(EscapeSystem sys, FILE* challenErr);
+MtmErrorCode addRoomCase(EscapeSystem sys, FILE* channelErr);
 
-void addRoomCase(EscapeSystem sys, FILE* challenErr);
+MtmErrorCode removeRoomCase(EscapeSystem sys, FILE* channelErr);
 
-void removeRoomCase(EscapeSystem sys, FILE* challenErr);
+MtmErrorCode addEscaperCase(EscapeSystem sys, FILE* channelErr);
 
-void addEscaperCase(EscapeSystem sys, FILE* challenErr);
+MtmErrorCode removeEscaperCase(EscapeSystem sys, FILE* channelErr);
 
-void removeEscaperCase(EscapeSystem sys, FILE* challenErr);
+MtmErrorCode addAnOrderCase(EscapeSystem sys, FILE* channelErr);
 
-void addAnOrderCase(EscapeSystem sys, FILE* challenErr);
+MtmErrorCode addRecommendedOrderCase(EscapeSystem sys, FILE* channelOut);
 
-void addRecommendedOrderCase(EscapeSystem sys, FILE* challenOut);
+MtmErrorCode reportDayCase(EscapeSystem sys, FILE* channelOut);
 
-void reportDayCase(EscapeSystem sys, FILE* challenOut);
-
-void reportBestCase(EscapeSystem sys, FILE* challenOut);
+MtmErrorCode reportBestCase(EscapeSystem sys, FILE* channelOut);
 
 #endif /* MTM_ESCAPE_H_ */
