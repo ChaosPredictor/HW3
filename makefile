@@ -39,19 +39,19 @@ test: $(OBJS_TEST)
 tests.o: ./tests/tests.c common_test.o system_test.o company_test.o escaper_test.o faculty_test.o
 	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/tests.c 
 
-common_test.o: ./tests/common_test.c ./tests/common_test.h ./order.c
+common_test.o: ./tests/common_test.c ./tests/common_test.h order.c
 	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/common_test.c 
 
-system_test.o: ./tests/system_test.c ./tests/system_test.h ./system.c
+system_test.o: ./tests/system_test.c ./tests/system_test.h system.c
 	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/system_test.c
 
-company_test.o: ./tests/company_test.c ./tests/company_test.h ./company.c
+company_test.o: ./tests/company_test.c ./tests/company_test.h company.c
 	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/company_test.c
 
-escaper_test.o: ./tests/escaper_test.c ./tests/escaper_test.h ./escaper.c
+escaper_test.o: ./tests/escaper_test.c ./tests/escaper_test.h escaper.c
 	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/escaper_test.c
 
-faculty_test.o: ./tests/faculty_test.c ./tests/faculty_test.h ./faculty.c
+faculty_test.o: ./tests/faculty_test.c ./tests/faculty_test.h faculty.c
 	$(CC) -c $(DEBUG_FLAG) $(COMP_FLAG) ./tests/faculty_test.c	
 
 clean:

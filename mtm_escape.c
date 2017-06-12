@@ -9,9 +9,6 @@
 #include "mtm_escape.h"
 
 
-#define MAX_LINE_LENG 300
-
-
 int main(int argc, char *argv[]) {
 	MtmErrorCode result;
 
@@ -60,9 +57,9 @@ void freeChannels(FILE* channelIn, FILE* channelOut , FILE* channelErr) {
 
 
 MtmErrorCode lineReader(EscapeSystem sys, FILE* channelIn, FILE* channelOut , FILE* channelErr) {
-	char line[MAX_LINE_LENG];
+	char line[MAX_LEN];
 	MtmErrorCode result = MTM_SUCCESS;
-	while ( fgets(line, MAX_LINE_LENG, channelIn) != NULL) {
+	while ( fgets(line, MAX_LEN, channelIn) != NULL) {
 
 		const char* firstNonSpace = line;
 		while(*firstNonSpace != '\0' && isspace(*firstNonSpace)) {

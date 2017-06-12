@@ -56,7 +56,7 @@ static bool testCompareFacultyByIncomeAndId() {
 	faculty1->id = 10;
 	faculty1->income = 555;
 	faculty2->id = 10;
-	faculty2->income = 333;
+	faculty2->income = 334;
 	faculty3->id = 1;
 	faculty3->income = 555;
 
