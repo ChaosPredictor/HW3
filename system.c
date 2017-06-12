@@ -247,7 +247,7 @@ bool isAnyRoomOfACompanyOrdered(const EscapeSystem sys, const char* email) {
 
 
 
-MtmErrorCode addAnEscaper(EscapeSystem sys, const char* email, TechnionFaculty faculty, SkillLevel skillLevel) {
+MtmErrorCode addEscaper(EscapeSystem sys, const char* email, TechnionFaculty faculty, SkillLevel skillLevel) {
 	Escaper newEscaper = malloc(sizeof(struct escaper_t));
 	if ( newEscaper == NULL ) return MTM_OUT_OF_MEMORY;
 	if ( sys == NULL || !emailValidation(email) || !facultyValidation(faculty) || !skillLevelValidation(skillLevel)) {
@@ -277,7 +277,7 @@ MtmErrorCode addAnEscaper(EscapeSystem sys, const char* email, TechnionFaculty f
 	return MTM_SUCCESS;
 }
 
-MtmErrorCode removeAnEscaper(EscapeSystem sys, const char* email) {
+MtmErrorCode removeEscaper(EscapeSystem sys, const char* email) {
 	if( sys == NULL || !emailValidation(email) ) return MTM_INVALID_PARAMETER;
 	Escaper escaper = findEscaperByEmail( sys, email );
 	if ( escaper == NULL ) return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;

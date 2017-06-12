@@ -151,7 +151,7 @@ MtmErrorCode addEscaperCase(EscapeSystem sys, FILE* channelErr) {
 	int faculty = atoi( strtok(NULL, " ") );
 	int skill_level = atoi( strtok(NULL, " ") );
 	//TODO check return value
-	MtmErrorCode result = addAnEscaper(sys, email, faculty, skill_level);
+	MtmErrorCode result = addEscaper(sys, email, faculty, skill_level);
 	if ( result != MTM_SUCCESS ) {
 		mtmPrintErrorMessage(channelErr, result);
 	}
@@ -162,7 +162,7 @@ MtmErrorCode removeEscaperCase(EscapeSystem sys, FILE* channelErr) {
 	char* email = strtok(NULL, " \r\n");
 	//if ( email == NULL ) printf("\n\nit's \n\n");
 	//TODO check return value
-	MtmErrorCode result = removeAnEscaper(sys, email);
+	MtmErrorCode result = removeEscaper(sys, email);
 	if ( result != MTM_SUCCESS ) {
 		mtmPrintErrorMessage(channelErr, result);
 	}

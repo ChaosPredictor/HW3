@@ -52,9 +52,9 @@ bool isAnyRoomOfACompanyOrdered(const EscapeSystem sys, const char* email);
 
 
 
-MtmErrorCode addAnEscaper(EscapeSystem sys, const char* email, TechnionFaculty faculty, SkillLevel typeSkill);
+MtmErrorCode addEscaper(EscapeSystem sys, const char* email, TechnionFaculty faculty, SkillLevel typeSkill);
 
-MtmErrorCode removeAnEscaper(EscapeSystem sys, const char* email);
+MtmErrorCode removeEscaper(EscapeSystem sys, const char* email);
 
 Escaper findEscaperByEmail(const EscapeSystem sys, const char* email );
 

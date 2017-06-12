@@ -155,9 +155,9 @@ static bool testHelperAddRooms(EscapeSystem sys) {
 }
 
 static bool testHelperAddEscapers(EscapeSystem sys) {
-	ASSERT_TEST(addAnEscaper(sys, "escaper1@civil", 0, 2) == MTM_SUCCESS );
-	ASSERT_TEST(addAnEscaper(sys, "escaper2@civil", 0, 2) == MTM_SUCCESS );
-	ASSERT_TEST(addAnEscaper(sys, "escaper1@electrical", 2, 9) == MTM_SUCCESS );
+	ASSERT_TEST(addEscaper(sys, "escaper1@civil", 0, 2) == MTM_SUCCESS );
+	ASSERT_TEST(addEscaper(sys, "escaper2@civil", 0, 2) == MTM_SUCCESS );
+	ASSERT_TEST(addEscaper(sys, "escaper1@electrical", 2, 9) == MTM_SUCCESS );
 
 	ASSERT_TEST( setGetSize(sys->escapers) == 3 );
 	return true;
@@ -368,20 +368,20 @@ static bool testAddAnEscaper() {
 	SkillLevel invalidSkillLevel = 0;
 	SkillLevel invalidSkillLevel2 = 11;
 
-	ASSERT_TEST( addAnEscaper(nullSystem, email, faculty, skillLevel) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addAnEscaper(system, nullEmail, faculty, skillLevel) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addAnEscaper(system, invalidEmail, faculty, skillLevel) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addAnEscaper(system, email, invalidFaculty, skillLevel) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addAnEscaper(system, email, invalidFaculty2, skillLevel) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addAnEscaper(system, email, invalidFaculty3, skillLevel) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addAnEscaper(system, email, faculty, invalidSkillLevel) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addAnEscaper(system, email, faculty, invalidSkillLevel2) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addEscaper(nullSystem, email, faculty, skillLevel) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addEscaper(system, nullEmail, faculty, skillLevel) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addEscaper(system, invalidEmail, faculty, skillLevel) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addEscaper(system, email, invalidFaculty, skillLevel) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addEscaper(system, email, invalidFaculty2, skillLevel) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addEscaper(system, email, invalidFaculty3, skillLevel) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addEscaper(system, email, faculty, invalidSkillLevel) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( addEscaper(system, email, faculty, invalidSkillLevel2) == MTM_INVALID_PARAMETER );
 
-	ASSERT_TEST( addAnEscaper(system, existCompanyEmail, faculty, skillLevel) == MTM_EMAIL_ALREADY_EXISTS );
+	ASSERT_TEST( addEscaper(system, existCompanyEmail, faculty, skillLevel) == MTM_EMAIL_ALREADY_EXISTS );
 
-	ASSERT_TEST( addAnEscaper(system, email, faculty, skillLevel) == MTM_SUCCESS );
+	ASSERT_TEST( addEscaper(system, email, faculty, skillLevel) == MTM_SUCCESS );
 
-	ASSERT_TEST( addAnEscaper(system, email, faculty, skillLevel) == MTM_EMAIL_ALREADY_EXISTS );
+	ASSERT_TEST( addEscaper(system, email, faculty, skillLevel) == MTM_EMAIL_ALREADY_EXISTS );
 
 	destroySystem(system);
 	return true;
@@ -412,18 +412,18 @@ static bool testRemoveAnEscaper() {
 	TechnionFaculty faculty = 0;
 	int id = 3;
 
-	ASSERT_TEST( removeAnEscaper(nullSystem, email) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( removeAnEscaper(system, nullEmail) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( removeAnEscaper(system, invalidEmail) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( removeAnEscaper(system, doesNotExistEmail) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST );
-	ASSERT_TEST( removeAnEscaper(system, existCompanyEmail) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST );
+	ASSERT_TEST( removeEscaper(nullSystem, email) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( removeEscaper(system, nullEmail) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( removeEscaper(system, invalidEmail) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( removeEscaper(system, doesNotExistEmail) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST );
+	ASSERT_TEST( removeEscaper(system, existCompanyEmail) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST );
 
 
-	ASSERT_TEST( removeAnEscaper(system, email) == MTM_SUCCESS );
+	ASSERT_TEST( removeEscaper(system, email) == MTM_SUCCESS );
 
 	ASSERT_TEST( IsARoomOrdered(system, faculty, id) == true );
 
-	ASSERT_TEST( removeAnEscaper(system, orderedEscaperEmail) == MTM_SUCCESS );
+	ASSERT_TEST( removeEscaper(system, orderedEscaperEmail) == MTM_SUCCESS );
 
 	ASSERT_TEST( IsARoomOrdered(system, faculty, id) == false );
 

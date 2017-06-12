@@ -37,5 +37,7 @@ int compareFacultyByIncomeAndId(const ListElement listElement1, const ListElemen
 
 MtmErrorCode addIncomeToFaculty(Faculty faculty, int income) {
 	faculty->income += income;
-	return MTM_INVALID_PARAMETER;
+	return MTM_SUCCESS;
 }
+
+
