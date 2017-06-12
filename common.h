@@ -42,6 +42,8 @@ bool timeValidation(const char* time);
 
 bool idValidation(int id);
 
+bool hourValidation (int hour);
+
 bool hoursValidation (int from, int to);
 
 bool priceValidation (int price);

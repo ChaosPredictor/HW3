@@ -424,7 +424,7 @@ Room findRecommendedRoom(const EscapeSystem sys, const Escaper escaper, int  num
 }
 
 bool isRoomAvailable(const EscapeSystem sys, int daysFromToday, int hour, ListElement room) {
-	if ( ((Room)room)->from_hrs > hour || ((Room)room)->to_hrs < hour ) return false;
+	if ( ((Room)room)->from_hrs > hour || ((Room)room)->to_hrs <= hour ) return false;
 
 	Day day = listGetFirst(sys->days);
 

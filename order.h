@@ -36,6 +36,7 @@ ListElement copyDay(ListElement day);
 
 void freeDay(ListElement day);
 
+
 ListElement createDay(int dayNumber);
 
 List createDays();

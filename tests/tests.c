@@ -11,6 +11,7 @@
 #include "company_test.h"
 #include "room_test.h"
 #include "escaper_test.h"
+#include "order_test.h"
 #include "system_test.h"
 
 
@@ -19,12 +20,13 @@
 int main() {
 	//userTests(argv, arc);
 	//roomTests(argv, arc);
-	//orderTests(argv, arc);
 	commonTests();
 	facultyTests();
 	companyTests();
 	roomTests();
 	escaperTests();
+	orderTests();
+
 
 	systemTests();
 	return 1;

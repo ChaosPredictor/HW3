@@ -9,12 +9,12 @@
 #define TESTS_ORDER_TEST_H_
 
 #include "./test_utilities.h"
-#include "./../ordery.h"
+#include "./../order.h"
 #include "./../system.h"
 
 
 
-int orderTests (int argv, char** arc);
+int orderTests ();
 
 
 #endif /* TESTS_ORDER_TEST_H_ */

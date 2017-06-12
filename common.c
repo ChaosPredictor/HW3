@@ -56,6 +56,13 @@ bool idValidation(int id) {
 	return false;
 }
 
+bool hourValidation (int hour) {
+	if ( hour < 0 || hour > 23) {
+		return false;
+	}
+	return true;
+}
+
 bool hoursValidation (int from, int to) {
 	if ( from < 0 || from >= to || to > 24) {
 		return false;

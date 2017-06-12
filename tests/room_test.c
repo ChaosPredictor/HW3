@@ -142,7 +142,6 @@ static bool testCalculatePriceOfOrder() {
 	ASSERT_TEST( calculatePriceOfOrder(newRoom, 1, 3) == 120 );
 	ASSERT_TEST( calculatePriceOfOrder(newRoom, 0, 4) == 120 );
 
-
 	freeRoom(newRoom);
 	return true;
 }
@@ -157,7 +156,6 @@ int roomTests () {
 	RUN_TEST(testCompareRoom);
 	RUN_TEST(testCreateRoom);
 	RUN_TEST(testCalculatePriceOfOrder);
-
 
 	return 0;
 }

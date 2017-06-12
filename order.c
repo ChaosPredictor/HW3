@@ -46,7 +46,6 @@ ListElement createDay(int dayNumber) {
 
 List createDays() {
 	List days = listCreate(copyDay, freeDay);
-	//TODO tset retrun value
 	if ( days == NULL ) return NULL;
 	Day newDay = createDay(0);
 
@@ -57,7 +56,6 @@ List createDays() {
 
 ListElement copyOrder(ListElement order) {
 	if ( order == NULL ) return NULL;
-	//TODO maybe assert
 	Order newOrder = malloc(sizeof(struct order_t));
 	if( newOrder == NULL ) return NULL;
 	newOrder->email = malloc(sizeof(char) * (strlen(((Order)order)->email) + 1));
@@ -81,14 +79,18 @@ void freeOrder(ListElement order) {
 }
 
 MtmErrorCode createOrder(Order order, const char* email, TechnionFaculty faculty, int id, int price, int num_ppl, int hour ) {
-	//printf("\n\nfaculty: %d\n\n", faculty);
-	if( order == NULL || !emailValidation(email)  || !facultyValidation(faculty)) return MTM_INVALID_PARAMETER;
+	if ( email != NULL && order!=NULL ) {
+		order->email = malloc(sizeof(char) * (strlen(email)+1));
+		if ( order->email == NULL ) return MTM_OUT_OF_MEMORY;
+	} else {
+		return MTM_INVALID_PARAMETER;
+	}
 
+	if( !emailValidation(email) || !facultyValidation(faculty) || !idValidation(id) || !numberOfPeoplepriceValidation(num_ppl) || !hourValidation (hour)){
+		free(order->email);
+		return MTM_INVALID_PARAMETER;
+	}
 
-	order->email = malloc(sizeof(char) * (strlen(email)+1));
-
-
-	if( order->email == NULL ) return MTM_OUT_OF_MEMORY;
 	strcpy( order->email, email);
 
 	order->faculty = faculty;
@@ -101,6 +103,9 @@ MtmErrorCode createOrder(Order order, const char* email, TechnionFaculty faculty
 
 
 MtmErrorCode setOrderHour(Order order, int hour) {
+	if( !hourValidation (hour) ){
+		return MTM_INVALID_PARAMETER;
+	}
 	order->hour = hour;
 	return MTM_SUCCESS;
 }
