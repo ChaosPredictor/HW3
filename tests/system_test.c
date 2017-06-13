@@ -179,6 +179,8 @@ static bool testRemoveACompany() {
 	ASSERT_TEST( removeCompany(system, email) == MTM_SUCCESS );
 	ASSERT_TEST( setGetSize(system->rooms) < numberOfRooms );
 
+	//TODO test that removed room can't be order
+
 	destroySystem(system);
 	return true;
 }
