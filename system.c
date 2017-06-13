@@ -216,6 +216,7 @@ bool isEscaperAvailable(const EscapeSystem sys, int daysFromToday, int hour, Set
 			listDestroy(ordersOfEscaper);
 			return false;
 		}
+		order = listGetNext(ordersOfEscaper);
 	}
 	listDestroy(ordersOfEscaper);
 	return true;
@@ -396,7 +397,7 @@ MtmErrorCode addAnOrder(EscapeSystem sys, const char* email, TechnionFaculty fac
 	} else if ( room == NULL ) {
 		free(newOrder);
 		return MTM_ID_DOES_NOT_EXIST;
-	} else 	if ( !isEscaperAvailable(sys, daysFromToday, hour, escaper) ) {
+	} else if ( !isEscaperAvailable(sys, daysFromToday, hour, escaper) ) {
 		free(newOrder);
 		return MTM_CLIENT_IN_ROOM;
 	} else if ( !isRoomAvailable(sys, daysFromToday, hour, room) ) {

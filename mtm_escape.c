@@ -31,7 +31,6 @@ int main(int argc, char *argv[]) {
 	if ( result != MTM_SUCCESS) {
 		destroySystem(sys);
 		mtmPrintErrorMessage(stderr, result);
-		//freeChannels(channelIn, channelOut );
 		return -1;
 	}
 
@@ -58,7 +57,7 @@ MtmErrorCode lineReader(EscapeSystem sys, FILE* channelIn, FILE* channelOut ) {
 	char line[MAX_LEN];
 	MtmErrorCode result = MTM_SUCCESS;
 	while ( fgets(line, MAX_LEN, channelIn) != NULL) {
-
+		//printf("line: %s\n", line);
 		const char* firstNonSpace = line;
 		while(*firstNonSpace != '\0' && isspace(*firstNonSpace)) {
 			++firstNonSpace;
