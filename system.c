@@ -56,122 +56,45 @@ MtmErrorCode inputChannelSelector(int argc, char* argv[], FILE** channelIn, FILE
 }
 
 MtmErrorCode sellectBothFiles(char* argv[], FILE** channelIn, FILE** channelOut) {
-	char* inFile;
-	char* outFile;
 	if ( strcmp(argv[1],"-i") == 0 && strcmp(argv[3],"-o") == 0) {
-		inFile = argv[2];
-		outFile = argv[4];
-
-	} else if ( strcmp(argv[1],"-o") == 0 && strcmp(argv[3],"-i") == 0 ) {
-		inFile = argv[4];
-		if ( inFile == NULL ) return MTM_OUT_OF_MEMORY;
-		outFile = addOutSuffix( argv[2] );
-		if ( outFile == NULL ) {
-			free(inFile);
-			return MTM_OUT_OF_MEMORY;
+		*channelIn = fopen(argv[2], "r");
+		if ( *channelIn == NULL ) return MTM_CANNOT_OPEN_FILE;
+		*channelOut = fopen(argv[4], "w");
+		if ( *channelOut == NULL ) {
+			fclose(*channelIn);
+			return MTM_CANNOT_OPEN_FILE;
 		}
-
+	} else if ( strcmp(argv[1],"-o") == 0 && strcmp(argv[3],"-i") == 0 ) {
+		*channelIn = fopen(argv[4], "r");
+		if ( *channelIn == NULL ) return MTM_CANNOT_OPEN_FILE;
+		*channelOut = fopen(argv[2], "w");
+		if ( *channelOut == NULL ) {
+			fclose(*channelIn);
+			return MTM_CANNOT_OPEN_FILE;
+		}
 	} else {
 		return MTM_INVALID_COMMAND_LINE_PARAMETERS;
 	}
-	MtmErrorCode result = openAllFiles(inFile, outFile, channelIn, channelOut);
-	freeAllNames(inFile, outFile, errFile);
-	return result;
+
+	return MTM_SUCCESS;
 }
 
-MtmErrorCode sellectOneOfTheFiles(char* argv[], FILE** channelIn, FILE** channelOut, FILE** channelErr) {
-	if ( strcmp(argv[1],"-i") == 0 ) {
-		char* inFile = addInSuffix( argv[2] );
-		if ( inFile == NULL ) return MTM_OUT_OF_MEMORY;
-		*channelIn = fopen(inFile, "r");
-		if ( *channelIn == NULL ) {
-			free(inFile);
-			return MTM_CANNOT_OPEN_FILE;
-		}
-		free(inFile);
+MtmErrorCode sellectOneOfTheFiles(char* argv[], FILE** channelIn, FILE** channelOut) {
+	if ( strcmp(argv[2],"-i") || strcmp(argv[2],"-o") ) {
+		return MTM_INVALID_COMMAND_LINE_PARAMETERS;
+	} else if ( strcmp(argv[1],"-i") == 0 ) {
+		*channelIn = fopen(argv[2], "r");
+		if ( *channelIn == NULL ) return MTM_CANNOT_OPEN_FILE;
 		*channelOut = stdout;
-		*channelErr = stderr;
 	} else if ( strcmp(argv[1],"-o") == 0 ) {
-		char* outFile = addOutSuffix( argv[2] );
-		if ( outFile == NULL ) return MTM_OUT_OF_MEMORY;
-		char* errFile = addErrSuffix( argv[2] );
-		if ( outFile == NULL ) {
-			free(outFile);
-			return MTM_OUT_OF_MEMORY;
-		}
-		*channelOut = fopen(outFile, "w");
-		if ( *channelOut == NULL ) {
-			free(outFile);
-			free(errFile);
-			return MTM_CANNOT_OPEN_FILE;
-		}
-		*channelErr = fopen(errFile, "w");
-		if ( *channelErr == NULL ) {
-			fclose(*channelOut);
-			free(outFile);
-			free(errFile);
-			return MTM_CANNOT_OPEN_FILE;
-		}
-		free(outFile);
-		free(errFile);
+		*channelOut = fopen(argv[2], "w");
+		if ( *channelOut == NULL ) return MTM_CANNOT_OPEN_FILE;
 		*channelIn = stdin;
 	} else  {
 		return MTM_INVALID_COMMAND_LINE_PARAMETERS;
 	}
 	return MTM_SUCCESS;
 }
-
-
-MtmErrorCode openAllFiles(const char *inFile, const  char *outFile, const  char *errFile, FILE** channelIn, FILE** channelOut, FILE** channelErr) {
-	*channelIn = fopen(inFile, "r");
-	if ( *channelIn == NULL ) {
-		return MTM_CANNOT_OPEN_FILE;
-	}
-	*channelOut = fopen(outFile, "w");
-	if ( *channelOut == NULL ) {
-		fclose(*channelIn);
-		return MTM_CANNOT_OPEN_FILE;
-	}
-	*channelErr = fopen(errFile, "w");
-	if ( *channelErr == NULL ) {
-		fclose(*channelIn);
-		fclose(*channelOut);
-		return MTM_CANNOT_OPEN_FILE;
-	}
-	return MTM_SUCCESS;
-}
-/*
-char* addInSuffix(const char *s){
-    char *result = malloc(sizeof(char) * (strlen(s)+4));//+1 for the zero-terminator
-    if ( result == NULL ) return NULL;
-    strcpy(result, s);
-    strcat(result, ".in");
-    return result;
-}
-
-char* addOutSuffix(const char *s){
-    char *result = malloc(sizeof(char) * (strlen(s)+5));//+1 for the zero-terminator
-    if ( result == NULL ) return NULL;
-    strcpy(result, s);
-    strcat(result, ".out");
-    return result;
-}
-
-char* addErrSuffix(const char *s){
-    char *result = malloc(sizeof(char) * (strlen(s)+5));//+1 for the zero-terminator
-    if ( result == NULL ) return NULL;
-    strcpy(result, s);
-    strcat(result, ".err");
-    return result;
-}
-*/
-void freeAllNames(char *in, char *out, char *err) {
-	free(in);
-	free(out);
-	free(err);
-}
-
-
 
 MtmErrorCode addCompany(EscapeSystem sys, const char* email, TechnionFaculty faculty) {
 	Company newCompany = malloc(sizeof(struct company_t));

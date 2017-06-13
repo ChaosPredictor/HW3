@@ -25,13 +25,13 @@ MtmErrorCode createSystem(EscapeSystem sys);
 
 MtmErrorCode destroySystem(EscapeSystem sys);
 
-MtmErrorCode inputChannelSelector(int argc, char* argv[], FILE** channelIn, FILE** channelOut, FILE** channelErr );
+MtmErrorCode inputChannelSelector(int argc, char* argv[], FILE** channelIn, FILE** channelOut );
 
-MtmErrorCode sellectBothFiles(char* argv[], FILE** channelIn, FILE** channelOut, FILE** channelErr);
+MtmErrorCode sellectBothFiles(char* argv[], FILE** channelIn, FILE** channelOut);
 
-MtmErrorCode sellectOneOfTheFiles(char* argv[], FILE** channelIn, FILE** channelOut, FILE** channelErr);
+MtmErrorCode sellectOneOfTheFiles(char* argv[], FILE** channelIn, FILE** channelOut);
 
-MtmErrorCode openAllFiles(const char *inFile, const char *outFile, const char *errFile, FILE** channelIn, FILE** channelOut, FILE** channelErr);
+MtmErrorCode openAllFiles(const char *inFile, const char *outFile, FILE** channelIn, FILE** channelOut);
 
 char* addInSuffix(const char* string);
 

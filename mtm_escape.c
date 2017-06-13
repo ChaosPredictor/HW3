@@ -26,37 +26,35 @@ int main(int argc, char *argv[]) {
 
 	FILE *channelIn = NULL;
 	FILE *channelOut = NULL;
-	FILE *channelErr = NULL;
 
-	result = inputChannelSelector(argc, argv, &channelIn, &channelOut, &channelErr );
+	result = inputChannelSelector(argc, argv, &channelIn, &channelOut );
 	if ( result != MTM_SUCCESS) {
 		destroySystem(sys);
 		mtmPrintErrorMessage(stderr, result);
-		freeChannels(channelIn, channelOut , channelErr);
+		//freeChannels(channelIn, channelOut );
 		return -1;
 	}
 
-	result = lineReader(sys, channelIn, channelOut, channelErr );
+	result = lineReader(sys, channelIn, channelOut );
 	if ( result != MTM_SUCCESS) {
 		destroySystem(sys);
 		mtmPrintErrorMessage(stderr, result);
-		freeChannels(channelIn, channelOut , channelErr);
+		freeChannels(channelIn, channelOut );
 		return -1;
 	}
 
 	destroySystem(sys);
-	freeChannels(channelIn, channelOut , channelErr);
+	freeChannels(channelIn, channelOut );
 	return 0;
 }
 
-void freeChannels(FILE* channelIn, FILE* channelOut , FILE* channelErr) {
+void freeChannels(FILE* channelIn, FILE* channelOut ) {
 	if ( channelIn != stdin) fclose(channelIn);
 	if ( channelOut != stdout) fclose(channelOut);
-	if ( channelErr != stderr) fclose(channelErr);
 }
 
 
-MtmErrorCode lineReader(EscapeSystem sys, FILE* channelIn, FILE* channelOut , FILE* channelErr) {
+MtmErrorCode lineReader(EscapeSystem sys, FILE* channelIn, FILE* channelOut ) {
 	char line[MAX_LEN];
 	MtmErrorCode result = MTM_SUCCESS;
 	while ( fgets(line, MAX_LEN, channelIn) != NULL) {
@@ -72,21 +70,21 @@ MtmErrorCode lineReader(EscapeSystem sys, FILE* channelIn, FILE* channelOut , FI
 		strtok(line, " \t");
 		strtok(NULL, " \t");
 		if ( numberOfCommand == 1 ) {
-			result = addCompanyCase(sys, channelErr);
+			result = addCompanyCase(sys, stderr);
 		} else if ( numberOfCommand == 2 ) {
-			result = removeCompanyCase(sys, channelErr);
+			result = removeCompanyCase(sys, stderr);
 		} else if ( numberOfCommand == 3 ) {
-			result = addRoomCase(sys, channelErr);
+			result = addRoomCase(sys, stderr);
 		} else if ( numberOfCommand == 4 ) {
-			result = removeRoomCase(sys, channelErr);
+			result = removeRoomCase(sys, stderr);
 		} else if ( numberOfCommand == 5 ) {
-			result = addEscaperCase(sys, channelErr);
+			result = addEscaperCase(sys, stderr);
 		} else if ( numberOfCommand == 6 ) {
-			result = removeEscaperCase(sys, channelErr);
+			result = removeEscaperCase(sys, stderr);
 		}  else if ( numberOfCommand == 7 ) {
-			result = addAnOrderCase(sys, channelErr);
+			result = addAnOrderCase(sys, stderr);
 		} else if ( numberOfCommand == 8 ) {
-			result = addRecommendedOrderCase(sys, channelErr);
+			result = addRecommendedOrderCase(sys, stderr);
 		} else if ( numberOfCommand == 9 ) {
 			result = reportDayCase(sys, channelOut);
 		} else if ( numberOfCommand == 10 ) {

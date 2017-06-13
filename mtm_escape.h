@@ -12,9 +12,9 @@
 #include "common.h"
 
 
-MtmErrorCode lineReader(EscapeSystem sys, FILE* channelIn, FILE* channelOut, FILE* channelErr );
+MtmErrorCode lineReader(EscapeSystem sys, FILE* channelIn, FILE* channelOut );
 
-void freeChannels(FILE* channelIn, FILE* channelOut , FILE* channelErr);
+void freeChannels(FILE* channelIn, FILE* channelOut );
 
 MtmErrorCode addCompanyCase(EscapeSystem sys, FILE* channelErr);
 
