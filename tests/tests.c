@@ -16,18 +16,16 @@
 
 
 
-//int main2(int argv, char** arc) {
 int main() {
-	//userTests(argv, arc);
-	//roomTests(argv, arc);
+
 	commonTests();
 	facultyTests();
 	companyTests();
 	roomTests();
 	escaperTests();
 	orderTests();
-
-
 	systemTests();
+	printf("\n\n ================ END Tests ================ \n\n");
+
 	return 1;
 }
