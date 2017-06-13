@@ -16,21 +16,21 @@ MtmErrorCode lineReader(EscapeSystem sys, FILE* channelIn, FILE* channelOut );
 
 void freeChannels(FILE* channelIn, FILE* channelOut );
 
-MtmErrorCode addCompanyCase(EscapeSystem sys, FILE* channelErr);
+MtmErrorCode addCompanyCase(EscapeSystem sys);
 
-MtmErrorCode removeCompanyCase(EscapeSystem sys, FILE* channelErr);
+MtmErrorCode removeCompanyCase(EscapeSystem sys);
 
-MtmErrorCode addRoomCase(EscapeSystem sys, FILE* channelErr);
+MtmErrorCode addRoomCase(EscapeSystem sys);
 
-MtmErrorCode removeRoomCase(EscapeSystem sys, FILE* channelErr);
+MtmErrorCode removeRoomCase(EscapeSystem sys);
 
-MtmErrorCode addEscaperCase(EscapeSystem sys, FILE* channelErr);
+MtmErrorCode addEscaperCase(EscapeSystem sys);
 
-MtmErrorCode removeEscaperCase(EscapeSystem sys, FILE* channelErr);
+MtmErrorCode removeEscaperCase(EscapeSystem sys);
 
-MtmErrorCode addAnOrderCase(EscapeSystem sys, FILE* channelErr);
+MtmErrorCode addAnOrderCase(EscapeSystem sys);
 
-MtmErrorCode addRecommendedOrderCase(EscapeSystem sys, FILE* channelOut);
+MtmErrorCode addRecommendedOrderCase(EscapeSystem sys);
 
 MtmErrorCode reportDayCase(EscapeSystem sys, FILE* channelOut);
 

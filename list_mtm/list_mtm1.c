@@ -7,8 +7,10 @@
  Description : Hello World in C, Ansi-style
  ============================================================================
  */
-#include "list_mtm1.h"
 
+#include "list_mtm1.h"
+#include <stddef.h>
+#include <stdlib.h>
 
 typedef struct listElementNode {
 	void* data;
@@ -84,7 +86,6 @@ int listGetSize(List list) {
 }
 
 ListElement listGetFirst(List list) {
-	//TODO move iterator to start
 	if ( list == NULL ) return NULL;
 	if ( list->first == NULL) return NULL;
 	list->iterator = list->first;
@@ -121,7 +122,6 @@ ListResult listInsertFirst(List list, ListElement listElement) {
 }
 
 ListResult listInsertLast(List list, ListElement listElement) {
-	//TODO remove duplication of listInsert;
 	if ( list == NULL) return LIST_NULL_ARGUMENT;
 
 	ListElementNode newNode = listInsert(list, listElement);
@@ -152,11 +152,9 @@ ListResult listInsertBeforeCurrent(List list, ListElement element) {
 
 	ListElementNode listElementNode = list->first;
 	while ( listElementNode->next != list->iterator ) {
-		//printf("\n%s\n",(char*)listElementNode->data);
 		listElementNode = listElementNode->next;
 	}
 	listElementNode->next = newNode;
-	//list->iterator->next = newNode;
 	list->size++;
 	return LIST_SUCCESS;
 }
@@ -297,14 +295,6 @@ static ListElementNode listElementNodeCreate(ListElement listElement) {
 	return listElementNode;
 }
 
-void ListPrint(List list) {
-	ListElementNode listElementNode = list->first;
-	while (listElementNode != NULL) {
-		printf("\n%s\n", (char*)listElementNode->data);
-		listElementNode = listElementNode->next;
-	}
-}
-
 static ListElementNode listInsert(List list, ListElement element) {
 	ListElement newListElement = list->copy(element);
 	if ( newListElement == NULL ) return NULL;
@@ -319,7 +309,6 @@ static ListElementNode listInsert(List list, ListElement element) {
 
 static ListResult exchangeNode(List list, ListElementNode listElementNode1, \
 		ListElementNode listElementNode2) {
-	//TODO to ask if it's a good way
 	ListElement listElementTemp = list->copy(listElementNode1->data);
 	if( listElementTemp == NULL ) return LIST_OUT_OF_MEMORY;
 	list->free(listElementNode1->data);

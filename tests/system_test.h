@@ -11,22 +11,9 @@
 
 #include <stdbool.h>
 
-
 #include "./test_utilities.h"
-//#include "./order_test.h"
 #include "./../system.h"
 
-
-/*
-#include "./../mtm_escape.h"
-#include "./../room.h"
-#include "./../user.h"
-#include <stdio.h>
-#include <assert.h>
-
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>*/
 
 
 

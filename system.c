@@ -80,7 +80,7 @@ MtmErrorCode sellectBothFiles(char* argv[], FILE** channelIn, FILE** channelOut)
 }
 
 MtmErrorCode sellectOneOfTheFiles(char* argv[], FILE** channelIn, FILE** channelOut) {
-	if ( strcmp(argv[2],"-i") || strcmp(argv[2],"-o") ) {
+	if ( strcmp(argv[2],"-i") == 0 || strcmp(argv[2],"-o") == 0) {
 		return MTM_INVALID_COMMAND_LINE_PARAMETERS;
 	} else if ( strcmp(argv[1],"-i") == 0 ) {
 		*channelIn = fopen(argv[2], "r");

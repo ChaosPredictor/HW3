@@ -2,10 +2,7 @@
 #define LIST_H_
 
 #include <stdbool.h>
-#include <stdio.h> //TODO remove it
-#include <stdlib.h>
 /**
-
 * Generic List Container
 *
 * Implements a list container type.
@@ -383,9 +380,6 @@ void listDestroy(List list);
 * @param iterator The name of the variable to hold the next list element
 * @param list the list to iterate over
 */
-
-void ListPrint(List list);
-
 #define LIST_FOREACH(type,iterator,list) \
 	for(type iterator = listGetFirst(list) ; \
 		iterator ;\

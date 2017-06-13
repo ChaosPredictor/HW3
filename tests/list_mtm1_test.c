@@ -266,7 +266,6 @@ static bool testListInsertLast() {
 }
 
 static bool testListInsertBeforeCurrent() {
-	//TODO what to do if list empty
 	char* a[5] = {"aaa","bbb","NI","hello mister fish","I"};
 	ASSERT_TEST( listInsertBeforeCurrent(NULL,a[0]) == LIST_NULL_ARGUMENT );
 
@@ -297,7 +296,6 @@ static bool testListInsertBeforeCurrent() {
 }
 
 static bool testListInsertAfterCurrent() {
-	//TODO what to do if list empty
 	char* a[5] = {"aaa","bbb","NI","hello mister fish","I"};
 	ASSERT_TEST( listInsertBeforeCurrent(NULL,a[0]) == LIST_NULL_ARGUMENT );
 
@@ -376,8 +374,6 @@ static bool testListSort() {
 	char* b[5] = {"AI","I","aaaaa","bbb","hello mister fish"};
 	ASSERT_TEST(strcmp(listGetCurrent(list),b[2]) == 0);
 
-	//TODO - check iterator location
-	//ASSERT_TEST(strcmp(listGetCurrent(list),a[2]) == 0);
 
 	ASSERT_TEST(strcmp(listGetFirst(list),b[0]) == 0);
 	for (int i = 1; i < 5; ++i ){
@@ -430,11 +426,10 @@ static bool testListDestroy() {
 	listDestroy(NULL);
 	ASSERT_TEST(listGetSize(list) == 5);
 	listDestroy(list);
-	//TODO test that is destroyed
 	return true;
 }
 
-int main2 (int argv, char** arc){
+int main (int argv, char** arc){
 	RUN_TEST(testListCreate);
 	RUN_TEST(testListFilter);
 	RUN_TEST(testListCopy);
