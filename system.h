@@ -165,7 +165,7 @@ MtmErrorCode removeEscaper(EscapeSystem system, const char* email);
 /* Find escaper in the system by email
  * @param
  * 	system - system the main object
- * 	email - email of the company
+ * 	email - email of the escaper
  * @return
  *  NULL -one of the parameters invalid or escaper does not exist in the system
  *  escaper - escaper with the email
@@ -177,7 +177,7 @@ Escaper findEscaperByEmail(const EscapeSystem system, const char* email );
  * 	system - system the main object
  * 	days_from_today - when (which from to day0
  * 	hour - when (which hour)
- * 	escaper - escaper the check
+ * 	escaper - escaper to check for
  * @return
  * 	true - escaper free
  * 	false - otherwise
@@ -229,48 +229,194 @@ MtmErrorCode removeRoom(EscapeSystem system, TechnionFaculty faculty, int id);
 MtmErrorCode removeAllRoomsOfCompany(EscapeSystem system,\
 		const char* company_email);
 
+/* Find room in the system by faculty and id
+ * @param
+ * 	system - system the main object
+ * 	faculty - faculty of the room's company
+ * 	id - of the room in the faculty
+ * @return
+ *  NULL -one of the parameters invalid or no such room
+ *  room - room in the faculty with the id
+ */
+Room findRoom(const EscapeSystem system, TechnionFaculty faculty, int id);
 
-SetElement findRoom(const EscapeSystem system, TechnionFaculty faculty, int id);
-
+/* Find the most recommended room in the system for the escaper with num_ppl
+ * @param
+ * 	system - system the main object
+ * 	escaper - escaper that the room for him
+ * 	num_ppl - number of people that coming with the escaper
+ * @return
+ *  NULL - one of the parameters invalid or no rooms in the system
+ *  room - the room in the faculty that recommended to escaper \
+ *  with number of people
+ */
 Room findRecommendedRoom(const EscapeSystem system, const Escaper escaper, \
 		int  num_ppl);
 
+/* check is room not occupied on specific time
+ * @param
+ * 	system - system the main object
+ * 	days_from_today - when (which from to day)
+ * 	hour - when (which hour)
+ * 	room - room to check for
+ * @return
+ * 	true - room free
+ * 	false - otherwise
+ */
 bool isRoomAvailable(const EscapeSystem system, int daysFromToday, int hour, \
 		ListElement room);
 
+/* Find Set (one or more) recommended rooms in the system by \
+ * recommendSetElement function with key1 and (optional) key2 paramenets
+ * @param
+ * 	system - system the main object
+ * 	recommendSetElement - function that return fit value for the room
+ * 	key1 - parameter that recommendSetElement using
+ * 	key2 - parameter that recommendSetElement may use
+ * @return
+ *  NULL - one of the parameters invalid or no rooms in the system
+ *  Set - Set of rooms recommended to escaper by recommendSetElement \
+ *  with key1 & key2 parameters
+ */
 Set findTheMostFitRooms(const Set rooms, \
 		RecommendSetElement recommendSetElement, SetKey key1, SetKey key2 );
 
-
-
-MtmErrorCode addAnOrder(EscapeSystem system, const char* email, \
+/* Adding order to the system
+ * @param
+ * 	system - system the main object
+ * 	email - email of the escaper that make the order
+ * 	faculty - faculty of the room's company
+ * 	id - id of the room in the faculty
+ * 	time - time to order xx-yy format (xx 0-10 days from today \
+ * 	   yy hour of the order 0 -23)
+ * 	num_ppl - number of people that want to order
+ * @return
+ * 	MTM_OUT_OF_MEMORY - if an allocation failed
+ *  MTM_INVALID_PARAMETER - one of the parameters invalid
+ *  MTM_CLIENT_EMAIL_DOES_NOT_EXIST - if not company the the email param
+ *  MTM_ID_DOES_NOT_EXIST - no such room (faculty & id)
+ *  MTM_CLIENT_IN_ROOM - escaper already have order to this time
+ *  MTM_ROOM_NOT_AVAILABLE - someone else order this room to this time
+ *  MTM_SUCCESS - if room added
+ */
+MtmErrorCode addOrder(EscapeSystem system, const char* email, \
 		TechnionFaculty faculty, int id, const char* time, int num_ppl);
 
+/* Create recommended order to the escaper
+ * @param
+ * 	system - system the main object
+ * 	email - email of the escaper that make the order
+ * 	num_ppl - number of people that want to order
+ * @return
+ * 	MTM_OUT_OF_MEMORY - if an allocation failed
+ *  MTM_INVALID_PARAMETER - one of the parameters invalid
+ *  MTM_CLIENT_EMAIL_DOES_NOT_EXIST - if not company the the email param
+ *  MTM_NO_ROOMS_AVAILABLE - no rooms in the system
+ *  MTM_CLIENT_IN_ROOM - escaper already have order to this time
+ *  MTM_SUCCESS - if room added
+ */
 MtmErrorCode addRecommendedOrder(EscapeSystem system, char* email, int num_ppl);
 
+/* Create recommended order to the escaper
+ * @param
+ * 	system - system the main object
+ * 	email - email of the escaper that make the order
+ * 	num_ppl - number of people that want to order
+ * @return
+ * 	MTM_OUT_OF_MEMORY - if an allocation failed
+ *  MTM_INVALID_PARAMETER - one of the parameters invalid
+ *  MTM_CLIENT_EMAIL_DOES_NOT_EXIST - if not company the the email param
+ *  MTM_NO_ROOMS_AVAILABLE - no rooms in the system
+ *  MTM_CLIENT_IN_ROOM - escaper already have order to this time
+ *  MTM_SUCCESS - if room added
+ */
 MtmErrorCode addFirstAvailableOrder(EscapeSystem system, Order order, \
 		SetElement room, SetElement escaper );
 
-bool IsARoomOrdered(const EscapeSystem system, TechnionFaculty faculty, int id);
+/* check is room have at least one order
+ * @param
+ * 	system - system the main object
+ * 	faculty - faculty of the room
+ * 	id - id of the room
+ * @return
+ * 	true - the room have at least one order
+ * 	false - otherwise
+ */
+bool IsRoomOrdered(const EscapeSystem system, TechnionFaculty faculty, int id);
 
-Day returnDayFromToday(const EscapeSystem system, int daysFromToday);
+/* return day object of the day
+ * @param
+ * 	system - system the main object
+ * 	days_from_today - number of days from today
+ * @return
+ * 	Day - a day object of the day from today
+ * 	NULL - if system NULL
+ */
+Day returnDayFromToday(const EscapeSystem system, int days_from_today);
 
+/* removing all the orders of the escaper
+ * @param
+ * 	system - system the main object
+ * 	email - email of escaper to remove the orders
+ * @return
+ * 	MTM_INVALID_PARAMETER - if system or email NULL
+ * 	MTM_SUCCESS - if all the orders of escaper removed
+ */
 MtmErrorCode removedOrdersOfEscaper(EscapeSystem system, const char* email );
 
+/* create and initialize faculties object
+ * @param
+ * 	number_of_faculties - number of faculties in the faculties list
+ * @return
+ *  LIST - list of faculties that init with faculty number and 0 as income
+ *  NULL - otherwise (out of memory)
+ */
+List createFaculties(int number_of_faculties);
 
-List createFaculties(int numberOfFaculties);
+/* Return a faclty in the system by faculty number
+ * @param
+ *  faculties - list of all faculties
+ *  faculty_number - number of faculty to return
+ * @return
+ *  Faculty - faculty object, if faculty found
+ *  NULL - otherwise
+ */
+Faculty findFacultyByNumber(List faculties, TechnionFaculty faculty_number);
 
-Faculty findFacultyByNumber(List Faculties, TechnionFaculty facultyNumber);
-
+/* Return a list of N faculties with the best income till now
+ * @param
+ *  faculties - list of all faculties
+ *  number - number of faculty to return
+ * @return
+ *  List of Faculties - faculties with the bets income
+ *  NULL - otherwise (if faculties param is NULL)
+ */
 List returnListOfBestNFaculties(List faculties, int number);
 
+/* Return a revenue of all the faculties  till now
+ * @param
+ *  faculties - list of all faculties
+ * @return
+ *  income - total income
+ *  NULL - otherwise (if faculties param is NULL)
+ */
 int returnTotalFacultiesRevenue(List faculties);
 
+/* Print daily report to out channel
+ * @param
+ * 	system - system the main object
+ * @return
+ *  MTM_SUCCESS
+ */
+MtmErrorCode reportDay(FILE* output_channel, EscapeSystem system);
 
-MtmErrorCode reportDay(FILE* outputChannel, EscapeSystem systemtem);
-
-MtmErrorCode reportBest(FILE* outputChannel, EscapeSystem systemtem);
-
+/* Print best faculties report to out channel
+ * @param
+ * 	system - system the main object
+ * @return
+ *  MTM_SUCCESS
+ */
+MtmErrorCode reportBest(FILE* output_channel, EscapeSystem system);
 
 
 

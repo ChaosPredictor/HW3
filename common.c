@@ -161,6 +161,6 @@ int toHour(const char* working_hrs) {
 	return ( charToInt(working_hrs[4]) + ( charToInt(working_hrs[3]) * 10 ));
 }
 
-int charToInt(char c) {
-	return (c - (int)'0');
+int charToInt(char number_char) {
+	return (number_char - (int)'0');
 }

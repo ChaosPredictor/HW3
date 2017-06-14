@@ -172,7 +172,7 @@ MtmErrorCode addAnOrderCase(EscapeSystem sys) {
 	int id = atoi( strtok(NULL, " ") );
 	char* time = strtok(NULL, " \t");
 	int num_ppl = atoi( strtok(NULL, " ") );
-	MtmErrorCode result = addAnOrder(sys, email, faculty, id, time, num_ppl);
+	MtmErrorCode result = addOrder(sys, email, faculty, id, time, num_ppl);
 	if ( result != MTM_SUCCESS ) {
 		mtmPrintErrorMessage(stderr, result);
 	}

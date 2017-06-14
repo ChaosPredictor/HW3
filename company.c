@@ -15,13 +15,13 @@ SetElement copyCompany(SetElement company) {
 	if ( company == NULL ) return NULL;
 	assert(company);
 	Company new_company = malloc(sizeof(struct company_t));
-	if ( new_company == NULL) return MTM_OUT_OF_MEMORY;
+	if ( new_company == NULL) return NULL;
 
 	new_company->email = malloc(sizeof(char) * \
 			(strlen(((Company)company)->email) + 1));
 	if ( new_company == NULL) {
 		free( new_company );
-		return MTM_OUT_OF_MEMORY;
+		return NULL;
 	}
 
 	strcpy(new_company->email, ((Company)company)->email);
@@ -42,16 +42,15 @@ int compareCompanies(const SetElement company1, const SetElement company2) {
 MtmErrorCode createCompany(Company company, const char* email, \
 		TechnionFaculty faculty) {
 
-	if( email == NULL ) return MTM_INVALID_PARAMETER;
-	if( !emailValidation(email) ) return MTM_INVALID_PARAMETER;
-	if( faculty < 0 || faculty > 17 ) return MTM_INVALID_PARAMETER;
-
-	if( company == NULL ) return MTM_OUT_OF_MEMORY;
+	if( email == NULL || company == NULL ) return MTM_INVALID_PARAMETER;
 	company->email = malloc(sizeof(char) * (strlen(email)+1));
 	if( company->email == NULL ) {
 		free(company);
 		return MTM_OUT_OF_MEMORY;
 	}
+	if( !emailValidation(email) || !facultyValidation(faculty)) \
+			return MTM_INVALID_PARAMETER;
+
 	strcpy( company->email, email);
 	company->faculty = faculty;
 

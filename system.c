@@ -176,7 +176,7 @@ Company findCompanyByEmail(const EscapeSystem system, const char* email ) {
 bool isAnyRoomOfACompanyOrdered(const EscapeSystem system, const char* email) {
 	SET_FOREACH(Room, val, system->rooms) {
 		if ( strcmp(val->email, email) == 0) {
-			if ( IsARoomOrdered(system, val->faculty, val->id) ) return true;
+			if ( IsRoomOrdered(system, val->faculty, val->id) ) return true;
 		}
 	}
 	return false;
@@ -313,7 +313,7 @@ MtmErrorCode removeRoom(EscapeSystem system, TechnionFaculty faculty, int id) {
 			return MTM_INVALID_PARAMETER;
 	SET_FOREACH(Room, val, system->rooms) {
 		if ( val->faculty == faculty && val->id == id ) {
-			if ( IsARoomOrdered(system, faculty, id) ) {
+			if ( IsRoomOrdered(system, faculty, id) ) {
 				return MTM_RESERVATION_EXISTS;
 			} else {
 				setRemove(system->rooms, val);
@@ -336,7 +336,7 @@ MtmErrorCode removeAllRoomsOfCompany(EscapeSystem system, const char* email) {
 	return MTM_SUCCESS;
 }
 
-SetElement findRoom(const EscapeSystem system, TechnionFaculty faculty,int id) {
+Room findRoom(const EscapeSystem system, TechnionFaculty faculty,int id) {
 	if ( system == NULL ) return NULL;
 	SET_FOREACH(Room, val, system->rooms) {
 		if ( val->faculty == faculty && val->id == id ) {
@@ -433,7 +433,7 @@ Set findTheMostFitRooms(const Set rooms, RecommendSetElement recommendSetElement
 
 
 
-MtmErrorCode addAnOrder(EscapeSystem system,const char* email, TechnionFaculty \
+MtmErrorCode addOrder(EscapeSystem system,const char* email, TechnionFaculty \
 		faculty, int id, const char* time, int num_ppl) {
 	Order new_order = malloc(sizeof(struct order_t));
 	if ( new_order == NULL) return MTM_OUT_OF_MEMORY;
@@ -546,7 +546,7 @@ MtmErrorCode addFirstAvailableOrder(EscapeSystem system, Order order, \
 	return MTM_SUCCESS;
 }
 
-bool IsARoomOrdered(const EscapeSystem system, TechnionFaculty faculty,int id) {
+bool IsRoomOrdered(const EscapeSystem system, TechnionFaculty faculty,int id) {
 	LIST_FOREACH(Day, dayVal, system->days) {
 		LIST_FOREACH(Order, orderVal, dayVal->dayOrders) {
 			if ( orderVal->faculty == faculty && orderVal->id == id ) {
@@ -558,6 +558,7 @@ bool IsARoomOrdered(const EscapeSystem system, TechnionFaculty faculty,int id) {
 }
 
 Day returnDayFromToday(const EscapeSystem system, int days_from_today) {
+	if( system == NULL ) return NULL;
 	if ( days_from_today == 0 ) return listGetFirst(system->days);
 	Day day = listGetFirst(system->days);
 	int last_day_number  = day->dayNumber;
@@ -585,6 +586,7 @@ Day returnDayFromToday(const EscapeSystem system, int days_from_today) {
 }
 
 MtmErrorCode removedOrdersOfEscaper(EscapeSystem system, const char* email ) {
+	if( system == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	Day day = listGetFirst(system->days);
 	Order order;
 	while( day != NULL ) {
@@ -603,27 +605,29 @@ MtmErrorCode removedOrdersOfEscaper(EscapeSystem system, const char* email ) {
 }
 
 
-List createFaculties(int numberOfFaculties) {
+List createFaculties(int number_of_faculties) {
 	List faculties = listCreate(copyFaculty, freeFaculty);
 	if ( faculties == NULL ) return NULL;
 
 	Faculty new_faculty = malloc(sizeof(struct faculty_t));
-
-	for( int i = 0; i < numberOfFaculties; i++) {
+	if ( new_faculty == NULL ) return NULL;
+	for( int i = 0; i < number_of_faculties; i++) {
 		new_faculty ->id = i;
 		new_faculty ->income = 0;
-		listInsertFirst(faculties, new_faculty );
+		ListResult list_result = listInsertFirst(faculties, new_faculty );
+		if ( list_result != LIST_SUCCESS ) return NULL;
+
 	}
 	free(new_faculty );
 	return faculties;
 }
 
 
-Faculty findFacultyByNumber(List Faculties, TechnionFaculty facultyNumber) {
+Faculty findFacultyByNumber(List Faculties, TechnionFaculty faculty_number) {
 	Faculty faculty = listGetFirst(Faculties);
 	while ( faculty != NULL ) {
 
-		if ( faculty->id == facultyNumber ) {
+		if ( faculty->id == faculty_number ) {
 			return faculty;
 		}
 		faculty = listGetNext(Faculties);
@@ -633,6 +637,7 @@ Faculty findFacultyByNumber(List Faculties, TechnionFaculty facultyNumber) {
 
 
 List returnListOfBestNFaculties(List faculties, int number) {
+	if( faculties == NULL) return NULL;
 	listSort(faculties, compareFacultyByIncomeAndId);
 	List new_list = listCreate(copyFaculty, freeFaculty);
 	ListElement faculty = listGetFirst( faculties );

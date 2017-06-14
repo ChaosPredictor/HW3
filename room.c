@@ -57,30 +57,30 @@ int compareRooms(const SetElement room1, const SetElement room2) {
 	}
 }
 
-MtmErrorCode createRoom(Room new_room, const char* email, int id, int faculty, \
+MtmErrorCode createRoom(Room room, const char* email, int id, int faculty, \
 		int price, int num_ppl, int from, int to, int difficulty) {
-	if ( email == NULL ) return MTM_INVALID_PARAMETER;
-	new_room->email = malloc(sizeof(char) * (strlen(email)+1));
-	if ( new_room->email == NULL) {
-		free(new_room->email);
+	if ( room == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
+	room->email = malloc(sizeof(char) * (strlen(email)+1));
+	if ( room->email == NULL) {
+		free(room->email);
 		return MTM_OUT_OF_MEMORY;
 	}
 
 	if (!idValidation(id)||!emailValidation(email)||!hoursValidation(from, to) \
 			|| !skillLevelValidation(difficulty) || !priceValidation(price) || \
 			!numberOfPeoplepriceValidation(num_ppl)) {
-		free(new_room->email);
+		free(room->email);
 		return MTM_INVALID_PARAMETER;
 	}
 
-	strcpy(new_room->email, email);
-	new_room->id = id;
-	new_room->faculty = faculty;
-	new_room->price = price;
-	new_room->num_ppl = num_ppl;
-	new_room->from_hrs = from;
-	new_room->to_hrs = to;
-	new_room->difficulty = difficulty;
+	strcpy(room->email, email);
+	room->id = id;
+	room->faculty = faculty;
+	room->price = price;
+	room->num_ppl = num_ppl;
+	room->from_hrs = from;
+	room->to_hrs = to;
+	room->difficulty = difficulty;
 	return MTM_SUCCESS;
 }
 
