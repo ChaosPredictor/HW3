@@ -61,9 +61,16 @@ int compareEscapers(const SetElement escasper1, const SetElement escasper2);
  *	MTM_INVALID_PARAMETER - if one of the parameters invalid
  *	MTM_SUCCESS - company created
  */
-MtmErrorCode createEscaper(Escaper escaper, const char* email, \
+MtmErrorCode initEscaper(Escaper escaper, const char* email, \
 		TechnionFaculty faculty, SkillLevel skill_level);
 
+/* return escaper faculty
+ * @param
+ * 	escaper - a escaper object
+ * @return
+ *  faculty - escaper faculty
+ *  UNKNOWN - if company faculty NULL
+ */
 TechnionFaculty returnEscaperFaculty(const Escaper escaper );
 
 

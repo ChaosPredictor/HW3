@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-	result = lineReader(sys, channel_in, channel_out );
+	result = lineReaderFunction(sys, channel_in, channel_out );
 	if ( result != MTM_SUCCESS) {
 		destroySystem(sys);
 		mtmPrintErrorMessage(stderr, result);
@@ -53,7 +53,7 @@ void freeChannels(FILE* channel_in, FILE* channel_out ) {
 }
 
 
-MtmErrorCode lineReader(EscapeSystem sys, FILE* channel_in, FILE* channel_out ) {
+MtmErrorCode lineReaderFunction(EscapeSystem sys, FILE* channel_in, FILE* channel_out ) {
 	char line[MAX_LEN];
 	MtmErrorCode result = MTM_SUCCESS;
 	while ( fgets(line, MAX_LEN, channel_in) != NULL) {
@@ -86,7 +86,7 @@ MtmErrorCode lineReader(EscapeSystem sys, FILE* channel_in, FILE* channel_out ) 
 			result = removeEscaperCase(sys);
 
 		}  else if ( number_of_command == 7 ) {
-			result = addAnOrderCase(sys);
+			result = addOrderCase(sys);
 
 		} else if ( number_of_command == 8 ) {
 			result = addRecommendedOrderCase(sys);
@@ -166,7 +166,7 @@ MtmErrorCode removeEscaperCase(EscapeSystem sys) {
 	return result;
 }
 
-MtmErrorCode addAnOrderCase(EscapeSystem sys) {
+MtmErrorCode addOrderCase(EscapeSystem sys) {
 	char* email = strtok(NULL, " \t");
 	int faculty = atoi( strtok(NULL, " ") );
 	int id = atoi( strtok(NULL, " ") );

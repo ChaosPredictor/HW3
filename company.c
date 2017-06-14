@@ -39,7 +39,7 @@ int compareCompanies(const SetElement company1, const SetElement company2) {
 	return strcmp(((Company)company1)->email, ((Company)company2)->email);
 }
 
-MtmErrorCode createCompany(Company company, const char* email, \
+MtmErrorCode initCompany(Company company, const char* email, \
 		TechnionFaculty faculty) {
 
 	if( email == NULL || company == NULL ) return MTM_INVALID_PARAMETER;

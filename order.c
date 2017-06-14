@@ -16,28 +16,28 @@ ListElement copyDay(ListElement day) {
 	Day new_day = malloc(sizeof(struct day_t));
 	if( new_day == NULL ) return NULL;
 	List newList;
-	if (((Day)day)->dayOrders != NULL ) {
-		List list = ((Day)day)->dayOrders;
+	if (((Day)day)->day_orders != NULL ) {
+		List list = ((Day)day)->day_orders;
 		newList = listCopy(list);
 	} else {
 		newList = listCreate(copyOrder ,freeOrder);
 	}
-	new_day->dayNumber = ((Day)day)->dayNumber;
-	new_day->dayOrders = newList;
+	new_day->day_number = ((Day)day)->day_number;
+	new_day->day_orders = newList;
 	return new_day;
 }
 
 void freeDay(ListElement day) {
 	if ( day == NULL ) return;
-	listDestroy((((Day)day)->dayOrders));
+	listDestroy((((Day)day)->day_orders));
 	free((Day)day);
 }
 
-ListElement createDay(int dayNumber) {
+ListElement initDay(int day_number) {
 	Day new_day = malloc(sizeof(struct day_t));
 	if( new_day == NULL ) return NULL;
-	new_day->dayNumber = dayNumber;
-	new_day->dayOrders = listCreate(copyOrder ,freeOrder);
+	new_day->day_number = day_number;
+	new_day->day_orders = listCreate(copyOrder ,freeOrder);
 	return new_day;
 }
 
@@ -46,7 +46,7 @@ ListElement createDay(int dayNumber) {
 List createDays() {
 	List days = listCreate(copyDay, freeDay);
 	if ( days == NULL ) return NULL;
-	Day new_day = createDay(0);
+	Day new_day = initDay(0);
 
 	listInsertFirst(days, new_day);
 	freeDay(new_day);
@@ -77,7 +77,7 @@ void freeOrder(ListElement order) {
 	free((Order)order);
 }
 
-MtmErrorCode createOrder(Order order, const char* email, \
+MtmErrorCode initOrder(Order order, const char* email, \
 		TechnionFaculty faculty, int id, int price, int num_ppl, int hour ) {
 	if ( email != NULL && order!=NULL ) {
 		order->email = malloc(sizeof(char) * (strlen(email)+1));
@@ -132,7 +132,7 @@ bool filterOrderById(const ListElement list_element, const ListFilterKey id) {
 	return ((((Order)list_element)->id) == *(int*)id);
 }
 
-int sortOrderByTimeFacultyId(const ListElement list_element1, \
+int compareOrderByTimeFacultyId(const ListElement list_element1, \
 		const ListElement list_element2) {
 	Order order1 = (Order)list_element1;
 	Order order2 = (Order)list_element2;

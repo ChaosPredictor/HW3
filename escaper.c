@@ -42,7 +42,7 @@ int compareEscapers(const SetElement escaper1, const SetElement escaper2) {
 }
 
 
-MtmErrorCode createEscaper(Escaper new_escaper, const char* email, \
+MtmErrorCode initEscaper(Escaper new_escaper, const char* email, \
 		TechnionFaculty faculty, SkillLevel skill_level) {
 	if( email == NULL ) return MTM_INVALID_PARAMETER;
 	new_escaper->email = malloc(sizeof(char) * (strlen(email)+1));

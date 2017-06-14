@@ -56,9 +56,16 @@ int compareCompanies(const SetElement company1, const SetElement company2);
  *	MTM_INVALID_PARAMETER - if one of the parameters invalid
  *	MTM_SUCCESS - company created
  */
-MtmErrorCode createCompany(Company company, const char* email, \
+MtmErrorCode initCompany(Company company, const char* email, \
 		TechnionFaculty faculty);
 
+/* return company faculty
+ * @param
+ * 	company - a company object
+ * @return
+ *  faculty - company faculty
+ *  UNKNOWN - if company faculty NULL
+ */
 TechnionFaculty returnCompanyFaculty(const Company company );
 
 #endif /* COMPANY_H_ */

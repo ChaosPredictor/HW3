@@ -57,7 +57,7 @@ int compareRooms(const SetElement room1, const SetElement room2) {
 	}
 }
 
-MtmErrorCode createRoom(Room room, const char* email, int id, int faculty, \
+MtmErrorCode initRoom(Room room, const char* email, int id, int faculty, \
 		int price, int num_ppl, int from, int to, int difficulty) {
 	if ( room == NULL || email == NULL ) return MTM_INVALID_PARAMETER;
 	room->email = malloc(sizeof(char) * (strlen(email)+1));
@@ -86,8 +86,7 @@ MtmErrorCode createRoom(Room room, const char* email, int id, int faculty, \
 
 int calculatePriceOfOrder(const Room room, TechnionFaculty escaper_faculty, \
 		int num_ppl) {
-	if( escaper_faculty == UNKNOWN ) return MTM_INVALID_PARAMETER;
-	if ( room == NULL ) return MTM_ID_DOES_NOT_EXIST;
+	if( escaper_faculty == UNKNOWN || room == NULL ) return -1;
 
 	if ( ((Room)room)->faculty == escaper_faculty ) \
 			return ((((Room)room)->price * 75) / 100) * num_ppl;

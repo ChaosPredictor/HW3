@@ -76,18 +76,47 @@ int compareRooms(const SetElement room1, const SetElement room2);
  *	MTM_INVALID_PARAMETER - if one of the parameters invalid
  *	MTM_SUCCESS - company created
  */
-MtmErrorCode createRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, int from, int to, int difficulty);
+MtmErrorCode initRoom(Room newRoom, const char* email, int id, int faculty, int price, int num_ppl, int from, int to, int difficulty);
 
+
+/* calculate the price of the order
+ * @param
+ * 	room - room that was ordered
+ * 	faculty - faculty of the escaper ordered the room
+ * 	num_ppl - number of people in the order
+ * @return
+ *  price - total price of the order
+ *  -1 - if room or faculty invalid
+ */
 int calculatePriceOfOrder(const Room room, TechnionFaculty escaperFaculty, int num_ppl);
 
+/* return room fit meter by number of people and skill level(the lower the better)
+ * @param
+ *  set_element - room to check
+ * 	num_ppl - number of people to compare to
+ * 	skill_level - skill level to compare to
+ * @return
+ *  number - index of fit
+ */
+int filterByNumOfPplandDifficulty(const SetElement set_element, SetKey num_ppl, SetKey skill_level );
 
+/* return room fit meter by nearest faculty (the lower the better)
+ * @param
+ *  faculty - faculty to compare to
+ *  junk - not used parameter
+ * @return
+ *  number - index of fit
+ */
+int filterByNearFaculty(const SetElement set_element, SetKey faculty, SetKey junk );
 
-
-int filterByNumOfPplandDifficulty(const SetElement setElement, SetKey num_ppl, SetKey skill_level );
-
-int filterByNearFaculty(const SetElement setElement, SetKey faculty, SetKey junk );
-
-int filterByNearId(const SetElement setElement, SetKey id, SetKey junk );
+/* return room fit meter by nearest id (the lower the better)
+ * @param
+ *  faculty - faculty to compare to
+ *  junk - not used parameter
+ * @return
+ *  number - index of fit
+ */
+int filterByNearId(const SetElement set_element, SetKey id, SetKey junk );
 
 
 #endif /* ROOM_H_ */

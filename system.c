@@ -66,9 +66,9 @@ MtmErrorCode destroySystem(EscapeSystem system) {
 MtmErrorCode channelSelectorFunction(int argc, char* argv[], FILE** channel_in,\
 		FILE** channel_out ) {
 	if ( argc == 5 ) {
-		return readBothFiles(argv, channel_in, channel_out);
+		return openBothFiles(argv, channel_in, channel_out);
 	} else if ( argc == 3 ) {
-		return readOneOfTheFiles(argv, channel_in, channel_out);
+		return openOneOfTheFiles(argv, channel_in, channel_out);
 	} else if ( argc == 1 ) {
 		*channel_in = stdin;
 		*channel_out = stdout;
@@ -77,7 +77,7 @@ MtmErrorCode channelSelectorFunction(int argc, char* argv[], FILE** channel_in,\
 	return MTM_INVALID_COMMAND_LINE_PARAMETERS;
 }
 
-MtmErrorCode readBothFiles(char* argv[],FILE** channel_in,FILE** channel_out) {
+MtmErrorCode openBothFiles(char* argv[],FILE** channel_in,FILE** channel_out) {
 	if ( strcmp(argv[1],"-i") == 0 && strcmp(argv[3],"-o") == 0) {
 		*channel_in = fopen(argv[2], "r");
 		if ( *channel_in == NULL ) return MTM_CANNOT_OPEN_FILE;
@@ -101,7 +101,7 @@ MtmErrorCode readBothFiles(char* argv[],FILE** channel_in,FILE** channel_out) {
 	return MTM_SUCCESS;
 }
 
-MtmErrorCode readOneOfTheFiles(char* argv[], FILE** channel_in, FILE** \
+MtmErrorCode openOneOfTheFiles(char* argv[], FILE** channel_in, FILE** \
 		channel_out) {
 	if ( strcmp(argv[2],"-i") == 0 || strcmp(argv[2],"-o") == 0) {
 		return MTM_INVALID_COMMAND_LINE_PARAMETERS;
@@ -128,7 +128,7 @@ MtmErrorCode addCompany(EscapeSystem system, const char* email, \
 		return MTM_INVALID_PARAMETER;
 	}
 
-	MtmErrorCode result = createCompany(new_company, email, faculty);
+	MtmErrorCode result = initCompany(new_company, email, faculty);
 	if ( result != MTM_SUCCESS ) {
 		free( new_company );
 		return result;
@@ -194,7 +194,7 @@ MtmErrorCode addEscaper(EscapeSystem system, const char* email, \
 		free( new_escaper );
 		return MTM_INVALID_PARAMETER;
 	}
-	MtmErrorCode result = createEscaper(new_escaper,email,faculty, skill_level);
+	MtmErrorCode result = initEscaper(new_escaper,email,faculty, skill_level);
 	if ( result != MTM_SUCCESS ) {
 		free( new_escaper );
 		return result;
@@ -244,7 +244,7 @@ bool isEscaperAvailable(const EscapeSystem system, int days_from_today, \
 		day = listGetNext(system->days);
 		if ( day == NULL ) return true;
 	}
-	List orders = day->dayOrders;
+	List orders = day->day_orders;
 	List orders_of_escaper = listFilter(orders, filterOrderByEscaper, \
 			((Escaper)escaper)->email);
 	Order order = listGetFirst(orders_of_escaper);
@@ -288,7 +288,7 @@ MtmErrorCode addRoom(EscapeSystem system, const char* email, int id, \
 		free(new_room);
 		return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
 	}
-	MtmErrorCode result = createRoom(new_room, email, id, faculty, \
+	MtmErrorCode result = initRoom(new_room, email, id, faculty, \
 			price, num_ppl, from, to, difficulty);
 	if( result != MTM_SUCCESS ) {
 		free(new_room);
@@ -391,7 +391,7 @@ bool isRoomAvailable(const EscapeSystem system, int days_from_today, int hour, \
 		day = listGetNext(system->days);
 		if ( day == NULL ) return true;
 	}
-	List orders = day->dayOrders;
+	List orders = day->day_orders;
 	List orders_of_faculty = listFilter(orders, filterOrderByFaculty, \
 			&(((Room)room)->faculty));
 	List orders_of_room = listFilter(orders_of_faculty, filterOrderById, \
@@ -464,7 +464,7 @@ MtmErrorCode addOrder(EscapeSystem system,const char* email, TechnionFaculty \
 		return MTM_ROOM_NOT_AVAILABLE;
 	}
 
-	MtmErrorCode result = createOrder(new_order, email, faculty, id, \
+	MtmErrorCode result = initOrder(new_order, email, faculty, id, \
 			calculatePriceOfOrder(room, escaper_faculty, num_ppl),num_ppl,hour );
 	if ( result != MTM_SUCCESS ) {
 		free(new_order);
@@ -472,7 +472,7 @@ MtmErrorCode addOrder(EscapeSystem system,const char* email, TechnionFaculty \
 	}
 
 	Day day = returnDayFromToday(system, days_from_today);
-	List orders = day->dayOrders;
+	List orders = day->day_orders;
 	ListResult list_result = listInsertFirst(orders, new_order);
 	if ( list_result == LIST_OUT_OF_MEMORY) {
 		return MTM_OUT_OF_MEMORY;
@@ -507,7 +507,7 @@ MtmErrorCode addRecommendedOrder(EscapeSystem system,char* email,int num_ppl ) {
 	if ( room != NULL ) {
 		int price = calculatePriceOfOrder(room, escaper->faculty, num_ppl);
 
-		MtmErrorCode result = createOrder(new_order, email, room->faculty, \
+		MtmErrorCode result = initOrder(new_order, email, room->faculty, \
 				room->id, price, num_ppl, 0 );
 		if ( result != MTM_SUCCESS ) {
 			freeRoom(room);
@@ -536,7 +536,7 @@ MtmErrorCode addFirstAvailableOrder(EscapeSystem system, Order order, \
 				setOrderHour(order, hour);
 				Day day = returnDayFromToday(system, days_from_today);
 
-				List orders = day->dayOrders;
+				List orders = day->day_orders;
 				listInsertFirst(orders, order);
 				return MTM_SUCCESS;
 			}
@@ -548,7 +548,7 @@ MtmErrorCode addFirstAvailableOrder(EscapeSystem system, Order order, \
 
 bool IsRoomOrdered(const EscapeSystem system, TechnionFaculty faculty,int id) {
 	LIST_FOREACH(Day, dayVal, system->days) {
-		LIST_FOREACH(Order, orderVal, dayVal->dayOrders) {
+		LIST_FOREACH(Order, orderVal, dayVal->day_orders) {
 			if ( orderVal->faculty == faculty && orderVal->id == id ) {
 				return true;
 			}
@@ -561,14 +561,14 @@ Day returnDayFromToday(const EscapeSystem system, int days_from_today) {
 	if( system == NULL ) return NULL;
 	if ( days_from_today == 0 ) return listGetFirst(system->days);
 	Day day = listGetFirst(system->days);
-	int last_day_number  = day->dayNumber;
+	int last_day_number  = day->day_number;
 	while ( day != NULL ) {
-		last_day_number  = day->dayNumber;
+		last_day_number  = day->day_number;
 		day = listGetNext(system->days);
 	}
 
 	while ( listGetSize(system->days) <= days_from_today ) {
-		Day newDay = createDay(++last_day_number);
+		Day newDay = initDay(++last_day_number);
 		if ( newDay == NULL ) {
 			freeDay(newDay);
 			return MTM_OUT_OF_MEMORY;
@@ -590,13 +590,13 @@ MtmErrorCode removedOrdersOfEscaper(EscapeSystem system, const char* email ) {
 	Day day = listGetFirst(system->days);
 	Order order;
 	while( day != NULL ) {
-		order = listGetFirst(day->dayOrders);
+		order = listGetFirst(day->day_orders);
 		while( order != NULL ) {
 			if ( strcmp(order->email, email) == 0 ) {
-				listRemoveCurrent(day->dayOrders);
-				order = listGetFirst(day->dayOrders);
+				listRemoveCurrent(day->day_orders);
+				order = listGetFirst(day->day_orders);
 			} else {
-				order = listGetNext(day->dayOrders);
+				order = listGetNext(day->day_orders);
 			}
 		}
 		day = listGetNext(system->days);
@@ -662,12 +662,12 @@ int returnTotalFacultiesRevenue(List faculties) {
 
 MtmErrorCode reportDay(FILE* output_channel, EscapeSystem system) {
 	Day today = listGetFirst(system->days);
-	List orders = today->dayOrders;
-	mtmPrintDayHeader(output_channel, today->dayNumber, listGetSize(orders));
+	List orders = today->day_orders;
+	mtmPrintDayHeader(output_channel, today->day_number, listGetSize(orders));
 
 	Escaper escaper = NULL;
 	Room room = NULL;
-	listSort(orders , sortOrderByTimeFacultyId);
+	listSort(orders , compareOrderByTimeFacultyId);
 	Order order = listGetFirst(orders);
 	while ( order != NULL ) {
 		escaper = findEscaperByEmail( system, order->email );
@@ -679,10 +679,10 @@ MtmErrorCode reportDay(FILE* output_channel, EscapeSystem system) {
 				room->faculty),	order->price );
 		order = listGetNext(orders);
 	}
-	mtmPrintDayFooter(output_channel, today->dayNumber);
+	mtmPrintDayFooter(output_channel, today->day_number);
 
 	if ( listGetSize(system->days) == 1 ) {
-		Day day = createDay(today->dayNumber+1);
+		Day day = initDay(today->day_number+1);
 		listInsertLast(system->days, day);
 		freeDay(day);
 	}
@@ -696,7 +696,7 @@ MtmErrorCode reportBest(FILE* output_channel, EscapeSystem system) {
 
 	listSort( system->faculties, compareFacultyByIncomeAndId);
 	mtmPrintFacultiesHeader(output_channel, NUMBER_OF_FACULTIES, \
-			today->dayNumber, returnTotalFacultiesRevenue(system->faculties));
+			today->day_number, returnTotalFacultiesRevenue(system->faculties));
 
 	List bestList = returnListOfBestNFaculties(system->faculties, \
 			NUMBER_OF_BEST);

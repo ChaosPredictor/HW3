@@ -117,13 +117,13 @@ static bool testCreateRoom() {
 	char* email = "company1@civil";
 	char* invalidEmail = "company1#civil";
 
-	ASSERT_TEST( createRoom(newRoom, invalidEmail, 1, 0, 40, 3, 5, 8, 5) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( createRoom(newRoom, email, 1, 0, 41, 3, 5, 8, 5) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( createRoom(newRoom, email, 1, 0, 40, 3, 8, 8, 5) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( createRoom(newRoom, email, 1, 0, 40, 3, 8, 25, 5) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( createRoom(newRoom, email, 1, 0, 40, 3, 8, 23, 0) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( initRoom(newRoom, invalidEmail, 1, 0, 40, 3, 5, 8, 5) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( initRoom(newRoom, email, 1, 0, 41, 3, 5, 8, 5) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( initRoom(newRoom, email, 1, 0, 40, 3, 8, 8, 5) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( initRoom(newRoom, email, 1, 0, 40, 3, 8, 25, 5) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( initRoom(newRoom, email, 1, 0, 40, 3, 8, 23, 0) == MTM_INVALID_PARAMETER );
 
-	ASSERT_TEST( createRoom(newRoom, email, 1, 0, 40, 3, 5, 8, 5) == MTM_SUCCESS );
+	ASSERT_TEST( initRoom(newRoom, email, 1, 0, 40, 3, 5, 8, 5) == MTM_SUCCESS );
 
 
 	freeRoom(newRoom);
@@ -136,7 +136,7 @@ static bool testCalculatePriceOfOrder() {
 
 	char* email = "company1@civil";
 
-	ASSERT_TEST( createRoom(newRoom, email, 1, 0, 40, 3, 5, 8, 5) == MTM_SUCCESS );
+	ASSERT_TEST( initRoom(newRoom, email, 1, 0, 40, 3, 5, 8, 5) == MTM_SUCCESS );
 
 	ASSERT_TEST( calculatePriceOfOrder(newRoom, 0, 3) == 90 );
 	ASSERT_TEST( calculatePriceOfOrder(newRoom, 1, 3) == 120 );

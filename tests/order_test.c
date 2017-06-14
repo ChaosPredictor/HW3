@@ -14,15 +14,15 @@ static bool testCopyDay() {
 	ASSERT_TEST( copyOrder(NULL) == NULL);
 
 	Day day = malloc(sizeof(struct day_t));
-	day->dayNumber = 0;
-	day->dayOrders = listCreate(copyOrder ,freeOrder);
+	day->day_number = 0;
+	day->day_orders = listCreate(copyOrder ,freeOrder);
 
 
 	Day newDay = copyDay(day);
 
 	ASSERT_TEST( newDay != NULL);
-	ASSERT_TEST( day->dayNumber == newDay->dayNumber );
-	ASSERT_TEST( listGetSize(day->dayOrders)==listGetSize(newDay->dayOrders) );
+	ASSERT_TEST( day->day_number == newDay->day_number );
+	ASSERT_TEST( listGetSize(day->day_orders)==listGetSize(newDay->day_orders) );
 
 	freeDay(newDay);
 	freeDay(day);
@@ -33,8 +33,8 @@ static bool testCopyDay() {
 static bool testFreeDay() {
 
 	Day day = malloc(sizeof(struct day_t));
-	day->dayNumber = 0;
-	day->dayOrders = listCreate(copyOrder ,freeOrder);
+	day->day_number = 0;
+	day->day_orders = listCreate(copyOrder ,freeOrder);
 
 
 	freeDay(day);
@@ -43,15 +43,15 @@ static bool testFreeDay() {
 
 static bool testCreateDay() {
 
-	Day day = createDay(0);
+	Day day = initDay(0);
 
-	ASSERT_TEST( day->dayNumber == 0 );
-	ASSERT_TEST( day->dayOrders != NULL );
+	ASSERT_TEST( day->day_number == 0 );
+	ASSERT_TEST( day->day_orders != NULL );
 
-	Day day2 = createDay(6);
+	Day day2 = initDay(6);
 
-	ASSERT_TEST( day2->dayNumber == 6 );
-	ASSERT_TEST( day2->dayOrders != NULL );
+	ASSERT_TEST( day2->day_number == 6 );
+	ASSERT_TEST( day2->day_orders != NULL );
 	freeDay(day2);
 	freeDay(day);
 	return true;
@@ -63,8 +63,8 @@ static bool testCreateDays() {
 
 	Day day = listGetFirst(days);
 
-	ASSERT_TEST( day->dayNumber == 0 );
-	ASSERT_TEST( day->dayOrders != NULL );
+	ASSERT_TEST( day->day_number == 0 );
+	ASSERT_TEST( day->day_orders != NULL );
 
 
 	listDestroy(days);
@@ -140,12 +140,12 @@ static bool testCreateOrder() {
 	order->num_ppl = 5;
 	order->hour = 8;
 
-	ASSERT_TEST( createOrder(order, email, 20, 1, 20, 3, 12 ) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( createOrder(order, email, 0, 0, 20, 3, 12 ) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( createOrder(order, email, 0, 1, 20, 0, 12 ) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( createOrder(order, email, 0, 1, 20, 3, 24 ) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( initOrder(order, email, 20, 1, 20, 3, 12 ) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( initOrder(order, email, 0, 0, 20, 3, 12 ) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( initOrder(order, email, 0, 1, 20, 0, 12 ) == MTM_INVALID_PARAMETER );
+	ASSERT_TEST( initOrder(order, email, 0, 1, 20, 3, 24 ) == MTM_INVALID_PARAMETER );
 
-	ASSERT_TEST( createOrder(order, email, 0, 1, 20, 3, 12 ) == MTM_SUCCESS );
+	ASSERT_TEST( initOrder(order, email, 0, 1, 20, 3, 12 ) == MTM_SUCCESS );
 
 	freeOrder(order);
 
@@ -165,7 +165,7 @@ static bool testSetOrderHour() {
 	order->num_ppl = 5;
 	order->hour = 8;
 
-	ASSERT_TEST( createOrder(order, email, 0, 1, 20, 3, 12 ) == MTM_SUCCESS );
+	ASSERT_TEST( initOrder(order, email, 0, 1, 20, 3, 12 ) == MTM_SUCCESS );
 	ASSERT_TEST( setOrderHour(order, 24 ) == MTM_INVALID_PARAMETER );
 
 	ASSERT_TEST( order->hour == 12 );

@@ -72,7 +72,7 @@ MtmErrorCode channelSelectorFunction(int argc, char* argv[], FILE** channel_in, 
  *  MTM_CANNOT_OPEN_FILE - if can't open input or output file
  *  MTM_SUCCESS - channel_in & channel_out get rights values
  */
-MtmErrorCode readBothFiles(char* argv[], FILE** channel_in, FILE** channel_out);
+MtmErrorCode openBothFiles(char* argv[], FILE** channel_in, FILE** channel_out);
 
 /* dealing with 3 input arguments case
  *  initialize input OR output channels
@@ -86,7 +86,7 @@ MtmErrorCode readBothFiles(char* argv[], FILE** channel_in, FILE** channel_out);
  *  MTM_CANNOT_OPEN_FILE - if can't open input or output file
  *  MTM_SUCCESS - channel_in & channel_out get rights values
  */
-MtmErrorCode readOneOfTheFiles(char* argv[],FILE** channel_in,FILE** channel_out);
+MtmErrorCode openOneOfTheFiles(char* argv[],FILE** channel_in,FILE** channel_out);
 
 /* Adding company to the system
  * @param

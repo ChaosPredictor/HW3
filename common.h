@@ -133,6 +133,7 @@ int convertHourStringToInt(const char* time );
  * 	line - line from input
  * @return
  * 	number - command:
+ * 		0 - not a legal command
  * 		1 - company add
  * 		2 - company remove
  * 		3 - room add

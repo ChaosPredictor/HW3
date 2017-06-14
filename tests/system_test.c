@@ -45,7 +45,7 @@ static bool testHelperAddOrders(EscapeSystem sys) {
 			MTM_SUCCESS );
 
 	Day day = listGetFirst(sys->days);
-	ASSERT_TEST( listGetSize( day->dayOrders ) == 2 );
+	ASSERT_TEST( listGetSize( day->day_orders ) == 2 );
 
 	ASSERT_TEST( addOrder(sys, "escaper1@civil", 0, 3, "1-5", 3) == \
 			MTM_SUCCESS );
@@ -54,7 +54,7 @@ static bool testHelperAddOrders(EscapeSystem sys) {
 
 	day = listGetFirst(sys->days);
 	day = listGetNext(sys->days);
-	ASSERT_TEST( listGetSize( day->dayOrders ) == 2 );
+	ASSERT_TEST( listGetSize( day->day_orders ) == 2 );
 	return true;
 }
 
@@ -192,7 +192,7 @@ static bool testfindCompanyByEmail() {
 
 	Company company = malloc(sizeof(struct company_t));
 
-	createCompany(company, "company1@civil", 0);
+	initCompany(company, "company1@civil", 0);
 
 	char* email = "company1@civil";
 	char* nullEmail = NULL;
@@ -343,7 +343,7 @@ static bool testfindEscaperByEmail() {
 
 	Escaper escaper = malloc(sizeof(struct escaper_t));
 
-	createEscaper(escaper, "escaper1@civil", 0, 5);
+	initEscaper(escaper, "escaper1@civil", 0, 5);
 
 	char* email = "escaper1@civil";
 	char* nullEmail = NULL;
