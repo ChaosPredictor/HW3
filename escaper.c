@@ -8,27 +8,26 @@
 #include "escaper.h"
 
 
-//TODO all mails together
-
 
 
 SetElement copyEscaper(SetElement escaper) {
 	if ( escaper == NULL ) return NULL;
 	assert(escaper);
-	Escaper newEscaper = malloc(sizeof(struct escaper_t));
-	if ( newEscaper == NULL) return MTM_OUT_OF_MEMORY;
+	Escaper new_escaper = malloc(sizeof(struct escaper_t));
+	if ( new_escaper == NULL) return MTM_OUT_OF_MEMORY;
 
-	newEscaper->email = malloc(sizeof(char) * (strlen(((Escaper)escaper)->email) + 1));
-	if ( newEscaper == NULL) {
-		free( newEscaper );
+	new_escaper->email = malloc(sizeof(char) * \
+			(strlen(((Escaper)escaper)->email) + 1));
+	if ( new_escaper == NULL) {
+		free( new_escaper );
 		return MTM_OUT_OF_MEMORY;
 	}
 
-	strcpy(newEscaper->email, ((Escaper)escaper)->email);
-	newEscaper->typeSkill = ((Escaper)escaper)->typeSkill;
-	newEscaper->faculty = ((Escaper)escaper)->faculty;
+	strcpy(new_escaper->email, ((Escaper)escaper)->email);
+	new_escaper->typeSkill = ((Escaper)escaper)->typeSkill;
+	new_escaper->faculty = ((Escaper)escaper)->faculty;
 
-	return newEscaper;
+	return new_escaper;
 }
 
 void freeEscaper(SetElement escaper) {
@@ -43,35 +42,24 @@ int compareEscapers(const SetElement escaper1, const SetElement escaper2) {
 }
 
 
-MtmErrorCode createEscaper(Escaper newEscaper, const char* email, TechnionFaculty faculty, SkillLevel typeSkill) {
-
+MtmErrorCode createEscaper(Escaper new_escaper, const char* email, \
+		TechnionFaculty faculty, SkillLevel skill_level) {
 	if( email == NULL ) return MTM_INVALID_PARAMETER;
-	if( !emailValidation(email) ) return MTM_INVALID_PARAMETER;
-	//TODO clean
-	if( faculty < 0 || faculty>17 || typeSkill < 0  || typeSkill > 10 ) return MTM_INVALID_PARAMETER;
-
-	if( newEscaper == NULL ) return MTM_OUT_OF_MEMORY;
-	newEscaper->email = malloc(sizeof(char) * (strlen(email)+1));
-	if( newEscaper->email == NULL ) {
-		free(newEscaper);
-		return MTM_OUT_OF_MEMORY;
+	new_escaper->email = malloc(sizeof(char) * (strlen(email)+1));
+	if( new_escaper->email == NULL ) return MTM_OUT_OF_MEMORY;
+	if( !emailValidation(email) || !facultyValidation(faculty) || \
+			!skillLevelValidation(skill_level)) {
+		free( new_escaper->email );
+		return MTM_INVALID_PARAMETER;
 	}
-	strcpy( newEscaper->email, email);
-	newEscaper->faculty = faculty;
-	newEscaper->typeSkill = typeSkill;
-
+	strcpy( new_escaper->email, email);
+	new_escaper->faculty = faculty;
+	new_escaper->typeSkill = skill_level;
 	return MTM_SUCCESS;
 }
 
 TechnionFaculty returnEscaperFaculty(const Escaper escaper ) {
 	if ( escaper == NULL ) return UNKNOWN;
 	return escaper->faculty;
-}
-
-void printEscaper(SetElement escaper) {
-	printf("\nPrint Escaper\n");
-	printf("\n Escaper email: %s\n", ((Escaper)escaper)->email);
-	printf("\n Escaper faculty: %d\n", ((Escaper)escaper)->faculty);
-	printf("\n Escaper skill: %d\n", ((Escaper)escaper)->typeSkill);
 }
 

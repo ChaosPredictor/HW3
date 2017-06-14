@@ -36,7 +36,7 @@ bool emailValidation(const char* email);
 
 bool facultyValidation(TechnionFaculty faculty);
 
-bool skillLevelValidation(SkillLevel skillLevel);
+bool skillLevelValidation(SkillLevel skill_level);
 
 bool timeValidation(const char* time);
 

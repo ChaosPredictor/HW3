@@ -24,78 +24,78 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-	FILE *channelIn = NULL;
-	FILE *channelOut = NULL;
+	FILE *channel_in = NULL;
+	FILE *channel_out = NULL;
 
-	result = inputChannelSelector(argc, argv, &channelIn, &channelOut );
+	result = channelSelectorFunction(argc, argv, &channel_in, &channel_out );
 	if ( result != MTM_SUCCESS) {
 		destroySystem(sys);
 		mtmPrintErrorMessage(stderr, result);
 		return -1;
 	}
 
-	result = lineReader(sys, channelIn, channelOut );
+	result = lineReader(sys, channel_in, channel_out );
 	if ( result != MTM_SUCCESS) {
 		destroySystem(sys);
 		mtmPrintErrorMessage(stderr, result);
-		freeChannels(channelIn, channelOut );
+		freeChannels(channel_in, channel_out );
 		return -1;
 	}
 
 	destroySystem(sys);
-	freeChannels(channelIn, channelOut );
+	freeChannels(channel_in, channel_out );
 	return 0;
 }
 
-void freeChannels(FILE* channelIn, FILE* channelOut ) {
-	if ( channelIn != stdin) fclose(channelIn);
-	if ( channelOut != stdout) fclose(channelOut);
+void freeChannels(FILE* channel_in, FILE* channel_out ) {
+	if ( channel_in != stdin) fclose(channel_in);
+	if ( channel_out != stdout) fclose(channel_out);
 }
 
 
-MtmErrorCode lineReader(EscapeSystem sys, FILE* channelIn, FILE* channelOut ) {
+MtmErrorCode lineReader(EscapeSystem sys, FILE* channel_in, FILE* channel_out ) {
 	char line[MAX_LEN];
 	MtmErrorCode result = MTM_SUCCESS;
-	while ( fgets(line, MAX_LEN, channelIn) != NULL) {
-		const char* firstNonSpace = line;
-		while(*firstNonSpace != '\0' && isspace(*firstNonSpace)) {
-			++firstNonSpace;
+	while ( fgets(line, MAX_LEN, channel_in) != NULL) {
+		const char* first_none_space = line;
+		while(*first_none_space != '\0' && isspace(*first_none_space)) {
+			++first_none_space;
 		}
-		size_t len = strlen(firstNonSpace)+1;
-		memmove(line, firstNonSpace, len);
+		size_t len = strlen(first_none_space)+1;
+		memmove(line, first_none_space, len);
 
-		int numberOfCommand = convertStringToCommand( line );
+		int number_of_command = convertStringToCommand( line );
 		strtok(line, " \t");
 		strtok(NULL, " \t");
-		if ( numberOfCommand == 1 ) {
+		if ( number_of_command == 1 ) {
 			result = addCompanyCase(sys);
 
-		} else if ( numberOfCommand == 2 ) {
+		} else if ( number_of_command == 2 ) {
 			result = removeCompanyCase(sys);
 
-		} else if ( numberOfCommand == 3 ) {
+		} else if ( number_of_command == 3 ) {
 			result = addRoomCase(sys);
 
-		} else if ( numberOfCommand == 4 ) {
+		} else if ( number_of_command == 4 ) {
 			result = removeRoomCase(sys);
 
-		} else if ( numberOfCommand == 5 ) {
+		} else if ( number_of_command == 5 ) {
 			result = addEscaperCase(sys);
 
-		} else if ( numberOfCommand == 6 ) {
+		} else if ( number_of_command == 6 ) {
 			result = removeEscaperCase(sys);
 
-		}  else if ( numberOfCommand == 7 ) {
+		}  else if ( number_of_command == 7 ) {
 			result = addAnOrderCase(sys);
 
-		} else if ( numberOfCommand == 8 ) {
+		} else if ( number_of_command == 8 ) {
 			result = addRecommendedOrderCase(sys);
 
-		} else if ( numberOfCommand == 9 ) {
-			result = reportDayCase(sys, channelOut);
+		} else if ( number_of_command == 9 ) {
+			result = reportDayCase(sys, channel_out);
 
-		} else if ( numberOfCommand == 10 ) {
-			result = reportBestCase(sys, channelOut);
+		} else if ( number_of_command == 10 ) {
+			result = reportBestCase(sys, channel_out);
 		}
 		if ( result == MTM_OUT_OF_MEMORY ) return result;
 	}
@@ -128,7 +128,8 @@ MtmErrorCode addRoomCase(EscapeSystem sys) {
 	int num_ppl = atoi( strtok(NULL, " ") );
 	char* working_hrs = strtok(NULL, " \t");
 	int difficulty = atoi( strtok(NULL, " ") );
-	MtmErrorCode result = addARoom(sys, email, id, price, num_ppl, working_hrs, difficulty);
+	MtmErrorCode result = addRoom(sys, email, id, price, num_ppl, \
+			working_hrs, difficulty);
 	if ( result != MTM_SUCCESS ) {
 		mtmPrintErrorMessage(stderr, result);
 	}
@@ -138,7 +139,7 @@ MtmErrorCode addRoomCase(EscapeSystem sys) {
 MtmErrorCode removeRoomCase(EscapeSystem sys) {
 	int faculty = atoi( strtok(NULL, " ") );
 	int id = atoi( strtok(NULL, " ") );
-	MtmErrorCode result = removeARoom(sys, faculty, id);
+	MtmErrorCode result = removeRoom(sys, faculty, id);
 	if ( result != MTM_SUCCESS ) {
 		mtmPrintErrorMessage(stderr, result);
 	}
@@ -188,13 +189,13 @@ MtmErrorCode addRecommendedOrderCase(EscapeSystem sys) {
 	return result;
 }
 
-MtmErrorCode reportDayCase(EscapeSystem sys, FILE* channelOut) {
-	MtmErrorCode result = reportDay(channelOut, sys);
+MtmErrorCode reportDayCase(EscapeSystem sys, FILE* channel_out) {
+	MtmErrorCode result = reportDay(channel_out, sys);
 	return result;
 }
 
-MtmErrorCode reportBestCase(EscapeSystem sys, FILE* channelOut) {
-	MtmErrorCode result = reportBest(channelOut, sys);
+MtmErrorCode reportBestCase(EscapeSystem sys, FILE* channel_out) {
+	MtmErrorCode result = reportBest(channel_out, sys);
 	return result;
 }
 

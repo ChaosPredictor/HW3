@@ -23,7 +23,8 @@ ListElement copyFaculty(ListElement faculty);
 
 void freeFaculty(ListElement faculty);
 
-int compareFacultyByIncomeAndId(const ListElement listElement1, const ListElement listElement2);
+int compareFacultyByIncomeAndId(const ListElement list_element1, \
+		const ListElement list_element2);
 
 MtmErrorCode addIncomeToFaculty(Faculty faculty, int income);
 

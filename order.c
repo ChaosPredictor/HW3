@@ -13,9 +13,8 @@
 
 ListElement copyDay(ListElement day) {
 	if ( day == NULL ) return NULL;
-	//TODO maybe assert
-	Day newDay = malloc(sizeof(struct day_t));
-	if( newDay == NULL ) return NULL;
+	Day new_day = malloc(sizeof(struct day_t));
+	if( new_day == NULL ) return NULL;
 	List newList;
 	if (((Day)day)->dayOrders != NULL ) {
 		List list = ((Day)day)->dayOrders;
@@ -23,9 +22,9 @@ ListElement copyDay(ListElement day) {
 	} else {
 		newList = listCreate(copyOrder ,freeOrder);
 	}
-	newDay->dayNumber = ((Day)day)->dayNumber;
-	newDay->dayOrders = newList;
-	return newDay;
+	new_day->dayNumber = ((Day)day)->dayNumber;
+	new_day->dayOrders = newList;
+	return new_day;
 }
 
 void freeDay(ListElement day) {
@@ -35,11 +34,11 @@ void freeDay(ListElement day) {
 }
 
 ListElement createDay(int dayNumber) {
-	Day newDay = malloc(sizeof(struct day_t));
-	if( newDay == NULL ) return NULL;
-	newDay->dayNumber = dayNumber;
-	newDay->dayOrders = listCreate(copyOrder ,freeOrder);
-	return newDay;
+	Day new_day = malloc(sizeof(struct day_t));
+	if( new_day == NULL ) return NULL;
+	new_day->dayNumber = dayNumber;
+	new_day->dayOrders = listCreate(copyOrder ,freeOrder);
+	return new_day;
 }
 
 
@@ -47,29 +46,29 @@ ListElement createDay(int dayNumber) {
 List createDays() {
 	List days = listCreate(copyDay, freeDay);
 	if ( days == NULL ) return NULL;
-	Day newDay = createDay(0);
+	Day new_day = createDay(0);
 
-	listInsertFirst(days, newDay);
-	freeDay(newDay);
+	listInsertFirst(days, new_day);
+	freeDay(new_day);
 	return days;
 }
 
 ListElement copyOrder(ListElement order) {
 	if ( order == NULL ) return NULL;
-	Order newOrder = malloc(sizeof(struct order_t));
-	if( newOrder == NULL ) return NULL;
-	newOrder->email = malloc(sizeof(char) * (strlen(((Order)order)->email) + 1));
-	if( newOrder->email == NULL ) {
-		free( newOrder );
+	Order new_order = malloc(sizeof(struct order_t));
+	if( new_order == NULL ) return NULL;
+	new_order->email = malloc(sizeof(char)*(strlen(((Order)order)->email) + 1));
+	if( new_order->email == NULL ) {
+		free( new_order );
 		return NULL;
 	}
-	strcpy(newOrder->email, ((Order)order)->email);
-	newOrder->faculty = ((Order)order)->faculty;
-	newOrder->id = ((Order)order)->id;
-	newOrder->price = ((Order)order)->price;
-	newOrder->num_ppl = ((Order)order)->num_ppl;
-	newOrder->hour = ((Order)order)->hour;
-	return newOrder;
+	strcpy(new_order->email, ((Order)order)->email);
+	new_order->faculty = ((Order)order)->faculty;
+	new_order->id = ((Order)order)->id;
+	new_order->price = ((Order)order)->price;
+	new_order->num_ppl = ((Order)order)->num_ppl;
+	new_order->hour = ((Order)order)->hour;
+	return new_order;
 }
 
 void freeOrder(ListElement order) {
@@ -78,7 +77,8 @@ void freeOrder(ListElement order) {
 	free((Order)order);
 }
 
-MtmErrorCode createOrder(Order order, const char* email, TechnionFaculty faculty, int id, int price, int num_ppl, int hour ) {
+MtmErrorCode createOrder(Order order, const char* email, \
+		TechnionFaculty faculty, int id, int price, int num_ppl, int hour ) {
 	if ( email != NULL && order!=NULL ) {
 		order->email = malloc(sizeof(char) * (strlen(email)+1));
 		if ( order->email == NULL ) return MTM_OUT_OF_MEMORY;
@@ -86,7 +86,9 @@ MtmErrorCode createOrder(Order order, const char* email, TechnionFaculty faculty
 		return MTM_INVALID_PARAMETER;
 	}
 
-	if( !emailValidation(email) || !facultyValidation(faculty) || !idValidation(id) || !numberOfPeoplepriceValidation(num_ppl) || !hourValidation (hour)){
+	if( !emailValidation(email) || !facultyValidation(faculty) || \
+			!idValidation(id) || !numberOfPeoplepriceValidation(num_ppl) || \
+			!hourValidation (hour)){
 		free(order->email);
 		return MTM_INVALID_PARAMETER;
 	}
@@ -112,25 +114,28 @@ MtmErrorCode setOrderHour(Order order, int hour) {
 
 
 
-bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour) {
-	return ((((Order)listElement)->hour) == *(int*)hour);
+bool filterOrderByHour(const ListElement list_element,const ListFilterKey hour){
+	return ((((Order)list_element)->hour) == *(int*)hour);
 }
 
-bool filterOrderByEscaper(const ListElement listElement, const ListFilterKey email) {
-	return (strcmp((((Order)listElement)->email), (char*)email) == 0);
+bool filterOrderByEscaper(const ListElement list_element, \
+		const ListFilterKey email) {
+	return (strcmp((((Order)list_element)->email), (char*)email) == 0);
 }
 
-bool filterOrderByFaculty(const ListElement listElement, const ListFilterKey faculty) {
-	return ((((Order)listElement)->faculty) == *(int*)faculty);
+bool filterOrderByFaculty(const ListElement list_element, \
+		const ListFilterKey faculty) {
+	return ((((Order)list_element)->faculty) == *(int*)faculty);
 }
 
-bool filterOrderById(const ListElement listElement, const ListFilterKey id) {
-	return ((((Order)listElement)->id) == *(int*)id);
+bool filterOrderById(const ListElement list_element, const ListFilterKey id) {
+	return ((((Order)list_element)->id) == *(int*)id);
 }
 
-int sortOrderByTimeFacultyId(const ListElement listElement1, const ListElement listElement2) {
-	Order order1 = (Order)listElement1;
-	Order order2 = (Order)listElement2;
+int sortOrderByTimeFacultyId(const ListElement list_element1, \
+		const ListElement list_element2) {
+	Order order1 = (Order)list_element1;
+	Order order2 = (Order)list_element2;
 	if ( (order1->hour) > (order2->hour) ) {
 		return 1;
 	} else if ( (order1->hour) < (order2->hour) ) {
@@ -145,41 +150,6 @@ int sortOrderByTimeFacultyId(const ListElement listElement1, const ListElement l
 		return -1;
 	}
 	return 0;
-}
-
-
-
-//TODO maybe should be deleted
-void printAllDays(List days) {
-	printf("\nA New Print\n");
-	Day day = listGetFirst(days);
-	while ( day != NULL ) {
-		printf(" Day Number: %d\n", day->dayNumber);
-		printAllOrders(day->dayOrders);
-		day = listGetNext(days);
-	}
-}
-
-void printAllOrders(List orders) {
-	Order order = listGetFirst(orders);
-	while ( order != NULL ) {
-		printf("  A New Order\n");
-		printf("	Order email: %s\n", order->email);
-		printf("	Order faculty: %d\n", order->faculty);
-		printf("	Order id: %d\n", order->id);
-		printf("	Order hour: %d\n", order->hour);
-		printf("	Order price: %d\n", order->price);
-		order = listGetNext(orders);
-	}
-}
-
-void printOrder(ListElement order) {
-	printf("  A New Order\n");
-	printf("	Order email: %s\n", ((Order)order)->email);
-	printf("	Order faculty: %d\n", ((Order)order)->faculty);
-	printf("	Order id: %d\n", ((Order)order)->id);
-	printf("	Order hour: %d\n", ((Order)order)->hour);
-	printf("	Order price: %d\n", ((Order)order)->price);
 }
 
 

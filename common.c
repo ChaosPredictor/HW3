@@ -33,8 +33,8 @@ bool facultyValidation(TechnionFaculty faculty) {
 	return true;
 }
 
-bool skillLevelValidation(SkillLevel skillLevel) {
-	if ( skillLevel < MIN_DIFICULTY || skillLevel > MAX_DIFICULTY ) return false;
+bool skillLevelValidation(SkillLevel skill_level) {
+	if(skill_level < MIN_DIFICULTY || skill_level > MAX_DIFICULTY) return false;
 	return true;
 }
 
@@ -90,9 +90,9 @@ bool priceValidation (int price) {
 int convertDayStringToInt( const char* time ) {
 	char *temp = malloc(sizeof(char) * (strlen(time) + 1));
 	strcpy(temp,time);
-	int daysFromToday = atoi( strtok(temp, "-") );
+	int days_from_today = atoi( strtok(temp, "-") );
 	free( temp );
-	return daysFromToday;
+	return days_from_today;
 }
 
 int convertHourStringToInt( const char* time ) {
@@ -140,9 +140,11 @@ int convertStringToCommand( const char* line ) {
 			result = 8;
 		}
 	} else if ( strcmp(command, "report" ) == 0 ) {
-		if ( strcmp(subcommand, "day\n" ) == 0 || strcmp(subcommand, "day\0" ) == 0 || strcmp(subcommand, "day\r\n" ) == 0 ) {
+		if ( strcmp(subcommand, "day\n" ) == 0 || strcmp(subcommand, "day\0" )\
+				== 0 || strcmp(subcommand, "day\r\n" ) == 0 ) {
 			result = 9;
-		} else if ( strcmp(subcommand, "best\n" ) == 0 || strcmp(subcommand, "best\0" ) == 0 || strcmp(subcommand, "best\r\n" ) == 0 ) {
+		} else if ( strcmp(subcommand, "best\n" ) == 0 || strcmp(subcommand, \
+				"best\0" ) == 0 || strcmp(subcommand, "best\r\n" ) == 0 ) {
 			result = 10;
 		}
 	}

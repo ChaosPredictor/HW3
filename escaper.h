@@ -11,7 +11,6 @@
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
-//#include "mtm_ex3.h"
 #include "set.h"
 #include "common.h"
 
@@ -32,13 +31,11 @@ void freeEscaper(SetElement escasper);
 
 int compareEscapers(const SetElement escasper1, const SetElement escasper2);
 
-MtmErrorCode createEscaper(Escaper escaper, const char* email, TechnionFaculty faculty, SkillLevel typeSkill);
+MtmErrorCode createEscaper(Escaper escaper, const char* email, \
+		TechnionFaculty faculty, SkillLevel skill_level);
 
 TechnionFaculty returnEscaperFaculty(const Escaper escaper );
 
-
-//TODO remove
-void printEscaper(SetElement escaper);
 
 
 

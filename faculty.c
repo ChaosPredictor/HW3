@@ -12,12 +12,11 @@
 
 ListElement copyFaculty(ListElement faculty) {
 	if ( faculty == NULL ) return NULL;
-	//TODO maybe assert
-	Faculty newFaculty = malloc(sizeof(struct faculty_t));
-	if( newFaculty == NULL ) return NULL;
-	newFaculty->id = ((Faculty)faculty)->id;
-	newFaculty->income = ((Faculty)faculty)->income;
-	return newFaculty;
+	Faculty new_faculty = malloc(sizeof(struct faculty_t));
+	if( new_faculty == NULL ) return NULL;
+	new_faculty->id = ((Faculty)faculty)->id;
+	new_faculty->income = ((Faculty)faculty)->income;
+	return new_faculty;
 }
 
 void freeFaculty(ListElement faculty) {
@@ -25,11 +24,13 @@ void freeFaculty(ListElement faculty) {
 	free((Faculty)faculty);
 }
 
-int compareFacultyByIncomeAndId(const ListElement listElement1, const ListElement listElement2) {
-	if ((((Faculty)listElement2)->income) > (((Faculty)listElement1)->income)) {
+int compareFacultyByIncomeAndId(const ListElement list_element1, \
+		const ListElement list_element2) {
+	if ((((Faculty)list_element2)->income)>(((Faculty)list_element1)->income)){
 		return 1;
-	} else if ((((Faculty)listElement2)->income) == (((Faculty)listElement1)->income)) {
-		return ((((Faculty)listElement1)->id) - (((Faculty)listElement2)->id));
+	} else if ((((Faculty)list_element2)->income) == \
+			(((Faculty)list_element1)->income)) {
+		return ((((Faculty)list_element1)->id)-(((Faculty)list_element2)->id));
 	} else {
 		return -1;
 	}

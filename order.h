@@ -47,32 +47,27 @@ ListElement copyOrder(ListElement order);
 
 void freeOrder(ListElement order);
 
-MtmErrorCode createOrder(Order order, const char* email, TechnionFaculty faculty, int id, int price, int num_ppl, int hour );
+MtmErrorCode createOrder(Order order, const char* email, \
+		TechnionFaculty faculty, int id, int price, int num_ppl, int hour );
 
 MtmErrorCode setOrderHour(Order order, int hour);
 
 
 bool filterOrderByHour(const ListElement listElement, const ListFilterKey hour);
 
-bool filterOrderByEscaper(const ListElement listElement, const ListFilterKey email);
+bool filterOrderByEscaper(const ListElement listElement, \
+		const ListFilterKey email);
 
-bool filterOrderByFaculty(const ListElement listElement, const ListFilterKey faculty);
+bool filterOrderByFaculty(const ListElement listElement, \
+		const ListFilterKey faculty);
 
 bool filterOrderById(const ListElement listElement, const ListFilterKey id);
 
-int sortOrderByTimeFacultyId(const ListElement listElement1, const ListElement listElement2);
+int sortOrderByTimeFacultyId(const ListElement listElement1, \
+		const ListElement listElement2);
 
 
 
-
-
-
-//TODO remove
-void printAllDays(List days);
-//TODO remove
-void printAllOrders(List orders);
-//TODO remove
-void printOrder(ListElement order);
 
 
 #endif /* ORDER_H_ */

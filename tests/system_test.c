@@ -18,11 +18,11 @@ static bool testHelperAddCompanies(EscapeSystem sys) {
 }
 
 static bool testHelperAddRooms(EscapeSystem sys) {
-	addARoom(sys, "company1@civil", 1, 4, 3, "00-24", 2);
-	addARoom(sys, "company1@civil", 2, 4, 3, "00-24", 2);
-	addARoom(sys, "company1@civil", 3, 4, 3, "00-24", 2);
-	addARoom(sys, "company2@civil", 4, 4, 3, "00-24", 2);
-	addARoom(sys, "company1@electrical", 1, 16, 2, "05-20", 8);
+	addRoom(sys, "company1@civil", 1, 4, 3, "00-24", 2);
+	addRoom(sys, "company1@civil", 2, 4, 3, "00-24", 2);
+	addRoom(sys, "company1@civil", 3, 4, 3, "00-24", 2);
+	addRoom(sys, "company2@civil", 4, 4, 3, "00-24", 2);
+	addRoom(sys, "company1@electrical", 1, 16, 2, "05-20", 8);
 
 	ASSERT_TEST( setGetSize(sys->rooms) == 5 );
 
@@ -178,8 +178,6 @@ static bool testRemoveACompany() {
 	ASSERT_TEST( setGetSize(system->rooms) == numberOfRooms );
 	ASSERT_TEST( removeCompany(system, email) == MTM_SUCCESS );
 	ASSERT_TEST( setGetSize(system->rooms) < numberOfRooms );
-
-	//TODO test that removed room can't be order
 
 	destroySystem(system);
 	return true;
@@ -393,35 +391,35 @@ static bool testAddARoom() {
 	int invalidDifficulty = 0;
 	int invalidDifficulty2 = 11;
 
-	ASSERT_TEST( addARoom(nullSystem, email, id, price, num_ppl, \
+	ASSERT_TEST( addRoom(nullSystem, email, id, price, num_ppl, \
 			working_hrs, difficulty) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addARoom(system, nullEmail, id, price, num_ppl, \
+	ASSERT_TEST( addRoom(system, nullEmail, id, price, num_ppl, \
 			working_hrs, difficulty) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addARoom(system, email, id, price, num_ppl, \
+	ASSERT_TEST( addRoom(system, email, id, price, num_ppl, \
 			nullWorking_hrs, difficulty) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addARoom(system, invalidEmail, id, price, num_ppl, \
+	ASSERT_TEST( addRoom(system, invalidEmail, id, price, num_ppl, \
 			working_hrs, difficulty) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addARoom(system, email, id, price, num_ppl, \
+	ASSERT_TEST( addRoom(system, email, id, price, num_ppl, \
 			invalidWorking_hrs, difficulty) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addARoom(system, email, invalidId, price, num_ppl, \
+	ASSERT_TEST( addRoom(system, email, invalidId, price, num_ppl, \
 			working_hrs, difficulty) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addARoom(system, email, id, invalidPrice, num_ppl, \
+	ASSERT_TEST( addRoom(system, email, id, invalidPrice, num_ppl, \
 			working_hrs, difficulty) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addARoom(system, email, id, invalidPrice2, num_ppl, \
+	ASSERT_TEST( addRoom(system, email, id, invalidPrice2, num_ppl, \
 			working_hrs, difficulty) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addARoom(system, email, id, price, invalidNum_ppl, \
+	ASSERT_TEST( addRoom(system, email, id, price, invalidNum_ppl, \
 			working_hrs, difficulty) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addARoom(system, email, id, price, num_ppl, \
+	ASSERT_TEST( addRoom(system, email, id, price, num_ppl, \
 			working_hrs, invalidDifficulty) == MTM_INVALID_PARAMETER );
-	ASSERT_TEST( addARoom(system, email, id, price, num_ppl, \
+	ASSERT_TEST( addRoom(system, email, id, price, num_ppl, \
 			working_hrs, invalidDifficulty2) == MTM_INVALID_PARAMETER );
 
 
-	ASSERT_TEST( addARoom(system, doesNotExistEmail, id, price, num_ppl,\
+	ASSERT_TEST( addRoom(system, doesNotExistEmail, id, price, num_ppl,\
 			working_hrs, difficulty) == MTM_COMPANY_EMAIL_DOES_NOT_EXIST );
-	ASSERT_TEST( addARoom(system, email, id, price, num_ppl, \
+	ASSERT_TEST( addRoom(system, email, id, price, num_ppl, \
 			working_hrs, difficulty) == MTM_SUCCESS );
-	ASSERT_TEST( addARoom(system, email, id, price, num_ppl, \
+	ASSERT_TEST( addRoom(system, email, id, price, num_ppl, \
 			working_hrs, difficulty) == MTM_ID_ALREADY_EXIST );
 
 	destroySystem(system);
@@ -447,22 +445,22 @@ static bool testRemoveARoom() {
 	int invalidId = 0;
 	int doesNotExistId = 999;
 
-	ASSERT_TEST( removeARoom(nullSystem, faculty, id) == \
+	ASSERT_TEST( removeRoom(nullSystem, faculty, id) == \
 			MTM_INVALID_PARAMETER );
-	ASSERT_TEST( removeARoom(system, invalidFaculty, id) == \
+	ASSERT_TEST( removeRoom(system, invalidFaculty, id) == \
 			MTM_INVALID_PARAMETER );
-	ASSERT_TEST( removeARoom(system, faculty, invalidId) == \
+	ASSERT_TEST( removeRoom(system, faculty, invalidId) == \
 			MTM_INVALID_PARAMETER );
 
-	ASSERT_TEST( removeARoom(system, faculty, doesNotExistId) == \
+	ASSERT_TEST( removeRoom(system, faculty, doesNotExistId) == \
 			MTM_ID_DOES_NOT_EXIST );
-	ASSERT_TEST( removeARoom(system, faculty2, id) == MTM_ID_DOES_NOT_EXIST );
+	ASSERT_TEST( removeRoom(system, faculty2, id) == MTM_ID_DOES_NOT_EXIST );
 
-	ASSERT_TEST( removeARoom(system, faculty, id) == MTM_SUCCESS );
+	ASSERT_TEST( removeRoom(system, faculty, id) == MTM_SUCCESS );
 
-	ASSERT_TEST( removeARoom(system, faculty, orderedId) == \
+	ASSERT_TEST( removeRoom(system, faculty, orderedId) == \
 			MTM_RESERVATION_EXISTS );
-	ASSERT_TEST( removeARoom(system, faculty, orderedId2) == \
+	ASSERT_TEST( removeRoom(system, faculty, orderedId2) == \
 			MTM_RESERVATION_EXISTS );
 
 	destroySystem(system);

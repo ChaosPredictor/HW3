@@ -9,11 +9,8 @@
 #define COMPANY_H_
 
 #include <assert.h>
-//#include "mtm_ex3.h"
 #include "set.h"
 #include "common.h"
-
-//TODO add related files
 
 
 
@@ -30,7 +27,8 @@ void freeCompany(SetElement company);
 
 int compareCompanies(const SetElement company1, const SetElement company2);
 
-MtmErrorCode createCompany(Company company, const char* email, TechnionFaculty faculty);
+MtmErrorCode createCompany(Company company, const char* email, \
+		TechnionFaculty faculty);
 
 TechnionFaculty returnCompanyFaculty(const Company company );
 
